@@ -1,0 +1,15 @@
+#ifndef _DEBUG_DEF_
+#define _DEBUG_DEF_
+
+#ifndef _DEBUG_F_
+	extern Print_GRam;
+	extern Debug_Print_CHx;
+	extern _Debug_Memory_File;
+	extern Debug_Print;
+#endif /* _DEBUG_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _DEBUG_DEF_ */

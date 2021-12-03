@@ -1,0 +1,15 @@
+#ifndef _FFT_DEF_
+#define _FFT_DEF_
+
+#ifndef _FFT_F_
+    extern FFT_fix;
+    extern FFT_fix128;
+    extern FFT_fix64;
+    extern FFT_Fast128;
+#endif /* _FFT_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _FFT_DEF_ */

@@ -1,0 +1,16 @@
+#ifndef _WDRC_DEF_
+#define _WDRC_DEF_
+
+#ifndef _WDRC_F_
+	extern loud_comp_Frame;
+	extern loud_comp_fix;
+	extern splcal_fix;
+	extern wdrc_fix;
+	extern nondb2db_fix;
+	extern compen_fix;	
+#endif /* _WDRC_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+#endif /* _WDRC_DEF_ */

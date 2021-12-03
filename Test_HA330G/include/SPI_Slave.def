@@ -1,0 +1,17 @@
+#ifndef _SPI_SLAVE_DEF_
+#define _SPI_SLAVE_DEF_
+
+//=========================== 函数声明 ===========================
+#ifndef _SPI_SLAVE_F_
+    extern SPI_Slave_Init;
+    extern SPI_Slave_Gets;
+    extern SPI_Slave_Puts;
+#endif
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+#include <USI.def>
+
+//=========================== 驱动级应用定义 ===========================
+
+#endif _SPI_SLAVE_DEF_

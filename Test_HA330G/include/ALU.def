@@ -1,0 +1,29 @@
+#ifndef _ALU_DEF_
+#define _ALU_DEF_
+
+#ifndef _ALU_F_
+    extern DMA_Trans_AD;
+    extern DMA_Trans_PATH1;
+    extern DMA_TransDimin_PATH1;
+    extern DMA_Trans_PATH3;
+    extern DMA_Trans_Neg;
+    extern Ram_Clr;
+    extern Dual_Ser_Sub32;
+    extern Cal_Single_Shift;
+    extern Cal_Single_ShiftR1;
+    extern Cal_Single_ShiftSR8;
+    extern ALU_Sub8_Synthesis;
+    extern ALU_Sub4_Synthesis;
+    extern Add_LMT;
+    extern Sub_LMT;
+    extern LMT32To16;
+    extern DMA_Trans;
+    extern Cal_Single_Add_Const;
+    extern Cal_Single_Sub_Const;
+#endif /* _ALU_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _ALU_DEF_ */

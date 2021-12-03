@@ -1,0 +1,14 @@
+#ifndef _AGC_DEF_
+#define _AGC_DEF_
+
+#ifndef _AGC_F_
+	extern splcal_AGC_fix;
+	extern set_ADC_Gain;
+	extern get_ADC_Gain;
+	extern cal_ADC_Gain;
+#endif /* _AGC_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+#endif /* _AGC_DEF_ */

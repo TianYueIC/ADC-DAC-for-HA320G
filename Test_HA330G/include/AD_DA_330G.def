@@ -1,0 +1,51 @@
+////////////////////////////
+// AD_DA_330G.def for HA330G (Core:HA320G)
+// WENDI YANG 2021/11/16
+////////////////////////////
+//	Modified Notes
+//	1. 
+//	2. 
+//	3. 
+//	4. 
+////////////////////////////
+
+
+#ifndef _AD_DA_330G_DEF_
+#define _AD_DA_330G_DEF_
+
+
+#ifndef _AD_DA_330G_F_
+    extern	AD_DA_INIT_330G;
+    extern	ADC_INIT_330G;
+    extern	_ADC_Table_330G;
+    extern	IIR_SetLP_89DB_ADC330G;
+    extern	DAC_INIT_330G;
+    extern	IIR_SetLP_109DB_DAC330G;
+    extern	ADC_En_nDis_330G;
+#endif /* _AD_DA_330G_F_ */
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+//增益配置字的宏定义
+
+//	AGC控制值					
+#define	AGC_Gain_n12dB		0b00000000000	//	-12dB
+#define	AGC_Gain_n6dB		0b00000000001	//	-6dB
+#define	AGC_Gain_0dB		0b00000000011	//	0dB
+#define	AGC_Gain_3dB		0b00000000111	//	3dB
+#define	AGC_Gain_6dB		0b00000001111	//	6dB
+#define	AGC_Gain_9dB		0b00000011111	//	9dB
+#define	AGC_Gain_12dB		0b00000111111	//	12dB
+#define	AGC_Gain_15dB		0b00001111111	//	15dB
+#define	AGC_Gain_18dB		0b00011111111	//	18dB
+#define	AGC_Gain_21dB		0b00111111111	//	21dB
+#define	AGC_Gain_24dB		0b01111111111	//	24dB
+#define	AGC_Gain_27dB		0b11111111111	//	27dB
+//DAC默认配置字
+#define DAC_CFG_Init 			0x80F340 
+#define ADC_CFG_Init			0x7C7
+
+
+
+#endif /* _AD_DA_330G_DEF_ */

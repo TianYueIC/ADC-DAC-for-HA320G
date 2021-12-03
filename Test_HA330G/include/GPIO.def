@@ -1,0 +1,72 @@
+#ifndef _GPIO_DEF_
+#define _GPIO_DEF_
+
+//=========================== 函数声明 ===========================
+//#ifndef _GPIO_F_
+//    extern GP0_Config;
+//    extern GP0_Write;
+//    extern GP0_Read;
+//    extern GP0_IntRead;
+//    extern GP0_IntClr;
+//#endif /* _LCD_F_ */
+
+//DB<12:0>
+//属性配置位宏定义
+#define  SetEn_4CPU          0x000
+#define  SetEn_Int           0x001
+#define  SetDBInv            0x002
+#define  SetInEn_4Ever       0x004
+#define  SetInEn_InLp        0x008
+#define  SetOe_4Ever         0x010
+#define  SetOe_4Oe           0x020
+#define  SetEnOC             0x040
+#define  SetPull_4Ever       0x080
+#define  SetPull_4H          0x100
+#define  SetEn_IntShare      0x400
+#define  SetEn_FlagShare     0x200
+#define  SetIntLow           0x000
+#define  SetIntHigh          0x800
+#define  SetIntEdgeL         0x1800
+#define  SetIntEdgeH         0x1000
+
+//#define  SetIntLow           0x800
+//#define  SetIntEdge          0x1000
+
+#define GPIO_OUT            (SetInEn_4Ever+SetOe_4Ever)
+#define GPIO_OC             SetEnOC
+#define GPIO_IN             SetInEn_4Ever
+#define GPIO_PULL           SetPull_4Ever
+#define GPIO_INT_LOW        (SetEn_Int+SetIntLow)
+#define GPIO_INT_HIGH       (SetEn_Int+SetIntHigh)
+#define GPIO_INT_NEGEDGE    (SetEn_Int+SetIntEdgeL)
+#define GPIO_INT_POSEDGE    (SetEn_Int+SetIntEdgeH)
+
+#define GP0_0               0x0001
+#define GP0_1               0x0002
+#define GP0_2               0x0004
+#define GP0_3               0x0008
+#define GP0_4               0x0010
+#define GP0_5               0x0020
+#define GP0_6               0x0040
+#define GP0_7               0x0080
+
+#define GP1_0               0x0001
+#define GP1_1               0x0002
+#define GP1_2               0x0004
+#define GP1_3               0x0008
+#define GP1_4               0x0010
+#define GP1_5               0x0020
+#define GP1_6               0x0040
+#define GP1_7               0x0080
+
+//CPU操作硬件宏定义
+#include <resource_allocation.def>
+//#define  GPIO_WEn            RP38           //写操作掩码
+//#define  GPIO_Set            RP37           //写属性配置
+//#define  GPIO_Data           RP36           //读写数据
+//#define  SelIntFlagEn        Set_LevelL21    //选择输出为IntFlag
+//#define  SelIntFlagDis       Set_LevelH21    //选择输出为数据
+//#define  GPIO_ClrInt         Set_Pulse42    //清中断标志
+
+////CPU
+#endif _GPIO_DEF_

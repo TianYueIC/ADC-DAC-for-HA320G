@@ -1,0 +1,5 @@
+[Setup]
+platform=CPU11B_Cache
+buildtype=1
+[project]
+1=Test_HA330G\Test_HA330G.prj

@@ -1,0 +1,57 @@
+[source]
+1=src\HA320G_Main.asm
+2=src\I2C_F.asm
+3=src\BL_SPI.asm
+4=src\GD25_F.asm
+5=src\MarchC_T.asm
+6=src\Memory_F.asm
+7=src\ALU_F.asm
+8=src\DMA_ParaCfg.asm
+9=src\Global_F.asm
+10=src\IIR_F.asm
+11=src\MAC_F.asm
+12=src\Math_F.asm
+13=src\SOC_Common_F.asm
+14=src\SPI_Slave_F.asm
+15=src\STA_F.asm
+16=src\String_F.asm
+17=src\CPU11_F.asm
+18=src\Random_F.asm
+19=src\SPI_Master_F.asm
+20=src\Timer_F.asm
+21=src\UART_F.asm
+22=src\Test_DSP.asm
+23=src\Init_F.asm
+24=src\Calibration_F.asm
+25=src\DspHotLine_330G.asm
+26=src\AD_DA_330G.asm
+27=include\DspHotLine_330G.def
+28=include\AD_DA_330G.def
+
+
+[include]
+0=.\include
+[debug]
+dbg=1
+lst=1
+list=1
+note=1
+c_a=1
+a_o=1
+inl=0
+define=_CPU09, _DEBUG
+link=startup.obj
+[release]
+dbg=1
+lst=1
+list=1
+note=0
+c_a=0
+a_o=0
+inl=0
+define=_CPU09, _NDEBUG
+link=startup.obj
+[folder]
+源程序=c; asm;
+头文件=h; def;
+库文件=obj;

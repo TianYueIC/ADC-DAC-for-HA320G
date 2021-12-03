@@ -1,0 +1,13 @@
+#ifndef _NR_DEF_
+#define _NR_DEF_
+
+#ifndef _NR_F_
+	extern NoiseReductionFix;
+	extern NoiseReduction;
+#endif /* _NR_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _NR_DEF_ */

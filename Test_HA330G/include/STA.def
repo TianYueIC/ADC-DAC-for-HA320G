@@ -1,0 +1,24 @@
+#ifndef _STA_DEF_
+#define _STA_DEF_
+
+#ifndef _STA_F_
+    extern FindMaxMin;
+    extern AbsSum;
+    extern nAbsSum;
+    extern MeanSquareAverage;
+    extern FindMaxIndex;
+    extern STA2_PATH2_Run;
+    extern STA2_PATH2_Get_ZCR;
+    extern STA1_Run;
+    extern STA2_Run;
+    extern STA3_Run;
+    extern STA1_Rst;
+    extern STA2_Rst;
+    extern STA3_Rst;
+#endif /* _STA_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _STA_DEF_ */

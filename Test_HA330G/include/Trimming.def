@@ -1,0 +1,64 @@
+#ifndef _EHIP_TRIM_DEF_
+#define _EHIP_TRIM_DEF_
+
+
+// HA320_G
+#define CHIP_320G_Libin_F
+
+#ifdef CHIP_320G_Libin_F
+    #define RN_VREF_VAL      0x743 // 0x800(电压高) ~ 0x83F(电压低) 6bit有效
+    #define RN_FREQ_VAL      0x62 // 0x100(高频率) ~ 0x17F(低频率) 7bit有效
+    #define RN_ADDC_VAL      0b1000//small
+    //#define RN_ADDC_VAL      0b0111//small
+    //#define RN_ADDC_VAL      0b0100
+#endif
+
+#ifdef CHIP_TMP32_F
+    #define RN_VREF_VAL      0b11101000111 // 0x800(电压高) ~ 0x83F(电压低) 6bit有效
+    #define RN_FREQ_VAL      0b01100111 // 0x100(高频率) ~ 0x17F(低频率) 7bit有效
+    #define RN_ADDC_VAL      0b1000
+#endif
+
+#ifdef CHIP_NUM1_F
+    #define RN_VREF_VAL      0b11100100011 //
+    #define RN_FREQ_VAL      0b01100101 //
+    #define RN_ADDC_VAL      0b1000 // 
+#endif
+
+#ifdef CHIP_NUM2_F
+    #define RN_VREF_VAL      0b11100111110
+    #define RN_FREQ_VAL      0b01100010
+    #define RN_ADDC_VAL      0b0111
+#endif
+
+#ifdef CHIP_NUM3_F
+    #define RN_VREF_VAL      0b11100110110
+    #define RN_FREQ_VAL      0b01100111
+		#define RN_ADDC_VAL      0b0111
+#endif
+
+#ifdef CHIP_NUM4_F
+    #define RN_VREF_VAL      0b11100011111
+    #define RN_FREQ_VAL      0b01100011
+		#define RN_ADDC_VAL      0b1000
+#endif
+
+#ifdef CHIP_NUM5_F
+    #define RN_VREF_VAL      0b11101001110
+    #define RN_FREQ_VAL      0b01100010
+		#define RN_ADDC_VAL      0b0111
+#endif
+
+#ifdef CHIP_Test_F
+    #define RN_VREF_VAL      0x73E
+    #define RN_FREQ_VAL      0x5E
+		#define RN_ADDC_VAL      0b0111
+#endif
+
+#ifdef CHIP_TestMeng_F
+    #define RN_VREF_VAL      0x721
+    #define RN_FREQ_VAL      0x6f
+	#define RN_ADDC_VAL      0b0111
+#endif
+
+#endif /* _GLOBAL_DEF_ */

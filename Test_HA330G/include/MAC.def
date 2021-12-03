@@ -1,0 +1,19 @@
+#ifndef _MAC_DEF_
+#define _MAC_DEF_
+
+#ifndef _MAC_F_
+    extern SingleSerSquare;
+    extern MultiConstH16L16;
+    extern MultiSum;
+    extern MultiSum_Init;
+    extern MAC_MultiConst16;
+	extern MAC_MultiConst24_DivQ7;
+    extern MAC_MultiConst16_Q2207;
+    extern ModulationToZero;
+#endif /* _MAC_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _MAC_DEF_ */

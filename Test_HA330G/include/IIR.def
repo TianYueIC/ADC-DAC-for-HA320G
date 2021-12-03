@@ -1,0 +1,17 @@
+#ifndef _IIR_DEF_
+#define _IIR_DEF_
+
+#ifndef _IIR_F_
+    extern _IIR_PATH1_FiltLP32;
+    extern _IIR_PATH1_FiltLP4Class;
+    extern _IIR_PATH1_FiltHP4Class;
+    extern _IIR_PATH1_HawlClr;
+    extern _IIR_PATH3_HP;
+    extern _IIR_PATH3_FSFT;
+#endif /* _IIR_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _IIR_DEF_ */

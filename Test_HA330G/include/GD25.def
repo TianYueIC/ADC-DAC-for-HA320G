@@ -1,0 +1,90 @@
+#ifndef _GD25_DEF_
+#define _GD25_DEF_
+
+#ifndef _GD25_F_
+    extern GD25_Release_DP;
+    extern GD25_DP;
+    extern GD25_Write_En;
+    extern GD25_Write_Dis;
+    extern GD25_Read_Status_Register;
+    extern GD25_Write_Status_Register;
+    extern GD25_Read_Data;
+    //extern GD25_Write_Data;
+    extern GD25_Write_Data_Check;
+    extern GD25_Sector_Erase_Check;
+    extern GD25_Read_ID;
+    extern GD25_Erase_Write_Data_Check;
+#endif /* _GD25_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+// ========== 扇区首地址表 ==========
+#define RN_GD25_SECTOR_LEN      (4*1024)
+#define RN_GD25_PAGE_LEN        256
+#define RN_GD25_SECTOR0       	0									 // 0x0000
+#define RN_GD25_SECTOR1       	(RN_GD25_SECTOR0+RN_GD25_SECTOR_LEN) // 0x1000
+#define RN_GD25_SECTOR2       	(RN_GD25_SECTOR1+RN_GD25_SECTOR_LEN) // 0x2000
+#define RN_GD25_SECTOR3       	(RN_GD25_SECTOR2+RN_GD25_SECTOR_LEN) // 0x3000
+#define RN_GD25_SECTOR4       	(RN_GD25_SECTOR3+RN_GD25_SECTOR_LEN) // 0x4000
+#define RN_GD25_SECTOR5       	(RN_GD25_SECTOR4+RN_GD25_SECTOR_LEN) // 0x5000
+#define RN_GD25_SECTOR6       	(RN_GD25_SECTOR5+RN_GD25_SECTOR_LEN) // 0x6000
+#define RN_GD25_SECTOR7       	(RN_GD25_SECTOR6+RN_GD25_SECTOR_LEN) // 0x7000
+#define RN_GD25_SECTOR8       	(RN_GD25_SECTOR7+RN_GD25_SECTOR_LEN) // 0x8000
+#define RN_GD25_SECTOR9       	(RN_GD25_SECTOR8+RN_GD25_SECTOR_LEN) // 0x9000
+#define RN_GD25_SECTOR10       	(RN_GD25_SECTOR9+RN_GD25_SECTOR_LEN) // 0xA000
+#define RN_GD25_SECTOR11       	(RN_GD25_SECTOR10+RN_GD25_SECTOR_LEN)// 0xB000
+#define RN_GD25_SECTOR12       	(RN_GD25_SECTOR11+RN_GD25_SECTOR_LEN)// 0xC000
+#define RN_GD25_SECTOR13      	(RN_GD25_SECTOR12+RN_GD25_SECTOR_LEN)// 0xD000
+#define RN_GD25_SECTOR14       	(RN_GD25_SECTOR13+RN_GD25_SECTOR_LEN)// 0xE000
+#define RN_GD25_SECTOR15       	(RN_GD25_SECTOR14+RN_GD25_SECTOR_LEN)// 0xF000
+
+// ========== 固件存储区 ==========
+#define RN_GD25_BASE_ADDR       RN_GD25_SECTOR0// 存储24KB固件
+
+// ========== 模式存储区 ==========
+#define RN_GD25_PARA0_ADDR      RN_GD25_SECTOR6// 存储第一场景参数
+#define RN_GD25_PARA1_ADDR      RN_GD25_SECTOR7// 存储第二场景参数
+#define RN_GD25_PARA2_ADDR      RN_GD25_SECTOR8// 存储第三场景参数
+#define RN_GD25_PARA3_ADDR      RN_GD25_SECTOR9// 存储第四场景参数
+#define RN_GD25_HP_OFFSET       1508
+#define RN_GD25_HP_LEN          (40*MMU_BASE)
+
+
+// ========== 关键参数区 ==========
+#define RN_GD25_CRITICAL_ADDR   RN_GD25_SECTOR11// 存储关键值，如：电压校准值，频率校准值，模块ID等
+#define RN_GD25_VOLT_ADDR       (RN_GD25_CRITICAL_ADDR)// 电压校准值
+#define RN_GD25_FREQ_ADDR       (RN_GD25_VOLT_ADDR+4)// 频率校准值
+#define RN_GD25_MODULE_IDH_ADDR (RN_GD25_FREQ_ADDR+4)// 模块ID高4字节
+#define RN_GD25_MODULE_IDL_ADDR (RN_GD25_MODULE_IDH_ADDR+4)// 模块ID低4字节
+
+// ========== 系统配置区 ==========
+#define RN_GD25_SETTING_ADDR    RN_GD25_SECTOR12// 存储一般配置值，如：用户ID、场景标志字、MIC和REC校准值、音量相关值等
+#define RN_GD25_USER_IDH_ADDR   (RN_GD25_SETTING_ADDR)// 用户ID高4字节
+#define RN_GD25_USER_IDL_ADDR   (RN_GD25_USER_IDH_ADDR+4)// 用户ID低4字节
+#define RN_GD25_FlAG0_ADDR      (RN_GD25_USER_IDL_ADDR+4)// 标记模式1参数是否已写入Flash，RN_GD25_FLAG~已初始化 其他~未初始化
+#define RN_GD25_FlAG1_ADDR      (RN_GD25_FlAG0_ADDR+4)// 标记模式2参数是否已写入Flash，RN_GD25_FLAG~已初始化 其他~未初始化
+#define RN_GD25_FlAG2_ADDR      (RN_GD25_FlAG1_ADDR+4)// 标记模式3参数是否已写入Flash，RN_GD25_FLAG~已初始化 其他~未初始化
+#define RN_GD25_FlAG3_ADDR      (RN_GD25_FlAG2_ADDR+4)// 标记模式4参数是否已写入Flash，RN_GD25_FLAG~已初始化 其他~未初始化
+#define RN_GD25_FLAG            0x32132112
+#define RN_GD25_MIC_GAIN_ADDR   (RN_GD25_FlAG3_ADDR+4)// 麦克风增益值
+#define RN_GD25_REC_GAIN_ADDR   (RN_GD25_MIC_GAIN_ADDR+4)// 受话器增益值
+#define RN_GD25_SCENE_QTY_ADDR  (RN_GD25_REC_GAIN_ADDR+4)// 场景数量
+#define RN_GD25_SYSCFG_ADDR     (RN_GD25_SCENE_QTY_ADDR+4)// bit1:关机提示音（0~无，1~有） bit0:开机提示音（0~无，1~有）
+#define RN_GD25_VOL_RANGE_ADDR  (RN_GD25_SYSCFG_ADDR+4)// 音量调节范围
+#define RN_GD25_VOL_STEP        (RN_GD25_VOL_RANGE_ADDR+4)//音量调节步长
+#define RN_GD25_VOL_STEP_QTY    (RN_GD25_VOL_STEP+4)//音量调节步长个数
+
+// ========== 记忆变量区 ==========
+#define RN_GD25_VAR_ADDR        RN_GD25_SECTOR14// 存储需记忆的变量，如：场景，音量等
+#define RN_GD25_SCENE_ADDR      RN_GD25_VAR_ADDR// 当前场景[0,3]
+#define RN_GD25_SCENE_OFFSET    0
+#define RN_GD25_VOL_ADDR        (RN_GD25_SCENE_ADDR+4)// 当前音量挡位[0,9]
+#define RN_GD25_VOL_OFFSET      4
+
+// 错误重试次数
+#define RN_GD25_WR_RETRY_TIMES  5// 写重试次数
+#define RN_GD25_ER_RETRY_TIMES  5// 擦重试次数
+
+#endif /* _GD25_DEF_ */

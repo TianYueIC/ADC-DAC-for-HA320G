@@ -1,0 +1,12 @@
+#ifndef _AFC_DEF_
+#define _AFC_DEF_
+
+#ifndef _AFC_F_
+	extern howlDetectFrame_fix;
+#endif /* _AFC_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _AFC_DEF_ */

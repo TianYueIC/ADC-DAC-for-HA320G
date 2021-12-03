@@ -1,0 +1,819 @@
+#ifndef _GLOBAL_DEF_
+#define _GLOBAL_DEF_
+
+#ifndef _GLOBAL_F_
+    extern Recover_Speed;
+    extern RAM_Read_Word;
+    extern ConstROM_Read_Word;
+    extern SetADBuf0_Flow;
+    extern SetADBuf1_Flow;
+    extern En_GRAM_To_CPU;
+    extern En_AllRAM_To_CPU;
+    extern En_AllFlowRAM_To_CPU;
+    extern En_AllGRAM_To_CPU;
+    extern En_AllXRAM_To_CPU;
+    extern En_RAM_To_PATHx;
+    extern En_RAM_To_PATH1;
+    extern En_RAM_To_PATH2;
+    extern En_RAM_To_PATH3;
+    extern Dis_GRAM_To_CPU;
+    extern Get_Real;
+    extern Get_Imag;
+    extern CPU_Copy;
+    extern Clr_RAM;
+    extern Ram_Clr;
+    extern sqrt_fix;
+    extern EndLoop;
+    extern Import_Sound_16bit;
+    extern Export_Sound_16bit;
+    extern Export_Data_32bit;
+    extern Export_Vector_32bit;
+    extern _IIR_PATH3_HPxxxInit_HP0;
+    extern _IIR_PATH3_HPxxxInit_HP1;
+    extern _IIR_PATH3_HPxxxInit_HP2;
+    extern _IIR_PATH3_HPxxxInit_HP3;
+    extern _IIR_PATH3_HPxxxInit_HP4;
+
+#endif /* _GLOBAL_F_ */
+//=========================== Ó²¼þ×ÊÔ´¶¨Òå ===========================
+#include <resource_allocation.def>
+//=========================== Çý¶¯¼¶Ó¦ÓÃ¶¨Òå ===========================
+// ÏÖÒÑÖ§³ÖµÄÆ½Ì¨ÁÐ±í£¨×î¶à256¸ö£¬ºó×ºVxxx±íÊ¾°æ±¾ºÅVx.xx£©
+//#define DevelopBoard_V100   // ¿ª·¢°å
+#define PrimoU600_V110// ÐÂÉùÖúÌýÆ÷PrimoU600
+//#define C109C_V110// °îÁ¦½¡ÖúÌýÆ÷C-109C
+//#define HT_ZK_C109C_V100// Õý¿µÑù»ú
+//#define CE_V110// ÆÀ¹À°å
+
+#ifdef DevelopBoard_V100
+#define CFG_VOL_ANA
+#endif
+#ifdef PrimoU600_V110
+#define CFG_VOL_ANA
+#endif
+
+#ifdef C109C_V110
+#define CFG_VOL_DIG
+#endif
+#ifdef HT_ZK_C109C_V100
+#define CFG_VOL_DIG
+#endif
+#ifdef CE_V100
+#define CFG_VOL_ANA
+#endif
+// ×Ó´øÊýÁ¿
+#define CHANNEL_4
+//#define CHANNEL_8
+
+// Ö¡³¤¶È
+#define FRAME32
+//#define FRAME128
+
+// PGAÅäÖÃ±í
+//RN_PGA_CFG_VAL   RN_PGA_GAIN(q8)     Gain
+//0x7FF            7936                +30.4dB
+//0x3FF            7168                +26.8dB
+//0x1FF            6144                +23.5dB
+//0x0FF            5120                +20.0dB
+//0x07F            4096                +16.3dB
+//0x03F            3328                +13.1dB
+//0x01F            2304                + 9.5dB
+//0x00F            1536                + 6.0dB
+//0x007            768                 + 3.5dB
+//0x003            0                     0.0dB
+//0x001            -1536               - 6.0dB
+//0x000            -3072               -12.0dB
+#define RN_PGA_CFG_VAL          0x7FF
+#define RN_PGA_GAIN             7936
+#define RN_POWEROFF_IND_TIMES   7// ¹Ø»úÌáÊ¾Òô´ÎÊý
+#define RN_POWEROFF_IND1        (100/2)// ¹Ø»úÌáÊ¾Òô1KHz³ÖÐøÖ¡Êý/ÖÜÆÚ
+#define RN_POWEROFF_IND2        (100/2)// ¹Ø»úÌáÊ¾Òô¾²Òô³ÖÐøÖ¡Êý/ÖÜÆÚ
+// ÅäÖÃ½Ó¿ÚÀàÐÍ 0~I2C 1~UART 2~SPI
+#define RN_INTERFACE_I2C        0
+#define RN_INTERFACE_UART       1
+#define RN_INTERFACE_TYPE       RN_INTERFACE_UART
+
+// ¿ª·¢°åÅäÖÃ
+#ifdef DevelopBoard_V100
+#endif
+// PrimoU600ÅäÖÃ
+#ifdef PrimoU600_V110
+#define RN_VCHK1_SW_TH          40//ï®µçµçÁ¿¼ì²â ×Ô¶¯¹Ø»úãÐÖµ=2.9V
+#define RN_VCHK1_WARNING_TH     44//ï®µçµçÁ¿¼ì²â ±¨¾¯ãÐÖµ=3.15V
+#define RN_VBAT3V_SW_TH         20//°´¼ü¶¯×÷¼ì²â
+#define LED GP0_6
+#endif
+
+// C109CÅäÖÃ
+#ifdef C109C_V110
+#endif
+// HT_ZK_C109C_V100ÅäÖÃ
+#ifdef HT_ZK_C109C_V100
+#define RN_VBAT3V_SW_TH         20//°´¼ü¶¯×÷¼ì²â
+#define RN_VCHK0_SW_TH          40//ï®µçµçÁ¿¼ì²â ×Ô¶¯¹Ø»úãÐÖµ=2.9V
+#define RN_VCHK0_WARNING_TH     44//ï®µçµçÁ¿¼ì²â ±¨¾¯ãÐÖµ=3.15V
+#endif
+// CEÅäÖÃ
+#ifdef CE_V110
+#define RN_VCHK1_SW_TH          40//ï®µçµçÁ¿¼ì²â ×Ô¶¯¹Ø»úãÐÖµ=2.9V
+#define RN_VCHK1_WARNING_TH     44//ï®µçµçÁ¿¼ì²â ±¨¾¯ãÐÖµ=3.15V
+#define LED 					GP0_3
+#endif
+// Í¨ÓÃÅäÖÃ
+#define WatchDogDivFre          (1000000*3)// ¿´ÃÅ¹·³¬Ê±Ê±¼ä3Ãë£¬Ö÷Æµ32MHz/32=1MHzµÄ·ÖÆµÊý
+
+#define RN_G2                   (-6*256)// ×Ó´øºê¹ÛÔöÒæ£¬Ä¿Ç°Îª±ÜÃâÓÉÓÚÍ¨´ø²¨ÎÆ´óÓÚÊ¹ÔöÒæ´óÓÚ1µ¼ÖÂµÄÒç³öÎÊÌâ£¬Éè¶¨´ËÔöÒæÎª-6dB£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH0               (RN_G2-0*256)// ×Ó´ø0µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH1               (RN_G2-0*256)// ×Ó´ø1µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH2               (RN_G2-0*256)// ×Ó´ø2µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH3               (RN_G2-0*256)// ×Ó´ø3µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH4               (RN_G2-0*256)// ×Ó´ø3µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH5               (RN_G2-0*256)// ×Ó´ø3µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH6               (RN_G2-0*256)// ×Ó´ø3µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+#define RN_G2_CH7               (RN_G2-0*256)// ×Ó´ø3µÄ×ÜÔöÒæ(°üº¬×Ó´ø¼äÂä²îµÄ2±¶¹ØÏµ)£¬µ¥Î»£ºdB(q8)
+
+#define RN_PROT_HEAD_LEN        12
+#define RN_NOTCH_START_TH       6
+#define RN_NOTCH_STOP_TH        11
+#define RN_NOTCH_FREQ_TOLERANCE 500
+#define RN_NOTCH_QTY            3
+
+#define RN_VT3_MAX              1000// °´¼ü³¤°´Ê±¼ä£º1000´Î * 1Ö¡/´Î * 2ms/Ö¡ = 2000ms
+#define RN_VT3_SHORT            15// °´¼ü¶Ì°´È¥¶¶£º15´Î * 1Ö¡/´Î * 2ms/Ö¡ = 30ms µÍÓÚ´ËÊ±³¤µÄµçÆ½¶¶¶¯±»ºöÂÔ
+#define RN_VOL_MAX              8
+#define RN_VOL_DEFAULT          0
+#define RN_VOL_MIN              0
+
+#define RN_PARA_LEN_B           (16*MMU_BASE)   // ÅäÖÃ²ÎÊýÇø¶ÀÁ¢DwordÊýÁ¿
+// ×Ô¶¨ÒåÊ¹ÄÜ¿ª¹Ø
+//                                |31  24||23  16||15   8||7    0|
+//                                |      ||      ||      ||      |
+#define MASK_AFC                0b01000000000000000000000000000000 // Ð¥½ÐÆµµã¼ì²â¿ª¹Ø
+#define MASK_CLASS              0b00100000000000000000000000000000 // ³¡¾°·ÖÀà¿ª¹Ø
+#define MASK_NR                 0b00010000000000000000000000000000 // ½µÔë¿ª¹Ø
+#define MASK_WDRC               0b00001000000000000000000000000000 // WDRC¿ª¹Ø
+#define MASK_SOUND_IN           0b00000100000000000000000000000000 // µ¼ÈëÊý×ÖÒôÆµ¿ª¹Ø
+#define MASK_SOUND_OUT          0b00000010000000000000000000000000 // µ¼³öÊý×ÖÒôÆµ¿ª¹Ø
+#define MASK_BANKS_OUT          0b00000001000000000000000000000000 // ×Ó´øÒôÆµÊý×ÖÊä³ö¿ª¹Ø
+//                                |31  24||23  16||15   8||7    0|
+//                                |      ||      ||      ||      |
+#define MASK_WN                 0b00000000100000000000000000000000 // °×ÔëÉù¿ª¹Ø
+#define MASK_NOTCH              0b00000000010000000000000000000000 // ÏÝ²¨Æ÷¿ª¹Ø
+#define MASK_NLMS               0b00000000001000000000000000000000 // NLMS¿ª¹Ø
+#define MASK_W_UPDATE           0b00000000000100000000000000000000 // NLMSµÄWÏµÊý¸üÐÂ¿ª¹Ø
+#define MASK_EQ                 0b00000000000010000000000000000000 // EQ¿ª¹Ø
+#define MASK_AGCO               0b00000000000001000000000000000000 // AGCO¿ª¹Ø
+#define MASK_AGCI               0b00000000000000100000000000000000 // AGCI¿ª¹Ø
+#define MASK_UNDEF2             0b00000000000000010000000000000000
+
+//                                |31  24||23  16||15   8||7    0|
+//                                |      ||      ||      ||      |
+#define MASK_SET_500Hz_MAX      0b00000000000000001000000000000000 // ×Ô¶¨Òå1£ºÊä³ö500Hz×î´óÒôÁ¿
+#define MASK_ALG                0b00000000000000000100000000000000 // ×Ô¶¨Òå2£ºËã·¨¿ª¹Ø
+#define MASK_HP                 0b00000000000000000010000000000000 // ×Ô¶¨Òå3£º¸ßÍ¨ÂË²¨Æ÷¿ª¹Ø
+#define MASK_PGA_CHECK          0b00000000000000000001000000000000 // ×Ô¶¨Òå4£º¹Û²ìPGAµÈ¼¶
+#define MASK_WAKE_SLEEP         0b00000000000000000000100000000000 // ×Ô¶¨Òå5£ºWake¼üÐÝÃß¿ª¹Ø
+#define MASK_GP00_SLEEP         0b00000000000000000000010000000000 // ×Ô¶¨Òå6£ºGP0_0ÐÝÃß¿ª¹Ø
+#define MASK_EXPORT_SOUND_IN    0b00000000000000000000001000000000 // ×Ô¶¨Òå7£ºµ¼³öÊäÈë¶ËÒôÆµÊý¾Ý
+#define MASK_SET_NOISE          0b00000000000000000000000100000000 // ×Ô¶¨Òå8£ºÊä³öÂú·ù°×ÔëÉù
+
+//                                |31  24||23  16||15   8||7    0|
+//                                |      ||      ||      ||      |
+#define MASK_ISPL_CHECK         0b00000000000000000000000010000000 // ×Ô¶¨Òå9£º¹Û²ìISPL
+#define MASK_OSPL_CHECK         0b00000000000000000000000001000000 // ×Ô¶¨Òå10£º¹Û²ìOSPL
+#define MASK_CHAN_ISPL_CHECK    0b00000000000000000000000000100000 // ×Ô¶¨Òå11£º¹Û²ì×Ó´øISPL
+#define MASK_CHAN_GAIN          0b00000000000000000000000000010000 // ×Ô¶¨Òå12£º¹Û²ì×Ó´øÔöÒæ
+#define MASK_SET_1KHz_MAX       0b00000000000000000000000000001000 // ×Ô¶¨Òå13£ºÊä³ö1000Hz×î´óÒôÁ¿
+#define MASK_CHAN_OSPL_CHECK    0b00000000000000000000000000000100 // ×Ô¶¨Òå14£º¹Û²ì×Ó´øOSPL
+#define MASK_CHAN_ISPL_ORG_CHECK 0b00000000000000000000000000000010 // ×Ô¶¨Òå15£º¹Û²ì×Ó´øISPL(Î´ÐÞÕý)
+#define MASK_SNR_CHECK          0b00000000000000000000000000000001 // ×Ô¶¨Òå16£ºÊä³öSNR
+
+#ifdef CHANNEL_4
+#define CHANNEL_NUM 4
+#endif
+#ifdef CHANNEL_8
+#define CHANNEL_NUM 8
+#endif
+
+
+
+
+#ifdef FRAME32
+    #define FRAME_LEN_Byte      64
+    #define FRAME_LEN_Word      32
+    #define FRAME_LEN_DWord     16
+
+	#define FL_M2_A0            0x1c71c71d // 16*2+0 = 32
+    #define FL_M2_A2            0x71c71c76 // 16*2+2 = 34
+    #define FL_M2_A4            0x471C71D8 // 16*2+4 = 36
+    #define FL_M2_A4_A1         0x0E38E3B1 // 16*2+4+1 = 37
+    #define FL_M2_A4_A2         0x1C71C762 // 16*2+4+2 = 38
+    #define FL_M3_A2            0x1c762762 // 16*3+2 = 50
+    #define FL_M3_A3            0x38ec4ec4 // 16*3+3 = 51
+    #define FL_M3_A4            0x71d89d89 // 16*3+4 = 52
+
+    #define FL2_M2_A2           0x27627629 // 32*2+2 = 66
+    #define FL2_M2_A4           0x1D89D8A5 // 32*2+4 = 68
+    #define FL2_M2_A4_A2        0x76276296 // 32*2+4+2 = 70
+    #define FL2_M3_A2           0x6296297D // 32*3+2 = 98
+    #define FL2_M3_A3           0x452C52FA // 32*3+3 = 99
+    #define FL2_M3_A4           0x0a58a5f5 // 32*3+4 = 100
+
+    #define FL4_M2_A2           0x68297D50 // 64*2+2 = 130
+    #define FL_M48_A1           0x7458174e // 16*48+1 = 769
+    #define FL_M88_A1           0x563a3b17 // 16*88+1 = 1409
+    #define AD_Buf_Len          (256*32)
+    #define FSFT_LP             0x6331d1ff // 64*88+1 = 5633
+    #define FSFT_Module         0x7aa16f3a // 64*3+3 = 195
+    #define L_Move_Howl_M2_A4   0x5d38ba76 // 32*15*2+4 = 964   // Æ½ÒÆcomp¸ñÊ½ÓÃ
+#endif
+
+#ifdef FRAME128
+    #define FRAME_LEN_Byte      256
+    #define FRAME_LEN_Word      128
+    #define FRAME_LEN_DWord     64
+    #define FL_M2_A4_A2         0x0297D50C // 64*2+4+2 = 134
+    #define FL_M3_A3            0x7aa16f3a // 64*3+3 = 195
+    #define FL_M3_A4            0x7542de75 // 64*3+4 = 196
+    #define FL_M2_A4            0x20A5F543 // 64*2+4 = 132
+    #define FL_M2_A4_A1         0x414bea86 // 64*2+4+1 = 133
+    #define FL_M2_A2            0x68297D50 // 64*2+2 = 130
+    #define FL3_CMP_M2_A2       0x22c0ba71 // (3*128+2)*2 = 772
+    #define FL4_M2_A2           0x2d3ba589 // 256*2+2 = 514
+    #define FL2_M2_A4_A2        0x0635339A // 128*2+4+2 = 262
+    #define FL2_M2_A4           0x218D4CE6 // 128*2+4 = 260
+    #define FL2_M3_A2           0x2a4f9763 // 128*3+2 = 386
+    #define FL_M3_A2            0x48635339 // 64*3+2 = 50
+    #define FL2_M3_A3           0x549F2EC6 // 128*3+3 = 387
+  //#define FL_M28_A1           0x52c58b17 // 64*28+1 = 1793
+    #define FL_M48_A1           0x6520a881 // 64*48+1 = 3073
+    #define FL_M88_A1           0x6331d1ff // 64*88+1 = 5633
+    #define AD_Buf_Len          (1024*32)
+    #define FSFT_LP             0x48bcbffb // 256*88+1 = 22529
+    #define FSFT_Module         0x51605d38 // 256*3+3 = 771
+  //#define L_Move_Howl_M2_A4   0x293E5D8C // 64*3*2+4 = 388        // Æ½ÒÆ16bit¸ñÊ½ÓÃ£¬·ÏÆú
+    #define L_Move_Howl_M2_A4   0x22c0ba71 // 128*3*2+4 = 772       // Æ½ÒÆcomp¸ñÊ½ÓÃ
+  //#define L_Add_Howl_M2_A4    0x20A5F543 // 64*2+4 = 132          // Æ½ÒÆ16bit¸ñÊ½ÓÃ£¬·ÏÆú
+  //#define L_Add_Howl_M2_A4    0x218d4ce6 // 128*2+4 = 260         // Æ½ÒÆcomp¸ñÊ½ÓÃ
+
+#endif
+
+#define L27_M2_A4_A1        0x6c4ec4ec // 27*2+4+1 = 59
+#define L31_M2_A4_A1        0x4ec4ec52 // 31*2+4+1 = 67
+#define L32_M1_A2           0x71c71c76 // 32*1+2 = 34
+#define L32_M2_A2           0x27627629 // 32*2+2 = 66
+#define L32_M2_A4           0x1d89d8a5 // 32*2+4 = 68
+#define L32_M1_A2_A1        0x3b13b14b // 32*2+4+1 = 69
+#define L32_M1_A2_A2        0x76276296 // 32*2+4+2 = 70
+#define L32_M3_A2           0x6296297d // 32*3+2 = 98
+#define L32_M3_A3           0x452c52fa // 32*3+3 = 99
+#define L32_M3_A4           0xa58a5f5  // 32*3+4 = 100
+#define L32_M2_A4_A1        0x3b13b14b // 32*2+4+1 = 69
+
+#define L48_M1_A2           0x1c762762 // 48*1+2 = 50
+#define L48_M2_A2           0x6296297d // 48*2+2 = 98
+#define L48_M2_A4           0xa58a5f5  // 48*2+4 = 100
+#define L48_M1_A2_A1        0x14b14beb // 48*2+4+1 = 101
+#define L48_M1_A2_A2        0x296297d6 // 48*2+4+2 = 102
+#define L48_M3_A2           0x7d50c97d // 48*3+2 = 146
+#define L48_M3_A3           0x7aa192fa // 48*3+3 = 147
+#define L48_M3_A4           0x754325f5 // 48*3+4 = 148
+#define L48_M2_A4_A1        0x14b14beb // 48*2+4+1 = 101
+
+#define L63_M2_A4           0x68297D50 // 63*2+4 = 130
+#define L63_M3_A3           0x5f542de7 // 63*3+3 = 192
+
+#define L64_M1_A2           0x27627629 // 64*1+2 = 66
+#define L64_M3_A3           0x7aa16f3a // 64*3+3 = 195
+#define L64_M3_A4           0x7542de75 // 64*3+4 = 196
+#define L64_M3_A5           0x6a85bcea // 64*3+5 = 197
+#define L64_M2_A2           0x68297D50 // 64*2+2 = 130
+//#define L64_M2_A4            // 64*2+4 = 132
+#define L64_M2_A4_A2        0x0297D50C // 64*2+4+2 = 134
+#define L64_M28_A1          0x52c58b17 // 64*28+1 = 1793
+#define L64_M48_A1          0x6520a881 // 64*48+1 = 3073
+#define L64_M88_A1          0x6331d1ff // 64*88+1 = 5633
+
+#define L80_M1_A2           0x76296296 // 80*1+2 = 82
+#define L80_M2_A2           0x497d50b7 // 80*2+2 = 162
+#define L80_M2_A4           0x25f542dd // 80*2+4 = 164
+#define L80_M1_A2_A1        0x4bea85bb // 80*2+4+1 = 165
+#define L80_M1_A2_A2        0x17d50b77 // 80*2+4+2 = 166
+#define L80_M3_A2           0x1caf4863 // 80*3+2 = 242
+#define L80_M3_A3           0x395e90c6 // 80*3+3 = 243
+#define L80_M3_A4           0x72bd218d // 80*3+4 = 244
+
+#define L88_M2_A2           0x50b77d50 // 88*2+2 = 178
+#define L88_M3_A4           0x0d4ce691 // 88*3+4 = 268
+#define L88_M3_A3           0x46a67348 // 88*3+3 = 267
+
+#define L96_M2_A2           0x7d50b79d // 96*2+2 = 194
+#define L96_M3_A4           0x113d3e0c // 96*3+4 = 292
+#define L96_M3_A3           0x489e9f06 // 96*3+3 = 291
+
+#define L112_M2_A2          0x50b79caf // 112*2+2 = 226
+#define L112_M3_A3          0x549f5f06 // 112*3+3 = 339
+#define L112_M3_A4          0x293ebe0c // 112*3+4 = 340
+
+#define L128_M1_A2          0x68297d50 // 128*1+2 = 130
+#define L128_M2_A2          0x48635339 // 128*2+2 = 258
+#define L128_M2_A4          0x218D4CE6 // 128*2+4 = 260
+#define L128_M2_A4_A2       0x0635339A // 128*2+4+2 = 262
+#define L128_M3_A2          0x2a4f9763 // 128*3+2 = 386
+#define L128_M3_A3          0x549F2EC6 // 128*3+3 = 387
+#define L128_M3_A4          0x293e5d8c // 128*3+3 = 388
+#define L128_M2_A4_A1       0x431a99cd // 128*2+4+1 = 261
+
+#define L160_M1_A2          0x497d50b7 // 160*1+2 = 162
+#define L160_M2_A2          0x2d39aa4f // 160*2+2 = 322
+#define L160_M2_A4          0x34e6a93e // 160*2+4 = 324
+#define L160_M1_A2_A1       0x69cd527d // 160*2+4+1 = 325
+#define L160_M1_A2_A2       0x539aa4fa // 160*2+4+2 = 326
+#define L160_M3_A2          0x544e689c // 160*3+2 = 482
+#define L160_M3_A3          0x289cd138 // 160*3+3 = 483
+#define L160_M3_A4          0x5139a270 // 160*3+4 = 484
+
+#define L176_M3_A3          0x4b12e9d4 // 176*3+3 = 531
+#define L176_M2_A4_A1       0x7c19963d // 176*2+4+1 = 357
+
+#define L192_M2_A4_A2       0x24f97633 // 192*2+4+1 = 390
+#define L192_M2_A4          0x293e5d8c // 192*2+4 = 388
+#define L192_M2_A4_A1       0x527cbb19 // 192*2+4+1 = 389
+#define L192_M3_A3          0x27402CF8 // 192*3+3 = 579
+
+#define L214_M2_A4          0x7513e5d8 // 214*2+4 = 432
+
+#define L256_M48_A1         0x2efcc3fe // 256*48+1 = 12289
+#define L256_M1_A2          0x48635339 // 256*1+2 = 258
+#define L256_M2_A2          0x2d3ba589 // 256*2+2 = 514
+#define L256_M2_A4          0x34ee9625 // 256*2+4 = 516
+#define L256_M2_A4_A1       0x69dd2c4b // 256*2+4+1 = 517
+#define L256_M3_A3          0x51605d38 // 256*3+3 = 771
+
+#define L512_M2_A2          0x0b14e9d1 // 512*2+2 = 1026
+#define L512_M2_A4_A1       0x58a74e89 // 512*2+4+1 = 1029
+#define L512_M3_A3          0x7a7162c7 // 512*3+3 = 1539
+
+// È«¾Ö³£Á¿¶¨Òå
+#define FRAME_LEN2              (FRAME_LEN_Word*2)
+#define FRAME_LEN4              (FRAME_LEN_Word*4)
+#define FRAME_LEN_DW            (FRAME_LEN_Word/2)    //Ò»¸ö³¤¶È´ú±íÁ½¸öµã
+#define Tat                     1023
+#define q14                     16384
+#define corrected               0
+#define PART_NUM                8
+#define n_frames_per_obs        128
+
+#ifdef CHANNEL_4
+#define RN_IIR_BANK_COLUM       RN_SEL_IIRB_COL0T3
+#endif
+#ifdef CHANNEL_8
+#define RN_IIR_BANK_COLUM       RN_SEL_IIRB_COL0T7
+#endif
+
+#define RN_IIR_SPLIT_LEN_B      (80*MMU_BASE)       // 8ch 2¶Î / 4ch 4¶Î
+#define RN_NR_PARA_LEN_B        (96*MMU_BASE)       // 8ch
+#define RN_NR_SNR_LEN_B         (48*MMU_BASE)
+#define RN_K_LEN_B              (64*MMU_BASE)
+#define RN_B_LEN_B              (64*MMU_BASE)
+#define RN_EQ_LEN_B             (8*MMU_BASE)
+
+
+#define RN_PARA_TOTAL_LEN_B     (4+RN_PARA_LEN_B+RN_IIR_SPLIT_LEN_B+RN_NR_PARA_LEN_B+RN_NR_SNR_LEN_B+RN_K_LEN_B+RN_B_LEN_B+RN_EQ_LEN_B)
+
+// =================== È«¾Ö±äÁ¿¶¨Òå ===================
+// NR
+//------------ADC\DAC Global-----------2021/11/28 16:17:13
+#define g_Cnt_Frame        		M[RA4+0*MMU_BASE]
+#define g_DAC_Cfg       		M[RA4+1*MMU_BASE]
+#define g_Vol       			M[RA4+2*MMU_BASE]
+#define g_Weight_Frame_0   		M[RA4+3*MMU_BASE]
+#define g_LastBank_Average_0    M[RA4+4*MMU_BASE]
+#define g_ADC_DC_0              M[RA4+5*MMU_BASE]
+#define g_ADC_CFG_0             M[RA4+6*MMU_BASE]
+#define g_Weight_Frame_1   		M[RA4+7*MMU_BASE]
+#define g_LastBank_Average_1    M[RA4+8*MMU_BASE]
+#define g_ADC_DC_1              M[RA4+9*MMU_BASE]
+#define g_ADC_CFG_1             M[RA4+10*MMU_BASE]
+//------------ADC\DAC Global-----------
+
+
+#define g_classFrameCount       M[RA4+11*MMU_BASE]	//ºóÐøÔÙÐÞ¸Ä
+#define g_class                 M[RA4+11*MMU_BASE]
+#define g_class_Offset          (6*MMU_BASE)
+#define g_class_cur             M[RA4+11*MMU_BASE]
+#define g_count_1               M[RA4+11*MMU_BASE]
+#define g_count_2               M[RA4+11*MMU_BASE]
+#define g_count_3               M[RA4+11*MMU_BASE]
+#define g_m_10                  M[RA4+11*MMU_BASE]
+#define g_ADC_Bias_Adj          M[RA4+12*MMU_BASE]// ADCÖ±Á÷Æ«ÒÆµ÷Õûµ²Î»[0,63]£¬Ä¬ÈÏÖµ32
+#define g_dBGain_Bank           M[RA4+13*MMU_BASE]
+#define g_dBGain_Bank_Offset    (13*MMU_BASE)
+//#define g_Vol                   M[RA4+14*MMU_BASE]
+
+// ÏµÍ³²ÎÊý
+#define g_SysStatus             M[RA4+15*MMU_BASE]// ÏµÍ³×´Ì¬£¬bit<31:12>±£Áô
+                                                  // bit11:ÕýÔÚ²¥·Å¿ª»úÊ±²¥·ÅÌáÊ¾ÒôµÄ±êÖ¾£¨0~Î´²¥·Å£¬1~ÕýÔÚ²¥·Å£©
+                                                  // bit10:¹Ø»ú¹ÒÆð£¨0~½ûÄÜ£¬1~Ê¹ÄÜ£©
+                                                  // bit9:Ö±Á÷Æ«ÒÆÐ£×¼Ê¹ÄÜ(0~½ûÄÜ£¬1~Ê¹ÄÜ)
+                                                  // bit8:ÊÇ·ñ³õ´ÎÍ³¼ÆÖ±Á÷Æ«ÒÆ(0~·ñ£¬1~ÊÇ)
+                                                  // bit7:ÉÏÒ»ÂÖ¼ì²âµÄÖ±Á÷Æ«ÒÆÖµµÄ·ûºÅÎ»(0~Õý£¬1~¸º)
+                                                  // bit<6:5>±£Áô
+                                                  // bit4:µÍµçÁ¿±¨¾¯
+                                                  // bit3:ÊÇ·ñ¿ªÆô¿´ÃÅ¹·(0~·ñ£¬1~ÊÇ)
+                                                  // bit2:µ±Ç°ÊÇ·ñÕýÔÚ³ösilentÒô(0~·ñ£¬1~ÊÇ)
+                                                  // bit1:µ±Ç°ÊÇ·ñÕýÔÚ³ösinÒô(0~·ñ£¬1~ÊÇ)
+                                                  // bit0:ÊÇ·ñÓÐÇÐ³¡¾°ÊÂ¼þÒªÏìÓ¦(0~ÎÞ£¬1~ÓÐÐèÒªÏìÓ¦»òÕßÕýÔÚÏìÓ¦)
+
+#define RD0_Flag_PowerOn_Ind    RD0_Bit11
+#define RD0_Set_PowerOn_Ind     RD0_SetBit11
+#define RD0_Clr_PowerOn_Ind     RD0_ClrBit11
+#define RD0_Set_PowerOff        RD0_SetBit10
+#define RD0_Clr_PowerOff        RD0_ClrBit10
+#define RD0_Set_Warning_En      RD0_SetBit4
+#define RD0_Clr_Warning_En      RD0_ClrBit4
+#define RD0_Set_ADBias_S        RD0_SetBit7
+#define RD0_Clr_ADBias_S        RD0_ClrBit7
+#define RD0_Bit_ADBias_S        RD0_Bit7
+#define RD0_Set_ADBias_En       RD0_SetBit9
+#define RD0_Clr_ADBias_En       RD0_ClrBit9
+#define RD0_Bit_ADBias_En       RD0_Bit9
+#define g_ADC_Bias              M[RA4+16*MMU_BASE]// ADCµÄÖ±Á÷Æ«ÒÆÖµ
+#define g_Bank_Num              M[RA4+17*MMU_BASE]
+#define g_Key_ID                M[RA4+18*MMU_BASE]// °´¼üÊÂÎñ¶ÔÓ¦µÄID bit<7:0>¶ÔÓ¦GP0.7~0.0  bit8¶ÔÓ¦WAKE£¬1±íÊ¾ÓÐÊÂ¼þ£¬0±íÊ¾ÎÞ?Â¼?
+//#define g_VT2                   M[RA4+19*MMU_BASE]// °´¼üÁ¬»÷¼ÆÊýÆ÷£¬¾²Ö¹Ê±=0£¬¼ÆÊýÆðÊ¼Öµ=RN_VT2_MAX
+#define g_VT3                   M[RA4+19*MMU_BASE]// °´¼ü³¤°´¼ÆÊýÆ÷£¬¾²Ö¹Ê±=0£¬¼ÆÊýÆðÊ¼Öµ=RN_VT3_MAX
+#define g_Flag_Import_Sound     M[RA4+20*MMU_BASE]// 0~Ã»ÓÐÊý×ÖÒôÆµÊäÈë ·Ç0~ÓÐÊý×ÖÒôÆµÊäÈë
+#define g_G1_PGA                M[RA4+21*MMU_BASE]// µ±Ç°Ç°¼¶ÔöÒæÖµ
+#define g_G1_PGA_Next           M[RA4+22*MMU_BASE]// ÏÂÒ»Ö¡Ç°¼¶ÔöÒæÖµ
+#define g_Scene                 M[RA4+23*MMU_BASE]// ³¡¾°Öµ
+//#define g_Boot_Over             M[RA4+24*MMU_BASE]// ¹Ì¼þÆô¶¯Íê±ÏÐÅºÅ£¬µ±¿ª»úºówake¼üµÚÒ»´ÎËÉ¿ª£¬¸ÃÖµ±»ÖÃ³É0x55555555¡£µ±¸ÃÖµ??x55555555Ê±£¬ÔÊÐíÖ´ÐÐ³¡¾°ÇÐ»»£¬ÐÝÃßµÈ²Ù×÷¡£
+#define g_Cnt1                  M[RA4+24*MMU_BASE]// Èí¼ÆÊýÆ÷1£¬ÓÃÓÚÃ¿´Î¿ª»ú»ò»½ÐÑºóÐ£×¼Ö±Á÷Æ«ÒÆ
+#define g_agci_releFr_cnt       M[RA4+25*MMU_BASE]// agcinµÄGPAµÈ¼¶ÌáÉýµÄ×îÐ¡¼ä¸ôÀÛ¼ÓÆ÷,³õÖµÎªg_agci_releFr,¼õµ½0ÖØÖÃ³õÖµ
+#define g_SAR_AD                M[RA4+26*MMU_BASE]// SAR_ADËÄ¸öÔ´µÄ¶ÁÖµ£¬bit<31:24>~VCHK1  bit<23:16>~Vref  bit<15:8>~VBat_3V  bit<7:0>~VCHK0
+#define g_CPUSpeed              M[RA4+27*MMU_BASE]//µ±Ç°CPUÔËÐÐËÙ¶ÈÖµ
+#define g_NLMS_history_ADDR     M[RA4+28*MMU_BASE]// NLMS¼°ÆäÏà¹ØÄ£¿éÊ¹ÓÃµÄÀúÊ·ÒôÆµÊý¾Ý»º´æÖ¸Õë£¬Í¬Ê±³äµ±Ñ­»·±äÁ¿£¬bit0Îª¿ªÆô×´Ì¬
+#define g_rn_1                  M[RA4+29*MMU_BASE]// NLMSÊ¹ÓÃµÄÀúÊ·ÒôÆµÊý¾ÝÄÜÁ¿1
+#define g_rn_2                  M[RA4+30*MMU_BASE]// NLMSÊ¹ÓÃµÄÀúÊ·ÒôÆµÊý¾ÝÄÜÁ¿2
+#define g_rn_3                  M[RA4+31*MMU_BASE]// NLMSÊ¹ÓÃµÄÀúÊ·ÒôÆµÊý¾ÝÄÜÁ¿3
+
+#define g_Vref                  M[RA4+32*MMU_BASE]
+#define g_Timer                 M[RA4+33*MMU_BASE]
+#define g_Mic_Gain              M[RA4+34*MMU_BASE]
+#define g_Rec_Gain              M[RA4+35*MMU_BASE]
+#define g_SysCfg                M[RA4+36*MMU_BASE]// bit1:¹Ø»úÌáÊ¾Òô£¨0~ÎÞ£¬1~ÓÐ£© bit0:¿ª»úÌáÊ¾Òô£¨0~ÎÞ£¬1~ÓÐ£©
+#define g_Vol_Range             M[RA4+37*MMU_BASE]
+#define g_Scene_Qty             M[RA4+38*MMU_BASE]
+#define g_Vol_Step              M[RA4+39*MMU_BASE]
+#define g_Vol_Step_Qty          M[RA4+40*MMU_BASE]
+#define g_Ind_1KHz              M[RA4+41*MMU_BASE]// ÌáÊ¾Òô1KHz³ÖÐøÖ¡³¤¶È£¬bit<31:16>~³õÖµ£¬bit<15:0>~¼ÆÊýÆ÷
+#define g_Ind_Silent            M[RA4+42*MMU_BASE]// ÌáÊ¾Òô¾²Òô³ÖÐøÖ¡³¤¶È£¬bit<31:16>~³õÖµ£¬bit<15:0>~¼ÆÊýÆ÷
+#define g_Ind_SW_Times          M[RA4+43*MMU_BASE]// ÌáÊ¾ÒôÑ­»·´ÎÊý¼°×´Ì¬£¬bit<31:9> ~±£Áô£¬bit8~ÌáÊ¾Òô×´Ì¬£¬Ö¸1KHzºÍ¾²ÒôµÄÇÐ»»×´Ì¬£¨0~1KHz£¬1~¾²Òô£©£¬bit<7:0>~ÌáÊ¾ÒôÑ­»·´ÎÊý
+#define g_Rsv13                 M[RA4+44*MMU_BASE]
+#define g_Rsv14                 M[RA4+45*MMU_BASE]
+
+// ======== ÅäÖÃ²ÎÊýÇø£¨ÓÉÉÏÎ»»úÏÂ·¢£¬»ò´Ó´æ´¢Æ÷¼ÓÔØ£© =========
+#define g_Switch                M[RA4+46*MMU_BASE]  // [ 31-Len      | 30-Ð¥½Ð¼ì²â | 29-CLASS    | 28-NR       | 27-WDRC     | 26-Êý×ÖÒôÆµÊäÈë | 25-Êý×ÖÒôÆµÊä³ö | 24-×Ó´øÊä³ö ]
+                                                    // [ 23-°×ÔëÊä³ö | 22-ÏÝ²¨Æ÷   | 21-»ØÉùÒÖÖÆ | 20-W¸üÐÂ    | 19-EQ       | 18-RSV          | 17-RSV          | 16-RSV      ]
+                                                    // [ 15-×Ô¶¨Òå1  | 14-×Ô¶¨Òå2  | 13-×Ô¶¨Òå3  | 12-×Ô¶¨Òå4  | 11-×Ô¶¨Òå5  | 10-×Ô¶¨Òå6      |  9-×Ô¶¨Òå7      |  8-ÉÕÐ´GD25 ]
+                                                    // [  7-RSV      |  6-RSV      |  5-RSV      |  4-RSV      |  3-RSV      |  2-RSV          |  1-RSV          |  0-RSV      ]
+#define g_Switch_Offset         (46*MMU_BASE)
+#define g_Ts                    M[RA4+47*MMU_BASE]  // 1.
+#define g_nTs                   M[RA4+48*MMU_BASE]  // 2.
+#define g_Tn                    M[RA4+49*MMU_BASE]  // 3.
+#define g_nTn                   M[RA4+50*MMU_BASE]  // 4.
+#define g_Tat                   M[RA4+51*MMU_BASE]  // 5.
+#define g_nTat                  M[RA4+52*MMU_BASE]  // 6.
+#define g_a                     M[RA4+53*MMU_BASE]  // 7.
+#define g_b                     M[RA4+54*MMU_BASE]  // 8.
+#define g_a_agco                M[RA4+55*MMU_BASE]  // 9.
+#define g_b_agco                M[RA4+56*MMU_BASE]  // 10.
+#define g_spl_ref_agco          M[RA4+57*MMU_BASE]  // 11.
+#define g_a_agci                M[RA4+58*MMU_BASE]  // 12.
+#define g_b_agci                M[RA4+59*MMU_BASE]  // 13.
+#define g_spl_ref_agci          M[RA4+60*MMU_BASE]  // 14.
+#define g_adc_gainLv            M[RA4+61*MMU_BASE]  // 15.
+#define agci_releFr_offset      (62*MMU_BASE)       // 16. ×¢ÒâÔö¼Ó±äÁ¿Ê±Í¬²½¸üÐÂ RN_PARA_LEN_B
+#define IIR_Split_Para_Offset   (63*MMU_BASE)                              // ³¤¶ÈRN_IIR_SPLIT_LEN_B
+#define NR_KB_Offset            (IIR_Split_Para_Offset+RN_IIR_SPLIT_LEN_B) // ³¤¶ÈRN_NR_PARA_LEN_B
+
+#define NR_K0_1_Offset          (NR_KB_Offset)
+#define NR_K0_2_Offset          (NR_K0_1_Offset+8*MMU_BASE)
+#define NR_K0_3_Offset          (NR_K0_2_Offset+8*MMU_BASE)
+#define NR_K1_1_Offset          (NR_K0_3_Offset+8*MMU_BASE)
+#define NR_K1_2_Offset          (NR_K1_1_Offset+8*MMU_BASE)
+#define NR_K1_3_Offset          (NR_K1_2_Offset+8*MMU_BASE)
+#define NR_B0_1_Offset          (NR_K1_3_Offset+8*MMU_BASE)
+#define NR_B0_2_Offset          (NR_B0_1_Offset+8*MMU_BASE)
+#define NR_B0_3_Offset          (NR_B0_2_Offset+8*MMU_BASE)
+#define NR_B1_1_Offset          (NR_B0_3_Offset+8*MMU_BASE)
+#define NR_B1_2_Offset          (NR_B1_1_Offset+8*MMU_BASE)
+#define NR_B1_3_Offset          (NR_B1_2_Offset+8*MMU_BASE)
+
+#define NR_SNR1_Offset          (NR_KB_Offset+RN_NR_PARA_LEN_B)
+#define NR_SNR2_Offset          (NR_SNR1_Offset+(RN_NR_SNR_LEN_B/2))
+
+#define WDRC_K_Offset           (NR_SNR1_Offset+RN_NR_SNR_LEN_B)                 // ³¤¶È64*MMU_BASE
+#define WDRC_B_Offset           (WDRC_K_Offset+RN_K_LEN_B)                      // ³¤¶È64*MMU_BASE
+#define EQ_Offset               (WDRC_B_Offset+RN_B_LEN_B)                      // ³¤¶È8*MMU_BASE
+#define Verify_Sum_Offset       (EQ_Offset+RN_EQ_LEN_B)                         // ³¤¶È1*MMU_BASE
+// ======== end of ÅäÖÃ²ÎÊýÇø =========
+
+// ×¢Òâ³ÌÐòÐ´·¨ÒªÇóvs_p¡¢vn_p¡¢k_p¡¢b_p±ØÐë½ô´ÕÁ¬½Ó
+#define vs_p_Offset             (Verify_Sum_Offset+1*MMU_BASE)                  // ³¤¶È16*MMU_BASE ÐÅºÅ°üÂçÖ¸Õë
+#define vn_p_Offset             (vs_p_Offset+16*MMU_BASE)                       // ³¤¶È16*MMU_BASE ÔëÉù°üÂçÖ¸Õë
+#define k_p_Offset              (vn_p_Offset+16*MMU_BASE)                       // ³¤¶È16*MMU_BASE
+#define b_p_Offset              (k_p_Offset+16*MMU_BASE)                        // ³¤¶È16*MMU_BASE
+
+// WDRC
+#define Buf1_Offset             (b_p_Offset+16*MMU_BASE)                        // ³¤¶È8*MMU_BASE
+#define WDRC_Gain_Offset        (Buf1_Offset+8*MMU_BASE)                        // ³¤¶È8*MMU_BASE WDRC¼ÆËã³öµÄ8¸ö×Ó´øµÄÔöÒæÖµ
+
+// 8×Ó´øµÄNRÔöÒæ
+#define Gain_NR_Array_Offset    (WDRC_Gain_Offset+8*MMU_BASE)                   // ³¤¶È8*MMU_BASE 8×Ó´øNRÔöÒæÖµ
+#define Gain_WDRC_Array_Offset  (Gain_NR_Array_Offset+8*MMU_BASE)               // ³¤¶È8*MMU_BASE 8×Ó´øWDRCÔöÒæÖµ
+#define Sum_Array_Offset        (Gain_WDRC_Array_Offset+8*MMU_BASE)             // ³¤¶È3*8*MMU_BASE ÀúÊ·ÈýÖ¡µÄ¾ø¶ÔÖµÀÛ¼ÓºÍ
+#define Spl_Array_Offset        (Sum_Array_Offset+3*8*MMU_BASE)                 // ³¤¶È3*8*MMU_BASEÀúÊ·ÈýÖ¡µÄ×Ó´ø¾ù·½
+
+// ÒôÁ¿±í
+#define Volume_Table_Offset     (Spl_Array_Offset+3*8*MMU_BASE)                 // ³¤¶È23*MMU_BASE
+#define MS_Offset               (Volume_Table_Offset+3*8*MMU_BASE)              // ³¤¶È4*MMU_BASEÀúÊ·3Ö¡µÄÈ«Æµ´ø¾ù·½
+#define nAbsSum_p_Offset        (MS_Offset+4*MMU_BASE)                          // ³¤¶È1*MMU_BASEÀúÊ·nAbsSum
+#define Buf_AGCO_SPL_Offset     (nAbsSum_p_Offset+1*MMU_BASE)                   // ³¤¶È1*MMU_BASE AGCOËã·¨¼ÇÂ¼µÄÀúÊ·SPL
+#define Buf_AGCI_SPL_Offset     (Buf_AGCO_SPL_Offset+1*MMU_BASE)                // ³¤¶È1*MMU_BASE AGCIËã·¨¼ÇÂ¼µÄÀúÊ·SPL
+#define Buf_ADC_GainLvNow_Offset (Buf_AGCI_SPL_Offset+1*MMU_BASE)               // ³¤¶È1*MMU_BASE ÏµÍ³µ±Ç°µÄADCÔöÒæµÈ¼¶(0~11)
+#define Buf_SPL_Offset          (Buf_ADC_GainLvNow_Offset+1*MMU_BASE)           // ³¤¶È8*MMU_BASE
+//#define AGCO_a_Offset           (Buf_AGCO_SPL_Offset+1*MMU_BASE)                // ³¤¶È1*MMU_BASE AGCOËã·¨µÄ¹¥»÷Ê±¼ä
+//#define AGCO_b_Offset           (AGCO_a_Offset+1*MMU_BASE)                      // ³¤¶È1*MMU_BASE AGCOËã·¨µÄÊÍ·ÅÊ±¼ä
+//#define AGCO_SPL_Ref_Offset     (AGCO_b_Offset+1*MMU_BASE)                      // ³¤¶È1*MMU_BASE AGCOËã·¨µÄ²Î¿¼ÉùÑ¹¼¶(Q8)
+
+#define RN_GLOBAL_VAR_TOTAL_LEN_B   (Buf_SPL_Offset+8*MMU_BASE)              // È«¾Ö±äÁ¿×Ü³¤¶È(º¬ÅäÖÃ²ÎÊýµÈ)
+// ConstROMµØÖ··ÖÅä(È«¾Ö³£Á¿)
+//#define RN_K0_1_ADDR            (RN_Const_StartAddr+244)
+//#define RN_K0_2_ADDR            (RN_K0_1_ADDR+16)
+//#define RN_K0_3_ADDR            (RN_K0_2_ADDR+16)
+//#define RN_K1_1_ADDR            (RN_K0_3_ADDR+16)
+//#define RN_K1_2_ADDR            (RN_K1_1_ADDR+16)
+//#define RN_K1_3_ADDR            (RN_K1_2_ADDR+16)
+//#define RN_B0_1_ADDR            (RN_K1_3_ADDR+16)
+//#define RN_B0_2_ADDR            (RN_B0_1_ADDR+16)
+//#define RN_B0_3_ADDR            (RN_B0_2_ADDR+16)
+//#define RN_B1_1_ADDR            (RN_B0_3_ADDR+16)
+//#define RN_B1_2_ADDR            (RN_B1_1_ADDR+16)
+//#define RN_B1_3_ADDR            (RN_B1_2_ADDR+16)
+
+#define RN_K0_1_8_ADDR          (RN_Const_StartAddr+244)
+#define RN_K0_2_8_ADDR          (RN_K0_1_8_ADDR+8)
+#define RN_K0_3_8_ADDR          (RN_K0_2_8_ADDR+8)
+#define RN_K1_1_8_ADDR          (RN_K0_3_8_ADDR+8)
+#define RN_K1_2_8_ADDR          (RN_K1_1_8_ADDR+8)
+#define RN_K1_3_8_ADDR          (RN_K1_2_8_ADDR+8)
+#define RN_B0_1_8_ADDR          (RN_K1_3_8_ADDR+8)
+#define RN_B0_2_8_ADDR          (RN_B0_1_8_ADDR+8)
+#define RN_B0_3_8_ADDR          (RN_B0_2_8_ADDR+8)
+#define RN_B1_1_8_ADDR          (RN_B0_3_8_ADDR+8)
+#define RN_B1_2_8_ADDR          (RN_B1_1_8_ADDR+8)
+#define RN_B1_3_8_ADDR          (RN_B1_2_8_ADDR+8)
+
+#define RN_K_16_ADDR            (RN_B1_3_8_ADDR+8)
+#define RN_B_16_ADDR            (RN_K_16_ADDR+128)
+#define RN_TPI_ADDR             (RN_B_16_ADDR+128)                              // WDRC·Ö¸îµã            ³¤¶È    9*MMU_BASE
+#define RN_tableMod_ADDR        (RN_TPI_ADDR+9)                                 // 0~45¶ÈÔ­±í            ³¤¶È 1024*MMU_BASE
+#define RN_FFT_COFF_ADDR        (RN_tableMod_ADDR+1024)                         // FFTÏµÊý               ³¤¶È 1024*MMU_BASE
+#define RN_ADC_TABLE_ADDR       (RN_FFT_COFF_ADDR+1024)                         // ADCÐ£Õý±íÄ¬ÈÏÖµ       ³¤¶È   35*MMU_BASE
+#define RN_Log2_Table_ADDR      (RN_ADC_TABLE_ADDR+35)                          // ¶¨µã¼ÆËãLog2ËùÓÃ±í    ³¤¶È   64*MMU_BASE
+#define RN_Pow2_Table_ADDR      (RN_Log2_Table_ADDR+64)                         // ¶¨µã¼ÆËãPow2ËùÓÃ±í    ³¤¶È   64*MMU_BASE
+#define RN_Recip_Table_ADDR     (RN_Pow2_Table_ADDR+64)                         // ¶¨µã¼ÆËãRecipËùÓÃ±í   ³¤¶È  128*MMU_BASE
+#define RN_Sqrt_Table_ADDR      (RN_Recip_Table_ADDR+128)                       // ¶¨µã¼ÆËãSqrtËùÓÃ±í    ³¤¶È   64*MMU_BASE
+#define RN_Addr_Para_Import     (RN_Sqrt_Table_ADDR+64)                         // DemoËã·¨²ÎÊý          ³¤¶È  169*MMU_BASE
+#define RN_VERIFY_SUM_16_REG_ADDR   (RN_Addr_Para_Import+169)                   // Ð£Ñéº¯ÊýÖ¸ÁîÂë        ³¤¶È   17*MMU_BASE
+#define RN_Multi_Sin_ADDR       (RN_VERIFY_SUM_16_REG_ADDR+17)                  // Multi_SinÒôÆµÁ÷       ³¤¶È   32*MMU_BASE
+#define RN_SPLIT_8CH_4SEG_ADDR  (RN_Multi_Sin_ADDR+32)                          // 8ch_4seg·Ö×Ó´øÏµÊý    ³¤¶È  160*MMU_BASE
+#define RN_SPLIT_RST_ADDR       (RN_SPLIT_8CH_4SEG_ADDR+160)                    // 8ch_4seg·Ö×Ó´ø½á¹û    ³¤¶È  256*MMU_BASE
+#define RN_FMT_RST_ADDR         (RN_SPLIT_RST_ADDR+256)                         // FMT²âÊÔ½á¹û           ³¤¶È  160*MMU_BASE
+
+#define RN_BaseROM_Verify_ADDR  (RN_Const_StartAddr+(RN_CONSTROM_SIZE/4)-1)     // BaseROMÐ£ÑéÖµ         ³¤¶È    1*MMU_BASE
+
+// GRAM¡¢XRAMµØÖ·
+#define RN_GRAM0                RN_GRAM_START                                   // 1024Byte
+#define RN_GRAM1                (RN_GRAM0+1024)                                 // 1024Byte
+#define RN_GRAM2                (RN_GRAM1+1024)                                 // 1024Byte
+#define RN_GRAM3                (RN_GRAM2+1024)                                 // 1024Byte
+#define RN_GRAM4                (RN_GRAM3+1024)                                 // 1024Byte
+#define RN_GRAM5                (RN_GRAM4+1024)                                 // 1024Byte
+#define RN_GRAM6                (RN_GRAM5+1024)                                 // 1024Byte
+#define RN_GRAM7                (RN_GRAM6+1024)                                 // 1024Byte
+#define RN_GRAM8                (RN_GRAM7+1024)                                 // 1024Byte
+#define RN_GRAM9                (RN_GRAM8+1024)                                 // 1024Byte
+#define RN_GRAM10               (RN_GRAM9+1024)                                 // 1024Byte
+#define RN_GRAM11               (RN_GRAM10+1024)                                // 1024Byte
+#define RN_GRAM12               (RN_GRAM11+1024)                                // 1024Byte
+#define RN_GRAM13               (RN_GRAM12+1024)                                // 1024Byte
+#define RN_GRAM14               (RN_GRAM13+1024)                                // 1024Byte
+#define RN_GRAM15               (RN_GRAM14+1024)                                // 1024Byte
+#define RN_XRAM0                (RN_GRAM15+1024)                                // 1024Byte
+#define RN_XRAM1                (RN_XRAM0+1024)                                 // 1024Byte
+#define RN_XRAM2                (RN_XRAM1+1024)                                 // 1024Byte
+#define RN_XRAM3                (RN_XRAM2+1024)                                 // 1024Byte
+#define RN_XRAM4                (RN_XRAM3+1024)                                 // 1024Byte
+#define RN_XRAM5                (RN_XRAM4+1024)                                 // 1024Byte
+#define RN_XRAM6                (RN_XRAM5+1024)                                 // 1024Byte
+#define RN_XRAM7                (RN_XRAM6+1024)                                 // 1024Byte
+
+// ============================ GRAM0 ============================
+#define RN_GRAM_IN              RN_GRAM0                                        // 512Byte
+#define RN_GRAM_OUT             RN_GRAM0                                        // 512Byte
+
+// ============================ GRAM1 ============================
+#define RN_myTableMod_ADDR          RN_GRAM1                                    // 2048Byte [cos|sin]
+
+// ============================ GRAM2 ============================
+#define RN_myTableMod_ADDR_Plus     RN_GRAM2
+
+// ============================ GRAM3 ============================
+#define RN_W_fix_ADDR           RN_GRAM3                                        // 512Byte NLMSÊ¹ÓÃµÄW´æ´¢Çø£¬128Î¬ÏòÁ¿
+#define RN_dW_fix_ADDR          (RN_W_fix_ADDR+128*MMU_BASE)                    // 512Byte NLMSÊ¹ÓÃµÄdW´æ´¢Çø£¬128Î¬ÏòÁ¿(¿ÉÓÃ×÷?ÙÊ±Êý¾Ýbutter)
+
+// ============================ GRAM4/5 ==========================
+#ifdef FRAME32
+// NLMSÊ¹ÓÃµÄÀúÊ·Ö¡(¸ßµÍÎ»´í¿ªÒ»Î»Ë³Ðò°Ú·Å)»º´æ
+#define RN_out_history_comp_ADDR1   RN_GRAM4                                    // 128Byte
+#define RN_out_history_comp_ADDR2   (RN_out_history_comp_ADDR1+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR3   (RN_out_history_comp_ADDR2+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR4   (RN_out_history_comp_ADDR3+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR5   (RN_out_history_comp_ADDR4+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR6   (RN_out_history_comp_ADDR5+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR7   (RN_out_history_comp_ADDR6+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR8   (RN_out_history_comp_ADDR7+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR9   (RN_out_history_comp_ADDR8+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR10  (RN_out_history_comp_ADDR9+32*MMU_BASE)     // 128Byte
+#define RN_out_history_comp_ADDR11  (RN_out_history_comp_ADDR10+32*MMU_BASE)    // 128Byte
+#define RN_out_history_comp_ADDR12  (RN_out_history_comp_ADDR11+32*MMU_BASE)    // 128Byte
+#define RN_out_history_comp_ADDR13  (RN_out_history_comp_ADDR12+32*MMU_BASE)    // 128Byte
+#define RN_out_history_comp_ADDR14  (RN_out_history_comp_ADDR13+32*MMU_BASE)    // 128Byte
+#define RN_out_history_comp_ADDR15  (RN_out_history_comp_ADDR14+32*MMU_BASE)    // 128Byte
+#define RN_out_history_comp_ADDR16  (RN_out_history_comp_ADDR15+32*MMU_BASE)    // 128Byte
+
+#endif
+
+// ============================= GRAM6/7 ===========================
+#ifdef FRAME32
+#define RN_history_comp_ADDR1       RN_GRAM6                                    // 128Byte 32µã Ð¥½Ð¼ì²âÊ¹ÓÃµÄÀúÊ·Ö¡£¨¸´Êý¸ñÊ½£©»º´æ
+#define RN_history_comp_ADDR2       (RN_history_comp_ADDR1+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR3       (RN_history_comp_ADDR2+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR4       (RN_history_comp_ADDR3+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR5       (RN_history_comp_ADDR4+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR6       (RN_history_comp_ADDR5+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR7       (RN_history_comp_ADDR6+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR8       (RN_history_comp_ADDR7+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR9       (RN_history_comp_ADDR8+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR10      (RN_history_comp_ADDR9+32*MMU_BASE)         // 128Byte 32µã
+#define RN_history_comp_ADDR11      (RN_history_comp_ADDR10+32*MMU_BASE)        // 128Byte 32µã
+#define RN_history_comp_ADDR12      (RN_history_comp_ADDR11+32*MMU_BASE)        // 128Byte 32µã
+#define RN_history_comp_ADDR13      (RN_history_comp_ADDR12+32*MMU_BASE)        // 128Byte 32µã
+#define RN_history_comp_ADDR14      (RN_history_comp_ADDR13+32*MMU_BASE)        // 128Byte 32µã
+#define RN_history_comp_ADDR15      (RN_history_comp_ADDR14+32*MMU_BASE)        // 128Byte 32µã
+#define RN_history_comp_ADDR16      (RN_history_comp_ADDR15+32*MMU_BASE)        // 128Byte 32µã
+#define RN_history_comp_new         RN_history_comp_ADDR16
+#endif
+#ifdef FRAME128
+#define RN_history_comp_ADDR1       RN_GRAM6                                    // 512Byte 128µã Ð¥½Ð¼ì²âÊ¹ÓÃµÄÀúÊ·Ö¡£¨¸´Êý¸ñÊ½?©»º´?
+#define RN_history_comp_ADDR2       (RN_history_comp_ADDR1+128*MMU_BASE)        // 512Byte 128µã
+#define RN_history_comp_ADDR3       (RN_history_comp_ADDR2+128*MMU_BASE)        // 512Byte 128µã
+#define RN_history_comp_ADDR4       (RN_history_comp_ADDR3+128*MMU_BASE)        // 512Byte 128µã
+#define RN_history_comp_new         RN_history_comp_ADDR4
+#endif
+
+#define RN_history_comp_ADDR_Plus   RN_GRAM7
+
+// ============================= GRAM8/9 ===========================
+#define RN_FFT_RESULT_ADDR          RN_GRAM8                                    // 2048Byte [Re|Im]
+#define RN_FFT_RESULT_ADDR_Plus     RN_GRAM9
+#define RN_x1_fix_ADDR              RN_GRAM8                                    // 2048Byte [Re|Im]
+#define RN_x1_fix_ADDR_Plus         RN_GRAM9
+#define RN_iirBuf_Re2_ADDR          RN_GRAM8                                    // 1024Byte [Re(n+1)|Re(n)]
+#define RN_iirBuf_Im2_ADDR          RN_GRAM9                                    // 1024Byte [Im(n+1)|Im(n)]
+#define RN_x2_comp_ADDR             RN_GRAM8                                    // 2048Byte [Re|Im]
+#define RN_x2_comp_ADDR_Plus        RN_GRAM9
+
+// ============================= GRAM10/11 =========================
+#define RN_Imag_ADDR                RN_GRAM10                                   // 1024Byte [Re^2|Im^2]
+#define RN_iirBuf_Re_ADDR           RN_GRAM10                                   // 1024Byte [Re(n+1)|Re(n)]
+#define RN_iirBuf_Im_ADDR           RN_GRAM11                                   // 1024Byte [Im(n+1)|Im(n)]
+#define RN_x2_fix_ADDR              RN_GRAM10                                   // 2048Byte [Re|Im]
+#define RN_x2_fix_ADDR_Plus         RN_GRAM11
+#define RN_x2_Imag_ADDR             RN_GRAM10                                   // 1024Byte [Re^2|Im^2]
+#define RN_x2_Imag_ADDR_Plus        RN_GRAM11
+
+// ============================ GRAM12~15 ===========================
+#define RN_FFT_COFF_GRAM_ADDR       RN_GRAM12                                   // 1024Byte
+#define RN_FFT_COFF_GRAM_ADDR_Plus1 RN_GRAM13                                   // 1024Byte
+#define RN_FFT_COFF_GRAM_ADDR_Plus2 RN_GRAM14                                   // 1024Byte
+#define RN_FFT_COFF_GRAM_ADDR_Plus3 RN_GRAM15                                   // 1024Byte
+
+// ============================ XRAM0 ============================
+// XRAMµØÖ··ÖÅä
+#define RN_Bank0_In                 RN_XRAM0                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank0_Out                (RN_XRAM0+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+#define p_env_diff                  (RN_Bank0_Out+32*MMU_BASE)                  // ³¤¶È128*MMU_BASE
+
+// ============================ XRAM1 ============================
+#define RN_Bank1_In                 RN_XRAM1                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank1_Out                (RN_XRAM1+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+#define p_env_chan1                 (RN_Bank1_Out+32*MMU_BASE)                  // ³¤¶È64*MMU_BASE
+
+// ============================ XRAM2 ============================
+#define RN_Bank2_In                 RN_XRAM2                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank2_Out                (RN_XRAM2+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+#define p_env_chan3                 (RN_Bank2_Out+32*MMU_BASE)                  // ³¤¶È64*MMU_BASE
+
+// ============================ XRAM3 ============================
+#define RN_Bank3_In                 RN_XRAM3                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank3_Out                (RN_XRAM3+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+#define g_env_LP                    (RN_Bank3_Out+32*MMU_BASE)                  // ³¤¶È128*MMU_BASE frames_per_obs*MMU_BASE ³¡¾°Ê¶±ðµÄÐÅºÅ°üÂç
+
+// ============================ XRAM4 ============================
+#define RN_Bank4_In                 RN_XRAM4                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank4_Out                (RN_XRAM4+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+
+// ============================ XRAM5 ============================
+#define RN_Bank5_In                 RN_XRAM5                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank5_Out                (RN_XRAM5+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+
+// ============================ XRAM6 ============================
+#define RN_Bank6_In                 RN_XRAM6                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank6_Out                (RN_XRAM6+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+
+// ============================ XRAM7 ============================
+#define RN_Bank7_In                 RN_XRAM7                                    // ³¤¶È16*MMU_BASE 16bit/µã ½ô´Õ¸ñÊ½
+#define RN_Bank7_Out                (RN_XRAM7+16*MMU_BASE)                      // ³¤¶È32*MMU_BASE 32bit/µã ¸ß16bitÓÐÐ§£¬µÍÎ»È«0
+
+
+
+//CPUµÄBootÆµÂÊÐÞ¸ÄÎªSpeed4ÔËÐÐ
+/*
+#define RN_SP1 0x0d
+#define RN_SP2 0x15
+#define RN_SP3 0x19
+#define RN_SP4 0x1f
+#define RN_SP5 0x1c
+*/
+#define Set_CPUSpeed(X)\
+    RD1 = X;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+    g_CPUSpeed = RD1;\
+
+#define Push_Set_CPUSpeed(X)\
+    RD1 = g_CPUSpeed;\
+    push RD1;\
+    RD1 = X;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+    g_CPUSpeed = RD1;\
+    
+#define Pop_CPUSpeed\
+    pop RD1;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+    g_CPUSpeed = RD1;\
+
+////CPUSpeed1: Freq=F0/128£¨0.1875MIPS£©;
+//#define Set_CPUSpeed1\
+//    RD1 = RN_SP1;\
+//    RP_B15;\
+//    Set_Pulse_Ext8;\
+//    nop;nop;\
+//
+////CPUSpeed2: Freq=F0/32;£¨0.75MIPS£©
+//#define Set_CPUSpeed2\
+//    RD1 = RN_SP2;\
+//    RP_B15;\
+//    Set_Pulse_Ext8;\
+//    nop;nop;\
+//
+////CPUSpeed3: Freq=F0/8;£¨3MIPS£©
+//#define Set_CPUSpeed3\
+//    RD1 = RN_SP3;\
+//    RP_B15;\
+//    Set_Pulse_Ext8;\
+//    nop;nop;\
+//
+////CPUSpeed4: Freq=F0/2; £¨default = 12MIPS£©
+//#define Set_CPUSpeed4\
+//    RD1 = RN_SP4;\
+//    RP_B15;\
+//    Set_Pulse_Ext8;\
+//    nop;nop;\
+//
+////CPUSpeed5: Freq=F0/1; £¨24MIPS£©
+//#define Set_CPUSpeed5\
+//    RD1 = RN_SP5;\
+//    RP_B15;\
+//    Set_Pulse_Ext8;\
+//    nop;nop;\
+
+#endif /* _GLOBAL_DEF_ */

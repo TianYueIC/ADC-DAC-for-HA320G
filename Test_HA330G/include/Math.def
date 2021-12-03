@@ -1,0 +1,90 @@
+#ifndef _Math_DEF_
+#define _Math_DEF_
+
+#ifndef Float_F
+	extern Float_From_8BitL;
+	extern Float_From_8BitLM;
+	extern Float_From_8BitHM;
+	extern Float_From_8BitH;
+	extern Float_From_16BitL;
+	extern Float_From_16BitH;
+	extern Float_From_IEEE754;
+	extern Float_To_16BitL;
+	extern Float_To_16BitH;
+	extern Float_To_8BitLM;
+	extern Float_To_8BitL;
+	extern Float_To_8BitHM;
+	extern Float_To_8BitH;
+	extern Float_To_IEEE754;
+	
+  	extern _Float_Add;
+  	extern _Float_Sub;
+  	extern _Recip;
+	extern _Float_Div;
+  	extern _Sqrt;	
+  	extern _Ln;
+  	extern _Lg;
+  	extern _Log2;
+  	extern _Sin;
+  	extern _Float_Sin;	
+
+	extern Float_To_Int;
+	extern Float_From_Int;
+  	extern _Float_Lg;
+  	extern _Float_Multi;
+  	extern pow;
+	extern _Float_Recip;
+
+	extern _Rf_ShiftR_Signed_Reg;
+	extern _Rf_ShiftL_Reg;  
+	
+	extern _2Power;
+  	extern _10Power;
+  	
+  	extern sqrt_fix;
+  	
+  	extern power_fix;
+  	extern recip_fix;
+  	extern recip_fix_Q7;
+  	extern log2_fix;
+  	extern sqrt_fix;
+
+#endif /* Math_F */
+
+//Ó²¼þºê
+
+//#define     RN_Addr_Float      M[RA5+0*MMU_BASE] //0xB0000000
+//#define     RN_Addr_Recip      M[RA5+1*MMU_BASE]
+//#define     RN_Addr_Sqrt       M[RA5+2*MMU_BASE]
+//#define     RN_Addr_Ln         M[RA5+3*MMU_BASE]
+//#define     RN_Addr_Sin        M[RA5+4*MMU_BASE]
+//#define     RN_Addr_Cos        M[RA5+5*MMU_BASE]
+//#define     RN_Addr_Con        M[RA5+6*MMU_BASE]
+//#define     RN_Addr_2Power     M[RA5+7*MMU_BASE]
+//#define     RN_Addr_10Power    M[RA5+8*MMU_BASE]
+
+#define     RN_Addr_Float      	0xB0000000
+#define     RN_Addr_Recip       0xD0000010
+#define     RN_Addr_Sqrt        0xD0000018
+#define     RN_Addr_Ln          0xD0000020
+#define     RN_Addr_Sin         0xD0000028
+#define     RN_Addr_Cos         0xD0000030
+#define     RN_Addr_Con         0xD0000038
+#define     RN_Addr_2Power      0xD00000DC
+#define     RN_Addr_10Power     0xD00000E4
+
+#define     L8Bit_ToFloat       0
+#define     LM8Bit_ToFloat      1
+#define     HM8Bit_ToFloat      2
+#define     H8Bit_ToFloat       3
+#define     L16Bit_ToFloat      4
+#define     H16Bit_ToFloat      5
+#define     L24Bit_ToFloat      6
+#define     Null_ToFloat        7
+
+#define     Read_Float          0
+#define     Read_Float_L        1
+#define     Read_Float_H        2
+#define     Read_Float_Order    3
+
+#endif /* _Math_DEF_ */

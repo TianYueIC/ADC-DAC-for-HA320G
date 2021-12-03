@@ -1,0 +1,912 @@
+#ifndef _CPU11_DEF_
+#define _CPU11_DEF_
+
+#ifndef _CPU11_F_
+    extern _Goto_RD1;
+    extern Const_RA6;
+    extern GuaiyiA;
+    extern _Aone_Hash_no_sbox_Reg;
+    extern _Aone_Hash_no_sbox_1Dword_Reg;
+    extern _Delay_RD2;
+    extern _Delay;
+    extern _Push_Field;
+    extern _Goto_IPaddRD1;
+    extern _Pop_Field;
+    extern _Set_IntEn4DrvProg;
+    extern _MemcpyDword;
+    extern _MemcpyWord;
+    extern _MemcmpDword;
+    extern _Verify_Sum_16_Reg;
+    extern _Debug_Memory_File;
+    extern _Debug_Memory_File_DWAddr;
+    extern _Timer_Number;
+    extern _Debug_Memory_File_Bank;
+#endif /* _CPU11_F_ */s
+
+
+//======================================================
+//常用汇编指令助记符，v2.0.0.0以上版本CPU09汇编器需要以下内容
+#define call                    goto far
+#define RD0_Float               RD0
+#define SetMMU_char             RD65=1
+#define SetMMU_uchar            RD65=2
+#define SetMMU_word             RD65=4
+#define SetMMU_uword            RD65=8
+
+#define Stack                   RD67
+
+//Heap0_x  <=>  RP4~RP11
+#define Heap0_0                 RD68
+#define Heap0_1                 RD69
+#define Heap0_2                 RD70
+#define Heap0_3                 RD71
+#define Heap0_4                 RD72
+#define Heap0_5                 RD73
+#define Heap0_6                 RD74
+#define Heap0_7                 RD75
+//Heap0_x  <=>  RP16~RP47
+#define Heap1_0                 RD80
+#define Heap1_1                 RD81
+#define Heap1_2                 RD82
+#define Heap1_3                 RD83
+#define Heap1_4                 RD84
+#define Heap1_5                 RD85
+#define Heap1_6                 RD86
+#define Heap1_7                 RD87
+
+
+#define Heap1_8                 RD88
+#define Heap1_9                 RD89
+#define Heap1_10                RD90
+#define Heap1_11                RD91
+#define Heap1_12                RD92
+#define Heap1_13                RD93
+#define Heap1_14                RD94
+#define Heap1_15                RD95
+
+
+#define RA0                     RD24
+#define RA1                     RD25
+#define RA2                     RD26
+#define RA3                     RD27
+#define RSP                     RD27
+#define RA4                     RD28
+#define RA5                     RD29
+#define RA6                     RD30
+#define RA7                     RD31
+#define RDxx                    RD16
+#define RPxx                    RD80
+#define Mxx                     RD64
+#define send_para(RDx)          push RDx
+#define RP0                     RD64
+#define RP1                     RD65
+#define RP2                     RD66
+#define RP3                     RD67
+#define RP4                     RD68
+#define RP5                     RD69
+#define RP6                     RD70
+#define RP7                     RD71
+#define RP8                     RD72
+#define RP9                     RD73
+#define RP10                    RD74
+#define RP11                    RD75
+#define RP12                    RD76
+#define RP13                    RD77
+#define RP14                    RD78
+#define RP15                    RD79
+#define RP16                    RD80
+#define RP17                    RD81
+#define RP18                    RD82
+#define RP19                    RD83
+#define RP20                    RD84
+#define RP21                    RD85
+#define RP22                    RD86
+#define RP23                    RD87
+#define RP24                    RD88
+#define RP25                    RD89
+#define RP26                    RD90
+#define RP27                    RD91
+#define RP28                    RD92
+#define RP29                    RD93
+#define RP30                    RD94
+#define RP31                    RD95
+#define RP32                    RD96
+#define RP33                    RD97
+#define RP34                    RD98
+#define RP35                    RD99
+#define RP36                    RD100
+#define RP37                    RD101
+#define RP38                    RD102
+#define RP39                    RD103
+#define RP40                    RD104
+#define RP41                    RD105
+#define RP42                    RD106
+#define RP43                    RD107
+#define RP44                    RD108
+#define RP45                    RD109
+#define RP46                    RD110
+#define RP47                    RD111
+#define RP48                    RD112
+#define RP49                    RD113
+#define RP50                    RD114
+#define RP51                    RD115
+#define RP52                    RD116
+#define RP53                    RD117
+#define RP54                    RD118
+#define RP55                    RD119
+#define RP56                    RD120
+#define RP57                    RD121
+#define RP58                    RD122
+#define RP59                    RD123
+#define RP60                    RD124
+#define RP61                    RD125
+#define RP62                    RD126
+#define RP63                    RD127
+
+#define RF_RotateL1             RF_OPP0
+#define RF_RotateL2             RF_OPP1
+#define RF_ShiftL1              RF_OPP2
+#define RF_ShiftL2              RF_OPP3
+#define RF_Disorder             RF_OPP4
+#define RF_RotateR1             RF_OPP5
+#define RF_RotateR2             RF_OPP6
+#define RF_ShiftR1              RF_OPP7
+#define RF_ShiftR2              RF_OPP8
+//#define //                        RF_OPP9
+#define RF_RotateR4             RF_OPP10
+#define RF_RotateR8             RF_OPP11
+#define RF_RotateL24            RF_OPP11
+#define RF_RotateL16            RF_OPP12
+#define RF_RotateR16            RF_OPP12
+#define RF_RotateL8             RF_OPP13
+#define RF_RotateR24            RF_OPP13
+#define RF_RotateL4             RF_OPP14
+#define RF_GetL8                RF_OPP15
+#define RF_GetML8               RF_OPP16
+#define RF_GetMH8               RF_OPP17
+#define RF_GetH8                RF_OPP18
+#define RF_GetL16               RF_OPP19
+#define RF_GetH16               RF_OPP20
+#define RF_Reverse              RF_OPP21
+#define RF_LSB2MSB              RF_OPP22
+#define RF_MSB2LSB              RF_OPP22
+#define RF_ExchangeL16          RF_OPP23
+#define RF_Bitextent2           RF_OPP24
+#define RF_GetBIT_2N            RF_OPP25
+#define RF_Tosddata             RF_OPP26
+#define RF_Fromsddata           RF_OPP27
+//#define //                        RF_OPP28
+//#define //                        RF_OPP29
+//#define //                        RF_OPP30
+//#define //                        RF_OPP31
+#define RF_GetH4                  RF_OPP32
+//#define //                        RF_OPP33
+#define RF_Get0                 RF_OPP34
+#define RF_Set0                 RF_OPP34
+#define RF_Get_1                 RF_OPP35
+#define RF_Set1                 RF_OPP35
+//#define RF_Add1               RF_OPP36   //指令码已占用，RDx ++
+//#define RF_Sub1               RF_OPP37   //指令码已占用，RDx --
+//#define RF_Neg                  RF_OPP38    //指令更改为RF_Abs（求绝对值）
+#define   RF_Neg(X)\
+          RF_Not(X);\
+          X += 1
+#define RF_Abs                  RF_OPP38
+#define RF_Not                  RF_OPP39
+#define RF_Parity               RF_OPP40
+#define RF_Exp                  RF_OPP41
+#define RF_Log                  RF_OPP42
+#define RF_EXT0                 RF_OPP43
+#define RF_EXT1                 RF_OPP44
+#define RF_EXT2                 RF_OPP45
+#define RF_EXT3                 RF_OPP46
+#define RF_EXT4                 RF_OPP47
+#define RF_EXT5                 RF_OPP48
+#define RF_EXT6                 RF_OPP49
+#define RF_EXT7                 RF_OPP50
+#define RF_EXT8                 RF_OPP51
+#define RF_EXT9                 RF_OPP52
+#define RF_EXT10                RF_OPP53
+#define RF_EXT11                RF_OPP54
+#define RF_EXT12                RF_OPP55
+#define RF_EXT13                RF_OPP56
+#define RF_EXT14                RF_OPP57
+#define RF_EXT15                RF_OPP58
+#define RF_EXT16                RF_OPP59
+#define RF_EXT17                RF_OPP60
+#define RF_EXT18                RF_OPP61
+#define RF_EXT19                RF_OPP62
+#define RF_EXT20                RF_OPP63// 已被内核占用
+
+#conditional RD0_Bit0==0            RFlag0
+#conditional RD0_Bit1==0            RFlag1
+#conditional RD0_Bit2==0            RFlag2
+#conditional RD0_Bit3==0            RFlag3
+#conditional RD0_Bit4==0            RFlag4
+#conditional RD0_Bit5==0            RFlag5
+#conditional RD0_Bit6==0            RFlag6
+#conditional RD0_Bit7==0            RFlag7
+#conditional RD0_Bit8==0            RFlag8
+#conditional RD0_Bit9==0            RFlag9
+#conditional RD0_Bit10==0           RFlag10
+#conditional RD0_Bit11==0           RFlag11
+#conditional RD0_Bit12==0           RFlag12
+#conditional RD0_Bit13==0           RFlag13
+#conditional RD0_Bit14==0           RFlag14
+#conditional RD0_Bit15==0           RFlag15
+#conditional RD0_Bit16==0           RFlag16
+#conditional RD0_Bit17==0           RFlag17
+#conditional RD0_Bit18==0           RFlag18
+#conditional RD0_Bit19==0           RFlag19
+#conditional RD0_Bit20==0           RFlag20
+#conditional RD0_Bit21==0           RFlag21
+#conditional RD0_Bit22==0           RFlag22
+#conditional RD0_Bit23==0           RFlag23
+#conditional RD0_Bit24==0           RFlag24
+#conditional RD0_Bit25==0           RFlag25
+#conditional RD0_Bit26==0           RFlag26
+#conditional RD0_Bit27==0           RFlag27
+#conditional RD0_Bit28==0           RFlag28
+#conditional RD0_Bit29==0           RFlag29
+#conditional RD0_Bit30==0           RFlag30
+#conditional RD0_Bit31==0           RFlag31
+#conditional RD0>=0                 RFlag31
+#conditional RQ_Bit0==0             RFlag32
+#conditional RQ_Bit1==0             RFlag33
+#conditional RQ_Bit2==0             RFlag34
+#conditional RQ_Bit3==0             RFlag35
+#conditional RQ_Bit4==0             RFlag36
+#conditional RQ_Bit5==0             RFlag37
+#conditional RQ_Bit6==0             RFlag38
+#conditional RQ_Bit7==0             RFlag39
+#conditional RQ_Bit8==0             RFlag40
+#conditional RQ_Bit9==0             RFlag41
+#conditional RQ_Bit10==0            RFlag42
+#conditional RQ_Bit11==0            RFlag43
+#conditional RQ_Bit12==0            RFlag44
+#conditional RQ_Bit13==0            RFlag45
+#conditional RQ_Bit14==0            RFlag46
+#conditional RQ_Bit15==0            RFlag47
+#conditional RQ_Bit16==0            RFlag48
+#conditional RQ_Bit17==0            RFlag49
+#conditional RQ_Bit18==0            RFlag50
+#conditional RQ_Bit19==0            RFlag51
+#conditional RQ_Bit20==0            RFlag52
+#conditional RQ_Bit21==0            RFlag53
+#conditional RQ_Bit22==0            RFlag54
+#conditional RQ_Bit23==0            RFlag55
+#conditional RQ_Bit24==0            RFlag56
+#conditional RQ_Bit25==0            RFlag57
+#conditional RQ_Bit26==0            RFlag58
+#conditional RQ_Bit27==0            RFlag59
+#conditional RQ_Bit28==0            RFlag60
+#conditional RQ_Bit29==0            RFlag61
+#conditional RQ_Bit30==0            RFlag62
+#conditional RQ_Bit31==0            RFlag63
+#conditional RFlag_USER0==0         RFlag64
+#conditional RFlag_USER1==0         RFlag65
+#conditional RFlag_USER2==0         RFlag66
+#conditional RFlag_USER3==0         RFlag67
+#conditional RFlag_USER4==0         RFlag68
+#conditional RFlag_USER5==0         RFlag69
+#conditional RFlag_USER6==0         RFlag70
+#conditional RFlag_USER7==0         RFlag71
+#conditional RFlag_USER8==0         RFlag72
+#conditional RFlag_USER9==0         RFlag73
+#conditional RFlag_USER10==0        RFlag74
+#conditional RFlag_USER11==0        RFlag75
+#conditional RFlag_USER12==0        RFlag76
+#conditional RFlag_USER13==0        RFlag77
+#conditional RFlag_USER14==0        RFlag78
+#conditional RFlag_USER15==0        RFlag79
+#conditional RFlag_USER16==0        RFlag80
+#conditional RFlag_USER17==0        RFlag81
+#conditional RFlag_USER18==0        RFlag82
+#conditional RFlag_USER19==0        RFlag83
+#conditional RFlag_USER20==0        RFlag84
+#conditional RFlag_USER21==0        RFlag85
+#conditional RFlag_USER22==0        RFlag86
+#conditional RFlag_USER23==0        RFlag87
+#conditional RFlag_USER24==0        RFlag88
+#conditional RFlag_USER25==0        RFlag89
+#conditional RFlag_USER26==0        RFlag90
+#conditional RFlag_USER27==0        RFlag91
+#conditional RFlag_USER28==0        RFlag92
+#conditional RFlag_USER29==0        RFlag93
+#conditional RFlag_USER30==0        RFlag94
+#conditional RFlag_USER31==0        RFlag95
+#conditional RD0_L4==0              RFlag96
+#conditional RQ_L8==0               RFlag97
+#conditional RD0==0                 RFlag98
+#conditional RD0_Zero               RFlag98
+#conditional RQ_L4==0               RFlag99
+#conditional RD0_L8==0              RFlag100
+#conditional RD0_L16==0             RFlag101
+#conditional RD0_H16==0             RFlag102
+#conditional RD0_MH8==0             RFlag103
+#conditional RQ_ML8==0              RFlag104
+#conditional RQ_L16==0              RFlag105
+#conditional RQ_H8==0               RFlag106
+#conditional RQ_H16==0              RFlag107
+#conditional RQ==0                  RFlag108
+#conditional RQ_Zero                RFlag108
+#conditional RD0_ML8==0             RFlag109
+#conditional RQ_MH8==0              RFlag110
+#conditional RD0_H8==0              RFlag111
+#conditional RD0<=0                 RFlag112
+#conditional RD0>0                  RFlag113
+#conditional SRQ<0                  RFlag114
+#conditional SRQ>=0                 RFlag115
+#conditional RQ>0                   RFlag116
+#conditional RQ<=0                  RFlag117
+#conditional SRQ<=0                 RFlag118
+#conditional SRQ>0                  RFlag119
+#conditional RQ_Carry               RFlag120
+#conditional RQ_nBorrow             RFlag120
+#conditional RQ>=0                  RFlag120
+#conditional RQ_nCarry              RFlag121
+#conditional RQ_Borrow              RFlag121
+#conditional RQ<0                   RFlag121
+#conditional RQ_OverFlow            RFlag122
+#conditional RQ_OverFlow_H          RFlag123
+#conditional Sys_RFlag0             RFlag124
+#conditional Sys_RFlag1             RFlag125
+#conditional Sys_RFlag2             RFlag126
+#conditional Sys_RFlag3             RFlag127
+#conditional RD0_Bit0==1            RFlag128
+#conditional RD0_Bit1==1            RFlag129
+#conditional RD0_Bit2==1            RFlag130
+#conditional RD0_Bit3==1            RFlag131
+#conditional RD0_Bit4==1            RFlag132
+#conditional RD0_Bit5==1            RFlag133
+#conditional RD0_Bit6==1            RFlag134
+#conditional RD0_Bit7==1            RFlag135
+#conditional RD0_Bit8==1            RFlag136
+#conditional RD0_Bit9==1            RFlag137
+#conditional RD0_Bit10==1           RFlag138
+#conditional RD0_Bit11==1           RFlag139
+#conditional RD0_Bit12==1           RFlag140
+#conditional RD0_Bit13==1           RFlag141
+#conditional RD0_Bit14==1           RFlag142
+#conditional RD0_Bit15==1           RFlag143
+#conditional RD0_Bit16==1           RFlag144
+#conditional RD0_Bit17==1           RFlag145
+#conditional RD0_Bit18==1           RFlag146
+#conditional RD0_Bit19==1           RFlag147
+#conditional RD0_Bit20==1           RFlag148
+#conditional RD0_Bit21==1           RFlag149
+#conditional RD0_Bit22==1           RFlag150
+#conditional RD0_Bit23==1           RFlag151
+#conditional RD0_Bit24==1           RFlag152
+#conditional RD0_Bit25==1           RFlag153
+#conditional RD0_Bit26==1           RFlag154
+#conditional RD0_Bit27==1           RFlag155
+#conditional RD0_Bit28==1           RFlag156
+#conditional RD0_Bit29==1           RFlag157
+#conditional RD0_Bit30==1           RFlag158
+#conditional RD0_Bit31==1           RFlag159
+#conditional RD0<0                  RFlag159
+#conditional RQ_Bit0==1             RFlag160
+#conditional RQ_Bit1==1             RFlag161
+#conditional RQ_Bit2==1             RFlag162
+#conditional RQ_Bit3==1             RFlag163
+#conditional RQ_Bit4==1             RFlag164
+#conditional RQ_Bit5==1             RFlag165
+#conditional RQ_Bit6==1             RFlag166
+#conditional RQ_Bit7==1             RFlag167
+#conditional RQ_Bit8==1             RFlag168
+#conditional RQ_Bit9==1             RFlag169
+#conditional RQ_Bit10==1            RFlag170
+#conditional RQ_Bit11==1            RFlag171
+#conditional RQ_Bit12==1            RFlag172
+#conditional RQ_Bit13==1            RFlag173
+#conditional RQ_Bit14==1            RFlag174
+#conditional RQ_Bit15==1            RFlag175
+#conditional RQ_Bit16==1            RFlag176
+#conditional RQ_Bit17==1            RFlag177
+#conditional RQ_Bit18==1            RFlag178
+#conditional RQ_Bit19==1            RFlag179
+#conditional RQ_Bit20==1            RFlag180
+#conditional RQ_Bit21==1            RFlag181
+#conditional RQ_Bit22==1            RFlag182
+#conditional RQ_Bit23==1            RFlag183
+#conditional RQ_Bit24==1            RFlag184
+#conditional RQ_Bit25==1            RFlag185
+#conditional RQ_Bit26==1            RFlag186
+#conditional RQ_Bit27==1            RFlag187
+#conditional RQ_Bit28==1            RFlag188
+#conditional RQ_Bit29==1            RFlag189
+#conditional RQ_Bit30==1            RFlag190
+#conditional RQ_Bit31==1            RFlag191
+#conditional RFlag_USER0==1         RFlag192
+#conditional RFlag_USER1==1         RFlag193
+#conditional RFlag_USER2==1         RFlag194
+#conditional RFlag_USER3==1         RFlag195
+#conditional RFlag_USER4==1         RFlag196
+#conditional RFlag_USER5==1         RFlag197
+#conditional RFlag_USER6==1         RFlag198
+#conditional RFlag_USER7==1         RFlag199
+#conditional RFlag_USER8==1         RFlag200
+#conditional RFlag_USER9==1         RFlag201
+#conditional RFlag_USER10==1        RFlag202
+#conditional RFlag_USER11==1        RFlag203
+#conditional RFlag_USER12==1        RFlag204
+#conditional RFlag_USER13==1        RFlag205
+#conditional RFlag_USER14==1        RFlag206
+#conditional RFlag_USER15==1        RFlag207
+#conditional RFlag_USER16==1        RFlag208
+#conditional RFlag_USER17==1        RFlag209
+#conditional RFlag_USER18==1        RFlag210
+#conditional RFlag_USER19==1        RFlag211
+#conditional RFlag_USER20==1        RFlag212
+#conditional RFlag_USER21==1        RFlag213
+#conditional RFlag_USER22==1        RFlag214
+#conditional RFlag_USER23==1        RFlag215
+#conditional RFlag_USER24==1        RFlag216
+#conditional RFlag_USER25==1        RFlag217
+#conditional RFlag_USER26==1        RFlag218
+#conditional RFlag_USER27==1        RFlag219
+#conditional RFlag_USER28==1        RFlag220
+#conditional RFlag_USER29==1        RFlag221
+#conditional RFlag_USER30==1        RFlag222
+#conditional RFlag_USER31==1        RFlag223
+#conditional RD0_L4!=0              RFlag224
+#conditional RQ_L8!=0               RFlag225
+#conditional RD0!=0                 RFlag226
+#conditional RD0_nZero              RFlag226
+#conditional RQ_L4!=0               RFlag227
+#conditional RD0_L8!=0              RFlag228
+#conditional RD0_L16!=0             RFlag229
+#conditional RD0_H16!=0             RFlag230
+#conditional RD0_MH8!=0             RFlag231
+#conditional RQ_ML8!=0              RFlag232
+#conditional RQ_L16!=0              RFlag233
+#conditional RQ_H8!=0               RFlag234
+#conditional RQ_H16!=0              RFlag235
+#conditional RQ_nZero               RFlag236
+#conditional RQ!=0                  RFlag236
+#conditional RD0_ML8!=0             RFlag237
+#conditional RQ_MH8!=0              RFlag238
+#conditional RD0_H8!=0              RFlag239
+#conditional SRQ==0                 RFlag241
+#conditional SRQ!=0                 RFlag255
+
+
+//以下为内核占用资源
+
+//定义单目操作 RF_Sub1 (RF_OPP37)含义
+#define RF_GetIntRIP                RF_EXT20
+#define Set_RFSub1                  Set_Level_ExtH1  //“RD --” 为自减1功能
+#define Set_RFSubBorrow             Set_Level_ExtL1  //“RD --” 为减去借位功能
+
+//C语言编译器使用
+#define RegCallRD1              call _Goto_RD1
+//======================================================
+#define goto_RD1                call GuaiyiA
+
+#define goto_IP+RD1             call _Goto_IPaddRD1
+
+#define MMU_BASE                        4
+#define ROM_BASE                        2
+//=====================================
+//   程序段地址分配
+//=====================================
+//最高两位“00”  :  BaseRom
+//最高两位“01”  :  Cache
+//最高两位“1x”  :  Flash
+#define RN_ROM_START_Program            0x00000000
+#define RN_Cache_StartAddr_Program      0x00400000
+//#define RN_Flash_StartAddr_Program      0x00800000
+
+//=====================================
+//   数据段地址分配
+//=====================================
+//最高四位“0000”  :  Cache
+//最高四位“0001”  :  BaseRAM
+//最高四位“1100”  :  BaseROM
+//最高四位“1101”  :  ConstROM
+//最高四位“111x”  :  Flash
+//其他            :  RAM
+#define RN_Cache_StartAddr              0x00000000
+#define RN_ROM_START                    0xC0000000
+#define RN_Const_StartAddr              0xD0000000
+//#define RN_Flash_StartAddr              0xF0000000
+#define RN_RAM_StarAddr                 0x10000000
+
+#define RN_BASEROM_SIZE                 (28*1024)
+#define RN_CONSTROM_SIZE                (16*1024)
+#define RN_RAM_SIZE                     (4*1024)
+#define RN_Cache_SIZE                   (24*1024)
+#define RN_GRAM_BANK_SIZE               1024
+#define RN_XRAM_BANK_SIZE               1024
+#define RN_GRAM_SIZE                    (16*RN_GRAM_BANK_SIZE)
+#define RN_XRAM_SIZE                    (8*RN_XRAM_BANK_SIZE)
+#define RN_PRAM_SIZE                    1024
+#define RN_FLOWRAM0_SIZE                1024
+#define RN_FLOWRAM1_SIZE                1024
+#define RN_RSP_START                    (RN_RAM_StarAddr+RN_RAM_SIZE)
+
+//========================================
+//SOC数据段定义，不同工程可更改
+//========================================
+#define     RN_GRAM_START           0x20000000
+#define     RN_PRAM_START           0x30000000
+#define     RN_XRAM_START           RN_GRAM_START+16*1024
+#define     PortExt_Addr            RN_GRAM_START+31*1024
+#define     FlowRAM_Addr0           RN_GRAM_START+24*1024
+#define     FlowRAM_Addr1           RN_GRAM_START+25*1024
+#define     I2SRAM_Addr0            RN_GRAM_START+26*1024
+#define     I2SRAM_Addr1            RN_GRAM_START+27*1024
+#define     FFT128RAM_Addr0         RN_GRAM_START+28*1024
+#define     FFT128RAM_Addr1         RN_GRAM_START+29*1024
+
+#define     RN_LMSRAM_START         0x40000000
+
+#define     RN_ADC_CREG_ADDR        0x60000000
+
+//原CPU09.def中相关硬件定义
+//====================================================================
+// CPU工作模式定义
+//====================================================================
+#define Set_CPUSleep        \
+       Set_Level_ExtL17; \
+       Set_Pulse_Ext15                  //RP_PulseExt15
+#define Set_CPUSleep_Over   \
+       Set_WakeFromSleepDis
+
+//#define RN_SP1 0x0b
+//#define RN_SP2 0x13
+//#define RN_SP3 0x1f
+//#define RN_SP4 0x19
+//#define RN_SP5 0x1a
+
+//CPU的Boot频率修改为Speed4运行
+
+#define RN_SP1 0x0d
+#define RN_SP2 0x15
+#define RN_SP3 0x19
+#define RN_SP4 0x1f
+#define RN_SP5 0x1c
+
+#define Set_CPUSpeed(X)\
+    RD1 = X;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+
+//CPUSpeed1: Freq=F0/128（0.1875MIPS）;
+#define Set_CPUSpeed1\
+    RD1 = RN_SP1;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+
+//CPUSpeed2: Freq=F0/32;（0.75MIPS）
+#define Set_CPUSpeed2\
+    RD1 = RN_SP2;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+
+//CPUSpeed3: Freq=F0/8;（3MIPS）
+#define Set_CPUSpeed3\
+    RD1 = RN_SP3;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+
+//CPUSpeed4: Freq=F0/2; （default = 12MIPS）
+#define Set_CPUSpeed4\
+    RD1 = RN_SP4;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+
+//CPUSpeed5: Freq=F0/1; （24MIPS）
+#define Set_CPUSpeed5\
+    RD1 = RN_SP5;\
+    RP_B15;\
+    Set_Pulse_Ext8;\
+    nop;nop;\
+
+
+#define Set_CPUSpeedFlash               Set_Set_Level_ExtL31
+#define Set_CPUSpeedROM                 Set_Set_Level_ExtH31
+#define Switch_CPUSpeed                 Set_Pulse_Ext8
+#define Sel_FilterCp_96M                Set_Level_ExtH5   //High RP_LevelExt 5
+#define Sel_FilterCp_Sync               Set_Level_ExtL5   // Low RP_LevelExt 5
+//====================================================================
+//Rx控制定义
+//====================================================================
+#define Set_RxLevelL                    Set_LevelL58         // Low RP_Level 58
+#define Set_RxLevelH                    Set_LevelH58         //High RP_Level 58
+#define Set_RxLevelEn                   Set_Level_ExtL30    // Low RP_LevelExt 30
+#define Set_RxLevelDis                  Set_Level_ExtH30    //High RP_LevelExt 30
+#define RP_RxLevel                      RP_B14
+#define Set_RxPulseEn                   Set_Level_ExtL29    // Low RP_LevelExt 29
+#define Set_RxPulseDis                  Set_Level_ExtH29    //High RP_LevelExt 29
+#define Set_RxPulse                     Set_Pulse0
+#define RP_RxPulse                      RP_B13
+#define Set_RxRPEn                      Set_Level_ExtL28    // Low RP_LevelExt 28
+#define Set_RxRPDis                     Set_Level_ExtH28    //High RP_LevelExt 28
+#define RP_RxRP                         RP_B12
+#define Set_RxRegReadEn                 Set_Level_ExtL27    // Low RP_LevelExt 27
+#define Set_RxRegReadDis                Set_Level_ExtH27    //High RP_LevelExt 27
+#define RP_RxRegRead                    RP_B11
+#define Set_RxRegWriteEn                Set_Level_ExtL26    // Low RP_LevelExt 26
+#define Set_RxRegWriteDis               Set_Level_ExtH26    //High RP_LevelExt 26
+#define RP_RxRegWrite                   RP_B10
+//====================================================================
+//AutoMem控制定义
+//====================================================================
+#define Set_AutoMemAlt                  Set_Pulse_Ext14     //RP_PulseExt14
+                                                            //RP_LevelExt22
+#define Set_DisMemAlt       \
+        Set_Level_ExtL22;   \
+        Set_Level_ExtH22
+//====================================================================
+//AutoReturn控制定义
+//====================================================================
+#define Set_LoopNum                     RD66
+
+#define Para_Slow                       3
+#define Para_Normal                     2
+
+#define Para_MemRead                    16
+#define Para_MemWrite                   17
+#define Para_RPOp                       18
+#define Para_Level                      19
+#define Para_Pulse                      20
+#define Para_RD1Read                    21
+#define Para_RD1Write                   22
+#define Para_RD0Op                      23
+#define Para_SQ_Littler0                1
+#define Para_SQ_unLittler0              9
+#define Para_uSQ_Larger0                5
+#define Para_RD0_Zero                   2
+#define Para_RD0_nZero                  10
+#define Para_RD0MSB==0                  3
+#define Para_RD0>=0                     3
+#define Para_RD0MSB==1                  11
+#define Para_RD0<0                      11
+#define Para_RD0>0                      4
+#define Para_RD0<=0                     12
+#define Para_RD0_H8==0                  6
+#define Para_RD0_H16==0                 7
+#define Para_AutoReturnFlag0            13
+#define Para_AutoReturnFlag1            14
+#define Para_AutoReturnFlag2            15
+
+//====================================================================
+//Int控制定义
+//====================================================================
+/*
+  硬件中断共31个，中断0优先级最高，中断30优先级最低
+  Int<6:0> 只到ROM
+  Int<14:7> 只到Flash
+  Int<30:15> 默认到FLash，当"Set_IntUser2Rom"时只到Flash
+
+  系统占用16个,不可屏蔽
+     Int0       看门狗
+     Int<1:5>   MMU 5个
+     Int6       Int_unMask2ROM     (外部扩展为8路)
+     Int7       Int_unMask2Flash   (外部扩展为8路)
+     Int<8:14>  补丁中断7个
+  系统占用4个,可屏蔽
+     Int<15>    补丁中断1个
+     Int<16:18> 定时器
+     Int<29>    实时钟中断
+     Int30      单步中断
+  用户中断10个,可屏蔽
+     Int<19:28>
+*/
+#define Set_IntUser2Rom                 Set_Level_ExtL25    // Low RP_LevelExt 25
+#define Set_IntUser2Flash               Set_Level_ExtH25    //High RP_LevelExt 25
+
+//禁止所有中断，清除所有中断请求
+#define Set_Int_AllDis                  Set_Pulse_Ext9  // RP_PulseExt9
+
+//中断使能总开关
+#define Set_IntFunc_En                  Set_Pulse_Ext13 // RP_PulseExt13
+
+// 单步中断 Int<30>
+#define Set_StepInt_En                  Set_Int_En30
+#define Set_StepInt_Dis                 Set_Int_Dis30
+
+// 补丁中断 Int<15:8>
+#define Set_PatchIntEn                  Set_Level_ExtL24    // RP_LevelExtL24
+#define Set_PatchIntDis                 Set_Level_ExtH24    // RP_LevelExtH24
+
+#define Set_PatchInt0_En                Set_Int_En8
+#define Set_PatchInt0_Dis               Set_Int_Dis8
+#define Set_PatchInt1_En                Set_Int_En9
+#define Set_PatchInt1_Dis               Set_Int_Dis9
+#define Set_PatchInt2_En                Set_Int_En10
+#define Set_PatchInt2_Dis               Set_Int_Dis10
+#define Set_PatchInt3_En                Set_Int_En11
+#define Set_PatchInt3_Dis               Set_Int_Dis11
+#define Set_PatchInt4_En                Set_Int_En12
+#define Set_PatchInt4_Dis               Set_Int_Dis12
+#define Set_PatchInt5_En                Set_Int_En13
+#define Set_PatchInt5_Dis               Set_Int_Dis13
+#define Set_PatchInt6_En                Set_Int_En14
+#define Set_PatchInt6_Dis               Set_Int_Dis14
+#define Set_PatchInt7_En                Set_Int_En15
+#define Set_PatchInt7_Dis               Set_Int_Dis15
+
+#define Set_PatchInt_Addr7              RP_B9
+#define Set_PatchInt_Addr6              RP_B8
+#define Set_PatchInt_Addr5              RP_B7
+#define Set_PatchInt_Addr4              RP_B6
+#define Set_PatchInt_Addr3              RP_B5
+#define Set_PatchInt_Addr2              RP_B4
+#define Set_PatchInt_Addr1              RP_B3
+#define Set_PatchInt_Addr0              RP_B2
+
+
+//MMU 中断控制
+//MMU 中断控制
+#define Set_IntMMUConst_En      \
+                Set_Pulse_Ext7; \
+                Set_Int_En1;    \
+                Set_Int_En2;    \
+                Set_Int_En3;    \
+                Set_Int_En4;    \
+                Set_Int_En5
+
+#define Set_ConstInt_En                 Set_Pulse_Ext7; Set_Level_ExtH11                     // High RP_Level 11
+#define Set_ConstInt_Dis                Set_Pulse_Ext7; Set_Level_ExtL11
+#define Set_Opcode_Dis                  Set_Pulse_Ext7      // RP_PulseExt7
+
+#define Set_IntunMask2ROM_En            Set_Int_En6
+#define Set_IntunMask2ROM_Dis           Set_Int_Dis6
+#define Set_IntunMask2Flash_En          Set_Int_En7
+#define Set_IntunMask2Flash_Dis         Set_Int_Dis7
+
+//用户中断使能/屏蔽，C语言用户使用
+#define Set_Int_En                      Set_Level_ExtL21
+#define Set_Int_Dis                     Set_Level_ExtH21
+//用户中断使能/屏蔽，ASM底层驱动使用
+#define Set_IntASM_En                   Set_Level_ExtL12
+#define Set_IntASM_Dis                  Set_Level_ExtH12
+//用户中断向量开关
+#define Set_UserInt0_En                 Set_Int_En19
+#define Set_UserInt0_Dis                Set_Int_Dis19
+#define Set_UserInt1_En                 Set_Int_En20
+#define Set_UserInt1_Dis                Set_Int_Dis20
+#define Set_UserInt2_En                 Set_Int_En21
+#define Set_UserInt2_Dis                Set_Int_Dis21
+#define Set_UserInt3_En                 Set_Int_En22
+#define Set_UserInt3_Dis                Set_Int_Dis22
+#define Set_UserInt4_En                 Set_Int_En23
+#define Set_UserInt4_Dis                Set_Int_Dis23
+#define Set_UserInt5_En                 Set_Int_En24
+#define Set_UserInt5_Dis                Set_Int_Dis24
+#define Set_UserInt6_En                 Set_Int_En25
+#define Set_UserInt6_Dis                Set_Int_Dis25
+#define Set_UserInt7_En                 Set_Int_En26
+#define Set_UserInt7_Dis                Set_Int_Dis26
+#define Set_UserInt8_En                 Set_Int_En27
+#define Set_UserInt8_Dis                Set_Int_Dis27
+#define Set_UserInt9_En                 Set_Int_En28
+#define Set_UserInt9_Dis                Set_Int_Dis28
+
+//中断后得到断点 RIP，至寄存器RD37
+#define ClrFlag_SubRet                  Set_Pulse_Ext2
+#define Sel_True96M                     Set_Level_ExtH5
+#define Sel_Sync96M                     Set_Level_ExtL5
+
+#define RP_MMUAddr                      RD127
+#define RFlag_AddrBit0_Zero             RFlag240
+#define RFlag_AddrBit1_Zero             RFlag241
+
+//====================================================================
+//RFlag 分配
+//====================================================================
+/*  RFlag 共256个，判0判1合并128个
+        RD0Bit31~0           占64个
+        RQBit31~0            占64个
+        UserFlag31~0         占64个
+        进位、大小、全零等   占44个
+
+        SysFlag              占20个
+
+            RFlag124~127         Flag_Level<0:7>
+            RFlag249~246
+                                 0:Wake_from_Sleep
+                                 1:RFlag_SingleTask
+                                 2:MF_RFlag
+                                 3:RFlag_Null
+                                 4:7 RFlag_Temp0~3
+
+        RFlag240~241         AB_RAM<1:0>
+        RFlag242             RFlag_SysResetTime
+        RFlag243~245         Counter2~0
+        RFlag249~246         Flag_Level<7:4>
+        RFlag251~250         0:SOC_Mode0
+                             1:SOC_Mode1
+        RFlag253~252         RFlag_SubInst
+                             RFlag_ReturnInst
+        RFlag254             RFlag_NoInt
+        RFlag255             null
+*/
+
+#define     RFlag_unWakeFromSleep       RFlag124
+#define     Set_WakeFromSleepEn         Set_Level_ExtL17
+#define     Set_WakeFromSleepDis        Set_Level_ExtH17
+
+#define     RFlag_SingleTask            RFlag125
+#define     Set_SingleTask              Set_Level_ExtH18
+#define     Set_MultiTask               Set_Level_ExtL18
+
+#define     RFlag_MF                    RFlag126
+#define     RFlag_MFSet1                Set_Level_ExtH19
+#define     RFlag_MFSet0                Set_Level_ExtL19
+
+#define     RFlag_Null                  RFlag127
+#define     Set_RFlag_Null              Set_Level_ExtL20
+#define     Set_RFlag_True              Set_Level_ExtH20
+
+#define     RFlag_Temp0                 RFlag246
+#define     Set_RFlagTemp0_Zero         Set_Level_ExtL7
+#define     Set_RFlagTemp0_nZero        Set_Level_ExtH7
+
+#define     RFlag_Temp1                 RFlag247
+#define     Set_RFlagTemp1_Zero         Set_Level_ExtL8
+#define     Set_RFlagTemp1_nZero        Set_Level_ExtH8
+
+#define     RFlag_Temp2                 RFlag248
+#define     Set_RFlagTemp2_Zero         Set_Level_ExtL9
+#define     Set_RFlagTemp2_nZero        Set_Level_ExtH9
+
+#define     RFlag_Java                  RFlag249              //既是标志，又是控制线
+#define     Set_RFlagJava_Java          Set_Level_ExtL10      //Java模式下，端口只有RP0~RP3保持原来功能
+#define     Set_RFlagJava_Native        Set_Level_ExtH10      //其余端口均映射到硬件HeapStack模块
+
+#define     SOC_Mode0                   RFlag250
+#define     SOC_Mode1                   RFlag251
+
+#define     RFlag_SubInst               RFlag252    //调试单步中断，前一条指令为Sub
+#define     RFlag_ReturnInst            RFlag253    //调试单步中断，前一条指令为Return
+
+#define     RFlag_NoInt                 RFlag254    //判断是否有中断过来
+
+#define     RFlag_SysResetTime          RFlag242
+#define     Set_SysResetTime_Over       Set_Pulse_Ext13   //与“Set_IntFunc_En”同
+
+#define     Set_RFlag_NoInt_4Ever       Set_Level_ExtL4
+
+#define     Set_Reg0814_Group0          Set_Level_ExtH23;   Set_Level_ExtH22
+#define     Set_Reg0814_Group1          Set_Level_ExtH23;   Set_Level_ExtL22
+#define     Set_Reg0814_Group2          Set_Level_ExtL23;   Set_Level_ExtH22
+
+//====================================================================
+//WRP、RRP 分配
+//====================================================================
+////写RP端口63个
+//    WRP63         Mem
+//      WRP<62>       WatchDog
+//      WRP<61:59>    Time2~0
+//      WRP<58:0>     User
+////读RP端口63个
+//    RRP63         Mem
+//      RRP<62:57>    ReadunOC<5:0>
+//      RRP<56:0>     User
+
+//======================================================
+
+//====================================================================
+//结束仿真的宏
+#define EXIT                            Set_Pulse_Ext15 // nRP_Pulse_Ext15
+
+#define Debug_Start                     Set_Level_ExtL0 // Low RP_LevelExt 0
+#define Debug_End                       Set_Level_ExtH0 //High RP_LevelExt 0
+
+#define Debug_Mark0                     Set_Pulse_Ext0  // Low RP_PulseExt 0
+#define Debug_Mark1                     Set_Pulse_Ext1  // Low RP_PulseExt 1
+#define Debug_Mark2                     Set_Pulse_Ext2  // Low RP_PulseExt 2
+
+#define Debug_Reg16                     RP4
+#define Debug_Reg32                     RP3
+
+#endif /* _CPU11_DEF_ */

@@ -1,0 +1,15 @@
+#ifndef _FMT_DEF_
+#define _FMT_DEF_
+
+#ifndef _FMT_F_
+    extern Get_Real;
+    extern Get_Imag;
+    extern Real_To_Complex;
+    extern Real_To_Complex2;
+#endif /* _FMT_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _FMT_DEF_ */

@@ -1,0 +1,16 @@
+#ifndef _BARREL_DEF_
+#define _BARREL_DEF_
+
+#ifndef _BARREL_F_
+
+#endif /* _BARREL_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+#define BRL_L   0b00000000
+#define BRL_R   0b00100000
+#define BRL_ROT 0b00000000
+#define BRL_SFT 0b10000000
+
+#endif /* _BARREL_DEF_ */

@@ -1,0 +1,112 @@
+////////////////////////////
+// DMA_ParaCfg.def for HA330 (Core:HA320G)
+// WENDI YANG 2021/11/19
+////////////////////////////
+//	Modified Notes
+//	1. DMA_ParaNum的宏定义修改，避免和热线指令冲突
+//	2. 
+//	3. 
+//	4. 
+////////////////////////////
+
+
+#ifndef _DMA_ParaCfg_DEF_
+#define _DMA_ParaCfg_DEF_
+
+#ifndef _DMA_ParaCfg_F_
+	extern _DMA_ParaCfg_Copy;
+	extern _DMA_ParaCfg_Clear;
+	extern _DMA_ParaCfg_Flow;
+	extern _DMA_ParaCfg_MAC;
+	extern _DMA_ParaCfg_HRAM;
+	extern _DMA_ParaCfg_Rff;
+	extern _DMA_ParaCfg_RffC;
+	extern _DMA_ParaCfg_RffC_nAbs;
+	extern _DMA_ParaCfg_RffC_Rf;
+	extern _DMA_ParaCfg_Rf;
+	extern _DMA_ParaCfg_AD_Copy;
+	extern _DMA_ParaCfg_DA_Copy;
+	extern _DMA_ParaCfg_MiddleX;
+	extern _DMA_IIRBANK_Analyze;
+	extern _DMA_IIRBANK_Synthesis;
+	extern _DMA_ParaCfg_FFT1024_Revs;
+	extern _DMA_ParaCfg_FFT512_Revs;
+	extern _DMA_ParaCfg_FFT256_Revs;
+	extern _DMA_ParaCfg_FFT128_Revs;
+	extern _DMA_ParaCfg_FFT64_Revs;
+	extern _DMA_ParaCfg_FFT1024;
+	extern _DMA_ParaCfg_FFT512;
+	extern _DMA_ParaCfg_FFT256;
+	extern _DMA_ParaCfg_FFT128;
+	extern _DMA_ParaCfg_FFT64;
+	extern _DMA_ParaCfg_MAC;
+	extern _DMA_ParaCfg_GetH16L16;
+	extern _DMA_ParaCfg_Complex;
+	extern _DMA_ParaCfg_Real2Complex;
+	extern _DMA_ParaCfg_FiltIIR;
+	extern _DMA_ParaCfg_Rff_Step2;
+	extern _DMA_ParaCfg_FFT128_Write;
+	extern _DMA_ParaCfg_FFT128_Read;
+extern _DMA_ParaCfg_FFT128;
+extern _DMA_ParaCfg_FFT128_Revs;	
+extern _DMA_ParaCfg_FFT64;
+extern _DMA_ParaCfg_FFT64_Revs;	
+#endif /* _DMA_ALU_F_ */
+
+//硬件宏
+
+#define     DMA_PATH0    		0x1  
+#define     DMA_PATH1    		0x2  
+#define     DMA_PATH2    		0x4  
+#define     DMA_PATH3    		0x8  
+#define     DMA_PATH4    		0x10 
+#define     DMA_PATH5    		0x20 
+#define     DMA_PATHIO    		0x80 
+
+
+#define     MGRP_PATH1    		0x8  
+#define     MGRP_PATH2    		0x10 
+#define     MGRP_PATH3    		0x20 
+#define     MGRP_PATH4    		0x40 
+#define     MGRP_PATH5    		0x80 
+#define     MGRP_PATHIO    		0x200
+
+
+#define DMA_ParaNum_ALU         0b11111        //1组参数8个Dword
+#define DMA_nParaNum_ALU        0b00000      	//1组参数8个Dword
+
+#define DMA_ParaNum_Copy        0b11111
+#define DMA_nParaNum_Copy       0b00000
+
+#define DMA_ParaNum_IIR 		0b11111
+#define DMA_nParaNum_IIR 		0b00000
+
+#define DMA_ParaNum_MAC 		0b11111
+#define DMA_nParaNum_MAC 		0b00000
+
+#define DMA_ParaNum_IIRBANK			0b11111
+#define DMA_nParaNum_IIRBANK    	0b00000
+
+#define DMA_ParaNum_Flow        	0b11111
+#define DMA_nParaNum_Flow       	0b00000
+
+#define DMA_ParaNum_FFTRevs     	0b11111
+#define DMA_nParaNum_FFTRevs    	0b00000
+
+#define DMA_ParaNum_FFT        		0b11111
+#define DMA_nParaNum_FFT         	0b00000
+
+#define DMA_ParaNum_Format     		0b11111
+#define DMA_nParaNum_Format      	0b00000
+
+#define DMA_ParaNum_I2S         	0b11111
+#define DMA_nParaNum_I2S        	0b00000
+
+
+#define HCtrl_Para   			M[RA6+6]//RP52
+#define Multi_Cfg0              M[RA6+7]//RP50
+#define Multi_Cfg1              M[RA6+8]//RP49
+
+#endif /* _DMA_ParaCfg_DEF_ */
+
+

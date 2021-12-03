@@ -1,0 +1,38 @@
+#ifndef _SOC_COMMON_DEF_
+#define _SOC_COMMON_DEF_
+
+//=========================== 函数声明 ===========================
+#ifndef _SOC_COMMON_F_
+	extern _Rf_ShiftR_Reg			;
+	extern _Rf_ShiftL_Reg			;
+	extern _Rf_ShiftR_Signed_Reg	;
+    extern _Rf_ShiftL               ;
+    extern _Rf_ShiftR               ;
+    extern _Rf_ShiftR_Signed        ;
+    extern _Ru_Multi                ;
+    extern _Rs_Multi                ;
+    extern _Ru_Div                  ;
+    extern _Ru_Mod                  ;
+    extern _Rs_Div                  ;
+    extern _Rs_Mod                  ;
+    extern MFGetDwordNum_Hash           ;
+    extern MFProcessTail_Hash           ;
+    extern MFROMtoRAM2_Hash             ;
+    extern _Delay_MS                    ;
+    extern _Timer_Number_ms             ;
+    extern _Duration_DIV                ;
+    extern _Goto_RD1                    ;
+    extern SetMemBit                    ;
+    extern uchar_SetMemBit              ;
+    extern uword_SetMemBit              ;
+    extern _Push_RegField2              ;
+    extern _Pop_RegField2               ;
+
+#endif /* _SOC_COMMON_F_ */
+
+//=========================== 硬件资源定义 ===========================
+
+//=========================== 驱动级应用定义 ===========================
+
+
+#endif /* _SOC_COMMON_DEF_ */

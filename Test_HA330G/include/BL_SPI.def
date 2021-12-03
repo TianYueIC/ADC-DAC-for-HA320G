@@ -1,0 +1,27 @@
+#ifndef _BL_SPI_DEF_
+#define _BL_SPI_DEF_
+
+#ifndef _BL_SPI_F_
+    extern Load_Data;
+    extern SPI_Init;
+    extern SPI_Read_Byte;
+    extern SPI_Send_Byte;
+#endif /* _BL_SPI_F_ */
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+//HA320E
+//#define CS		GP1_0
+//#define MISO	GP1_1
+//#define WP		GP1_2
+//#define MOSI	GP1_3
+//#define SCL		GP1_4
+
+
+#define WP   GP1_4
+#define CS   GP1_3
+#define SCL  GP1_2
+#define MISO GP1_1
+#define MOSI GP1_0
+
+#endif /* _BL_SPI_DEF_ */

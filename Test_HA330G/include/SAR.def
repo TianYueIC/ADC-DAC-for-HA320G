@@ -1,0 +1,15 @@
+#ifndef _SAR_DEF_
+#define _SAR_DEF_
+
+#ifndef _SAR_F_
+    extern SAR_Init_VCheck1;
+    extern SAR_Get_VCheck1;
+    extern SAR_Init_VCheck2;
+    extern SAR_Get_VCheck2;
+#endif /* _SAR_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _SAR_DEF_ */

@@ -1,0 +1,13 @@
+[Dd]ebug/
+[Rr]elease/
+x64/
+.vs
+*.opendb
+user/data/data_out.bin
+*.db
+*.bak
+*.bin
+user/data/data_out.bin
+In0.txt
+In1.txt
+out.txt

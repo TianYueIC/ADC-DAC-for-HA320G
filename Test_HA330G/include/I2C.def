@@ -1,0 +1,26 @@
+#ifndef _I2C_DEF_
+#define _I2C_DEF_
+
+//=========================== 函数声明 ===========================
+#ifndef _I2C_F_
+    extern I2C_Scan_Addr;
+    extern I2C_Wait_Stop;
+    extern I2C_Getchar;
+    extern I2C_Send_Ack;
+    extern I2C_Gets;
+    extern I2C_Gets_Word;
+    extern I2C_Putchar;
+    extern I2C_Get_Ack;
+    extern I2C_Puts;
+#endif
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+
+//=========================== 驱动级应用定义 ===========================
+#define I2C_SDA         GP0_1
+#define I2C_SCL         GP0_2
+#define I2C_SDA_Level   RD0_Bit1
+#define I2C_SCL_Level   RD0_Bit2
+
+#endif _I2C_DEF_

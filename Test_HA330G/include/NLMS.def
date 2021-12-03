@@ -1,0 +1,13 @@
+#ifndef _NMLS_DEF_
+#define _NMLS_DEF_
+
+#ifndef _NMLS_F_
+	extern Update_OutBuf;
+	extern NLMS;	
+#endif /* _NMLS_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _NMLS_DEF_ */

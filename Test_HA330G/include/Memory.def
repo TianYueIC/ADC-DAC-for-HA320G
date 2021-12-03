@@ -1,0 +1,47 @@
+#ifndef _MEMORY_DEF_
+#define _MEMORY_DEF_
+
+//=========================== 函数声明 ===========================
+#ifndef _MEMORY_F_
+    //======================
+    // XL  操作
+    //======================
+    extern _Mem_Clear_Reg;
+    extern _Mem_Copy_Reg;
+
+    extern _Mem_Add_AB_Reg;
+    extern _Mem_Sub_AB_Reg;
+
+    extern _Mem_ShiftL1_Reg;
+    extern _Mem_ShiftL2_Reg;
+    extern _Mem_ShiftL3_Reg;
+    extern _Mem_ShiftL4_Reg;
+    extern _Mem_ShiftL8_Reg;
+    extern _Mem_ShiftL16_Reg;
+
+    extern _Mem_ShiftR1_Reg;
+
+    extern _Mem_Sub_A2B_Reg;
+    extern _Mem_Sub_A3B_Reg;
+    extern _Mem_Sub_A4B;
+    extern _Mem_Sub_A5B;
+    extern _Mem_Sub_A6B;
+    extern _Mem_Sub_A7B;
+
+    extern _Mem_Zero_Reg;
+
+    extern _Mem_Aequ2B_Reg;
+    extern _Mem_3A_Reg;
+
+    extern _Mem_Sub_A1_Reg;
+    extern _Mem_Sub_A2_Reg;
+    extern _Mem_Add_A1_Reg;
+    extern _Mem_Madd_AB_Reg;
+#endif /* _MEMORY_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _MEMORY_DEF_ */

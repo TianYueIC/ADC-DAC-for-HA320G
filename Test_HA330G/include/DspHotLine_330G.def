@@ -1,0 +1,231 @@
+////////////////////////////
+// DspHotLine.def for HA330 (Core:HA320G)
+// WENDI YANG 2021/11/19
+////////////////////////////
+//	Modified Notes
+//	1. 加入CntFWB的宏定义(在b7:b0) 和 CntFWB32b的宏定义(在b31:b24)，方便设置CntF、CntB、CntW
+//	2. 加入DMA_ParaNum的宏定义，分配PRAM地址
+//	3. 加入DSP端口宏定义
+//	4. 
+////////////////////////////
+
+
+#ifndef _DSPHOTLINE_330G_DEF_
+#define _DSPHOTLINE_330G_DEF_
+
+#ifndef _DSPHOTLINE_330G_F_
+	extern DSP_HotLine_init;
+	extern _GetADC_Ave_Max_Min;
+	extern _MAC_RffC;
+	extern _Send_DAC_SignSftR_RndOff;
+	//extern _FFT_ClrRAM;
+	extern _MAC_Rff;
+	//extern _SendFFT128;
+	//extern _Win_FFT;
+	extern FFT_Fast128_HotLineRun;
+#endif /* _DSPHOTLINE_330G_F_ */
+
+//硬件宏
+
+////======== DSP端口 的宏定义 ========////
+//写端口
+#define	ALU_PATH1_CFG						M[RA6+0*MMU_BASE]	
+#define	ALU_PATH1_Const					M[RA6+1*MMU_BASE]	
+#define	ALU_PATH2_CFG						M[RA6+2*MMU_BASE]	
+#define	ALU_PATH2_Const					M[RA6+3*MMU_BASE]	
+#define	LMT_CFG									M[RA6+4*MMU_BASE]	
+//#define	I2S_CFG									M[RA6+5*MMU_BASE]	
+//#define	IIR_BANK_Sel						M[RA6+6*MMU_BASE]	
+//#define	IIR_BANK_Colum					M[RA6+7*MMU_BASE]	
+//#define	IIR_BANK_HD							M[RA6+8*MMU_BASE]	
+#define	MAC_CFG									M[RA6+9*MMU_BASE]	
+#define	MAC_Const								M[RA6+10*MMU_BASE]	
+#define	FMT_CFG									M[RA6+11*MMU_BASE]	
+#define	MAC64_CFG								M[RA6+12*MMU_BASE]	
+//#define	DAC_IIR1_HD							M[RA6+13*MMU_BASE]	
+//#define	DAC_CFG									M[RA6+14*MMU_BASE]	
+//#define	IIR_PATH1_BANK					M[RA6+16*MMU_BASE]	
+//#define	IIR_PATH1_HD						M[RA6+17*MMU_BASE]	
+//#define	IIR_PATH3_BANK					M[RA6+18*MMU_BASE]	
+//#define	IIR_PATH3_HD						M[RA6+19*MMU_BASE]	
+//读端口
+#define	STA1_Read								M[RA6+0*MMU_BASE]	
+#define	STA2_Read								M[RA6+1*MMU_BASE]	
+#define	STA3_Read								M[RA6+2*MMU_BASE]	
+#define	STA4_Read								M[RA6+3*MMU_BASE]	
+#define	MAC_Read								M[RA6+4*MMU_BASE]	
+//#define	FFT128_GAIN							M[RA6+5*MMU_BASE]	
+
+
+
+
+
+////======== DAM ParaNum 地址分配 宏定义 ========////
+//#define	DMA_ParaNum_助记符							0b值		//	说明													
+//#define	DMA_nParaNum_助记符							0b值		//	说明	
+
+//HotLine #0----DMA_ParaNum_GetADC_Ave_Max_Min	
+//				用于将ADC FlowRAM的数据搬移到Gram0中，同时进行STA运算，获得ave，max，min统计量
+#define	DMA_ParaNum_GetADC_Ave_Max_Min		0b00000	//0	
+#define	DMA_nParaNum_GetADC_Ave_Max_Min		0b11111	//0	
+
+//HotLine #1----DMA_ParaNum_MAC_RffC
+//				将GRAM0的数据乘常数
+#define	DMA_ParaNum_MAC_RffC				0b00001	//1	
+#define	DMA_nParaNum_MAC_RffC				0b11110	//1	
+
+//HotLine #2----DMA_ParaNum_Send_DAC
+//				用于DAC数据写回.完成移位、四舍五入，并将数据搬移到FlowRAM中
+#define	DMA_ParaNum_Send_DAC				0b00010	//2	
+#define	DMA_nParaNum_Send_DAC				0b11101	//2	
+
+#define	DMA_ParaNum_FFT128_ClrRAM		0b00011	//3	用于FFT的RAM清零
+#define	DMA_nParaNum_FFT128_ClrRAM	0b11100	//3	
+
+#define	DMA_ParaNum_MAC_Rff					0b00100	//4			
+#define	DMA_nParaNum_MAC_Rff				0b11011	//4
+
+#define	DMA_ParaNum_FMT_Send2FFT128					0b00101	//5			
+#define	DMA_nParaNum_FMT_Send2FFT128					0b11010	//5	
+//
+//#define	DMA_ParaNum_					0b00110	//6			
+//#define	DMA_nParaNum_					0b11001	//6	暂未使用
+//
+//#define	DMA_ParaNum_					0b00111	//7			
+//#define	DMA_nParaNum_					0b11000	//7	暂未使用
+//
+//#define	DMA_ParaNum_					0b01000	//8			
+//#define	DMA_nParaNum_					0b10111	//8	暂未使用
+//
+//#define	DMA_ParaNum_					0b01001	//9			
+//#define	DMA_nParaNum_					0b10110	//9	暂未使用
+//
+//#define	DMA_ParaNum_					0b01010	//10			
+//#define	DMA_nParaNum_					0b10101	//10	暂未使用
+//
+//#define	DMA_ParaNum_					0b01011	//11			
+//#define	DMA_nParaNum_					0b10100	//11	暂未使用
+//
+//#define	DMA_ParaNum_					0b01100	//12			
+//#define	DMA_nParaNum_					0b10011	//12	暂未使用
+//
+//#define	DMA_ParaNum_					0b01101	//13			
+//#define	DMA_nParaNum_					0b10010	//13	暂未使用
+//
+//#define	DMA_ParaNum_					0b01110	//14			
+//#define	DMA_nParaNum_					0b10001	//14	暂未使用
+//
+//#define	DMA_ParaNum_					0b01111	//15			
+//#define	DMA_nParaNum_					0b10000	//15	暂未使用
+//
+//#define	DMA_ParaNum_					0b10000	//16			
+//#define	DMA_nParaNum_					0b01111	//16	暂未使用
+//
+//#define	DMA_ParaNum_					0b10001	//17			
+//#define	DMA_nParaNum_					0b01110	//17	暂未使用
+//
+//#define	DMA_ParaNum_					0b10010	//18			
+//#define	DMA_nParaNum_					0b01101	//18	暂未使用
+//
+//#define	DMA_ParaNum_					0b10011	//19			
+//#define	DMA_nParaNum_					0b01100	//19	暂未使用
+//
+//#define	DMA_ParaNum_					0b10100	//20			
+//#define	DMA_nParaNum_					0b01011	//20	暂未使用
+//
+//#define	DMA_ParaNum_					0b10101	//21			
+//#define	DMA_nParaNum_					0b01010	//21	暂未使用
+//
+//#define	DMA_ParaNum_					0b10110	//22			
+//#define	DMA_nParaNum_					0b01001	//22	暂未使用
+//
+//#define	DMA_ParaNum_					0b10111	//23			
+//#define	DMA_nParaNum_					0b01000	//23	暂未使用
+//
+//#define	DMA_ParaNum_					0b11000	//24			
+//#define	DMA_nParaNum_					0b00111	//24	暂未使用
+//
+//#define	DMA_ParaNum_					0b11001	//25			
+//#define	DMA_nParaNum_					0b00110	//25	暂未使用
+//
+//#define	DMA_ParaNum_					0b11010	//26			
+//#define	DMA_nParaNum_					0b00101	//26	暂未使用
+//
+//#define	DMA_ParaNum_					0b11011	//27			
+//#define	DMA_nParaNum_					0b00100	//27	暂未使用
+//
+//#define	DMA_ParaNum_					0b11100	//28	暂未使用		
+//#define	DMA_nParaNum_					0b00011	//28	暂未使用
+//
+//#define	DMA_ParaNum_					0b11101	//29	暂未使用		
+//#define	DMA_nParaNum_					0b00010	//29	暂未使用
+//
+//#define	DMA_ParaNum_					0b11110	//30	暂未使用		
+//#define	DMA_nParaNum_					0b00001	//30	暂未使用
+//
+//#define	DMA_ParaNum_					0b11111	//31	灵活使用（默认位置）		
+//#define	DMA_nParaNum_					0b00000	//31	灵活使用（默认位置）
+
+
+
+
+////======== CntF CntW CntB 的宏定义 ========////
+/////////// 8bit，数据在 b7：b0
+#define	CntFWB0		0x00	//	NULL	除CntF外，均不可以设为0！
+#define	CntFWB1		0x7e	//	1	
+#define	CntFWB2		0x7d	//	2	
+#define	CntFWB3		0x7a	//	3	
+#define	CntFWB4		0x75	//	4	
+#define	CntFWB5		0x6a	//	5	
+#define	CntFWB6		0x55	//	6	
+#define	CntFWB7		0x2a	//	7	
+#define	CntFWB8		0x54	//	8	
+#define	CntFWB9		0x29	//	9	
+#define	CntFWB10	0x53	//	10	
+#define	CntFWB11	0x26	//	11	
+#define	CntFWB12	0x4c	//	12	
+#define	CntFWB13	0x19	//	13	
+#define	CntFWB14	0x33	//	14	
+
+/////////// 32bit，数据在 b31：b24
+#define	CntFWB0_32b		0x00000000	//	NULL	除CntF外，均不可以设为0！
+#define	CntFWB1_32b		0x7e000000	//	1	
+#define	CntFWB2_32b		0x7d000000	//	2	
+#define	CntFWB3_32b		0x7a000000	//	3	
+#define	CntFWB4_32b		0x75000000	//	4	
+#define	CntFWB5_32b		0x6a000000	//	5	
+#define	CntFWB6_32b		0x55000000	//	6	
+#define	CntFWB7_32b		0x2a000000	//	7	
+#define	CntFWB8_32b		0x54000000	//	8	
+#define	CntFWB9_32b		0x29000000	//	9	
+#define	CntFWB10_32b	0x53000000	//	10	
+#define	CntFWB11_32b	0x26000000	//	11	
+#define	CntFWB12_32b	0x4c000000	//	12	
+#define	CntFWB13_32b	0x19000000	//	13	
+#define	CntFWB14_32b	0x33000000	//	14	
+
+////======== MGRP_PATH 的宏定义 ========////
+//#define     DMA_PATH0    		0x1  
+//#define     DMA_PATH1    		0x2  
+//#define     DMA_PATH2    		0x4  
+//#define     DMA_PATH3    		0x8  
+//#define     DMA_PATH4    		0x10 
+//#define     DMA_PATH5    		0x20 
+//#define     DMA_PATHIO    	0x80 
+#define     DMA_PATH_1w2    	0b000110
+#define     DMA_PATH_1w5    	0b100010
+
+//#define     MGRP_PATH1    		0x8  
+//#define     MGRP_PATH2    		0x10 
+//#define     MGRP_PATH3    		0x20 
+//#define     MGRP_PATH4    		0x40 
+//#define     MGRP_PATH5    		0x80 
+//#define     MGRP_PATHIO    		0x200
+#define     MGRP_PATH_1w2    		0x18
+#define     MGRP_PATH_1w5    		0x88
+
+/////////
+
+#endif /* _DSPHOTLINE_330G_DEF_ */
+
+

@@ -1,0 +1,21 @@
+#ifndef _Download_Mode_DEF_
+#define _Download_Mode_DEF_
+
+#include <cpu11.def>
+
+//=========================== 函数声明 ===========================
+#ifndef _Download_Mode_F_
+    extern _Download_Function;
+    extern _Verify_Sum_8;
+#endif /* _Debug_Mode_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+
+//=========================== 驱动级应用定义 ===========================
+#define RN_PASSWORD_OK  0x31415926
+#define UART_Delay 200
+#define RN_Password_OK_Flag 0x31415926
+
+
+#endif /* _Download_Mode_DEF_ */

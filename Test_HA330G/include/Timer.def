@@ -1,0 +1,34 @@
+#ifndef _TIMER_DEF_
+#define _TIMER_DEF_
+
+#ifndef _TIMER_F_
+//    extern Timer_Init;
+//    extern Timer_PreSet;
+//    extern Timer_Start;
+//    extern Timer_Get;
+//    extern Timer_Close;
+//
+//    extern Timer0_PreSet;
+//    extern Timer0_Start;
+//    extern Timer0_Get;
+//    extern Timer0_Close;
+//
+//    extern Timer1_PreSet;
+//    extern Timer1_Start;
+//    extern Timer1_Get;
+//    extern Timer1_Close;
+
+    extern WatchDog_Init;
+//    extern WatchDog_Start;
+    extern WatchDog_Reset;
+
+
+
+#endif /* _TIMER_F_ */
+
+//=========================== 硬件资源定义 ===========================
+
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _TIMER_DEF_ */

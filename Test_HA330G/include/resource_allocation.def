@@ -1,0 +1,356 @@
+#ifndef _Resource_Allocation_DEF_
+#define _Resource_Allocation_DEF_
+
+
+#define           XDRAM_SetAll_Enable      Set_LevelL11
+#define           XDRAM_SetAll_Disable     Set_LevelH11
+#define           IIR_BANK_Enable          Set_LevelL12
+#define           IIR_BANK_Disable         Set_LevelH12
+#define           IIR_PATH1_Enable         Set_LevelL13
+#define           IIR_PATH1_Disable        Set_LevelH13
+#define           IIR_PATH3_Enable         Set_LevelL14
+#define           IIR_PATH3_Disable        Set_LevelH14
+
+#define           ADM_SelInit              Set_LevelL15
+#define           ADM_SelCalc              Set_LevelH15
+#define           ADM_Enable               Set_LevelL16
+#define           ADM_Disable              Set_LevelH16
+#define           SetLow_GP10              Set_LevelL17
+#define           SetHigh_GP10             Set_LevelH17
+#define           GPSFT_CLKLOW             Set_LevelL18
+#define           GPSFT_CLKHIGH            Set_LevelH18
+#define			  LMS_ANEX_Enable          Set_LevelL19
+#define			  LMS_ANEX_Disable         Set_LevelH19
+#define			  LMS_DSP_SelOpCPU         Set_LevelL20
+#define			  LMS_DSP_DisOpCPU         Set_LevelH20
+#define			  LMS_DSP_WorkEn           Set_LevelL21
+#define			  LMS_DSP_WorkDis          Set_LevelH21
+//#define           SetPADMCK_L              Set_LevelL22
+//#define           SetPADMCK_H              Set_LevelH22
+#define           DBGIO_IN_ENABLE          Set_LevelL23
+#define           DBGIO_IN_DISABLE         Set_LevelH23
+#define           DBGIO_OC_ENABLE          Set_LevelL24
+#define           DBGIO_OC_DISABLE         Set_LevelH24
+#define           DBGIO_OUT_ENABLE         Set_LevelL25
+#define           DBGIO_OUT_DISABLE        Set_LevelH25
+#define           Enable_I2S               Set_LevelL26
+#define           Disable_I2S              Set_LevelH26
+#define           Sel_MCLK                 Set_LevelL27
+#define           Dis_MCLK                 Set_LevelH27
+#define           SetLow_GP13              Set_LevelL28
+#define           SetHigh_GP13             Set_LevelH28
+#define           SetLow_GP14              Set_LevelL29
+#define           SetHigh_GP14             Set_LevelH29
+#define           DBGIO_PULL_ENABLE        Set_LevelL30
+#define           DBGIO_PULL_DISABLE       Set_LevelH30
+#define           Sel_Clock_RC             Set_LevelH31
+#define           Sel_Clock_GP00           Set_LevelL31
+#define           SDM_DRV0_ENABLE          Set_LevelL32
+#define           SDM_DRV0_DISABLE         Set_LevelH32
+#define           DAC_Enable               Set_LevelL33
+#define           DAC_Disable              Set_LevelH33
+#define           ADC_TestView_Enable      Set_LevelL34
+#define           ADC_TestView_Disable     Set_LevelH34
+#define           SDM_DRV1_ENABLE          Set_LevelL35
+#define           SDM_DRV1_DISABLE         Set_LevelH35
+#define           Set_BDUART               Set_LevelH36
+#define           Set_BDI2C                Set_LevelL36
+#define           Multi64_Disable          Set_LevelH37
+#define           Multi64_Enable           Set_LevelL37
+#define           Multi64_ShiftL1_Dis      Set_LevelH38
+#define           Multi64_ShiftL1_En       Set_LevelL38
+#define           Dis_LowPower_ADC         Set_LevelH39
+#define           Sel_LowPower_ADC         Set_LevelL39
+#define           Random_Disable           Set_LevelH41
+#define           Random_Enable            Set_LevelL41
+#define           SAR_Disable              Set_LevelH40
+#define           SAR_Enable               Set_LevelL40
+#define           ADC_CPUCtrl_Disable      Set_LevelH42
+#define           ADC_CPUCtrl_Enable       Set_LevelL42
+#define           Sel_PATH3_FFT            Set_LevelL43
+#define           Dis_PATH3_FFT            Set_LevelH43
+#define           Sel_CpRef_DebugEn        Set_LevelL44
+#define           Sel_CpRef_SPIClk         Set_LevelH44
+#define           OSC_Slow                 Set_LevelL45
+#define           OSC_Fast                 Set_LevelH45
+#define           CPU_SimpleLevel_L        Set_LevelL46     //DBG_IO
+#define           CPU_SimpleLevel_H        Set_LevelH46     //DBG_IO
+#define           GPIO_LpDis               Set_LevelH47
+#define           GPIO_LpEn                Set_LevelL47
+#define           GPIO_SelRDData           Set_LevelH48
+#define           GPIO_SelRDInt            Set_LevelL48
+#define           CPU2PAD_OeEnGP10         Set_LevelL49
+#define           CPU2PAD_OeDisGP10        Set_LevelH49
+#define           CPU2PAD_OeEnGP11         Set_LevelL50
+#define           CPU2PAD_OeDisGP11        Set_LevelH50
+#define           CPU2PAD_OeDisGP0         Set_LevelH51
+#define           CPU2PAD_OeEnGP0          Set_LevelL51
+#define           ADC_Disable              Set_LevelH52
+#define           ADC_Enable               Set_LevelL52
+#define           DSP_Disable              Set_LevelH53
+#define           DSP_Enable               Set_LevelL53
+#define           Enable_FFT_Fast128       Set_LevelL54
+#define           Disable_FFT_Fast128      Set_LevelH54
+#define           MemSet0_Enable           Set_LevelL55
+#define           MemSet0_Disable          Set_LevelH55
+#define           MemSet1_Enable           Set_LevelL56
+#define           MemSet1_Disable          Set_LevelH56
+#define           Sel_Cache4Data           Set_LevelH57
+#define           Sel_Cache4Inst           Set_LevelL57
+#define           Dis_Cp750K2GP00          Set_LevelH58
+#define           Sel_Cp750K2GP00          Set_LevelL58
+#define           CPU_WorkDisable          Set_LevelH59; Set_Pulse49
+#define           CPU_WorkEnable           Set_LevelL59
+#define           Sel_LE256FFT             Set_LevelH60
+#define           Sel_SE256FFT             Set_LevelL60
+#define           Check3V_Enable           Set_LevelH61
+#define           Check3V_Disable          Set_LevelL61
+#define           Pull_Disable             Set_LevelH62
+#define           Pull_Enable              Set_LevelL62
+#define           Sel_GP07ToCnt1           Set_LevelH63
+#define           Sel_GP04ToCnt1           Set_LevelL63
+
+#define           RTC_Enable               Set_Level_ExtL6
+#define           RTC_Disable              Set_Level_ExtH6
+#define           Set_Super_WEn            Set_Level_ExtL7
+#define           Set_Super_WDis           Set_Level_ExtH7
+#define           WatchDog_Disable         Set_Level_ExtH13
+#define           WatchDog_Enable          Set_Level_ExtL13
+#define           Timer0_Disable           Set_Level_ExtH14
+#define           Timer0_Enable            Set_Level_ExtL14
+#define           Timer1_Disable           Set_Level_ExtH15
+#define           Timer1_Enable            Set_Level_ExtL15
+#define           Timer2_Disable           Set_Level_ExtH16
+#define           Timer2_Enable            Set_Level_ExtL16
+
+
+//脉冲Pulse端口
+#define           Clr_ADCFlagDC            Set_Pulse41
+#define           Start_FFT128W            Set_Pulse42
+#define           Start_SAR                Set_Pulse43
+#define           Clr_Multi64              Set_Pulse44
+#define           IIR_PATH1_CLRADDR        Set_Pulse45
+#define           IIR_PATH3_CLRADDR        Set_Pulse46
+#define           IIR_BANK_CLRADDR         Set_Pulse47
+#define           FFT_Next_Round           Set_Pulse48
+#define           Clr_CfgGRAM              Set_Pulse49
+#define           Start_H2M                Set_Pulse50
+#define           CPU_Sleep                Set_Pulse51
+#define           USI_Disable              Set_Pulse52
+#define           USI_Enable               Set_Pulse53
+#define           Shift_Float              Set_Pulse54
+#define           GPIO_ClrInt              Set_Pulse55
+#define           USI_StopCnt0             Set_Pulse56
+#define           USI_StartCnt0            Set_Pulse57
+#define           USI_ClrCnt0              Set_Pulse58
+#define           USI_ClrParity            Set_Pulse59
+#define           USI_DisTxRx              Set_Pulse60
+#define           USI_EnableTx             Set_Pulse61
+#define           USI_EnableRx             Set_Pulse62
+#define           Set_ReadProtect          Set_Pulse63
+
+#define           Timer0_Str               Set_Pulse_Ext3
+#define           Timer1_Str               Set_Pulse_Ext4
+#define           Timer2_Str               Set_Pulse_Ext5
+#define           WatchDog_Str             Set_Pulse_Ext6
+
+#define           RFlag_DBGIO              RFlag_USER0
+#define           RFlag_CKT_CP             RFlag_USER1
+#define           RFlag_CKT_Rx             RFlag_USER2
+#define           RFlag_BDUART             RFlag_USER3
+#define           RFlag_MLRCK              RFlag_USER4
+#define           RFlag_I2S2Bank0          RFlag_USER5
+#define           RFlag_FFT128End          RFlag_USER6
+#define           RFlag_AD3DC              RFlag_USER7
+#define           RFlag_VDDIO              RFlag_USER8
+#define           RFlag_AD0DC              RFlag_USER9
+#define           RFlag_AD1DC              RFlag_USER10
+#define           RFlag_Wake               RFlag_USER11
+#define           RFlag_SAR                RFlag_USER12
+#define           RFlag_ADCSD              RFlag_USER13
+#define           RFlag_GP00               RFlag_USER14
+#define           RFlag_OverFlowFFT        RFlag_USER15
+#define           RFlag_Flow2Bank0         RFlag_USER16
+#define           RFlag_GPIO_Share1        RFlag_USER17
+#define           RFlag_Multi64            RFlag_USER18
+#define           RFlag_GP05               RFlag_USER19
+#define           RFlag_GP11               RFlag_USER20
+#define           RFlag_GP13               RFlag_USER21
+#define           RFlag_COM0_Tx            RFlag_USER22  //GP01
+#define           RFlag_I2C0_SDA           RFlag_USER22  //GP01
+#define           SPI0_RxFlag              RFlag_USER23
+#define           RFlag_GPIO_Share0        RFlag_USER24
+#define           RFlag_COM0_Rx            RFlag_USER25  //GP02
+#define           RFlag_I2C0_SCL           RFlag_USER25  //GP02
+#define           RFlag_NChargeOK          RFlag_USER26
+#define           Flag_DMAWork             RFlag_USER27
+#define           RFlag_GP14               RFlag_USER28
+#define           RFlag_PLUG5V             RFlag_USER29
+#define           USI_Flag                 RFlag_USER30
+#define           Flag_ShiftEnd            RFlag_USER31
+#define           Flag_XH_LSB              RFlag_USER31
+
+
+#define           Timer0_EndFlag           RFlag243
+#define           Timer1_EndFlag           RFlag244
+#define           Timer2_EndFlag           RFlag245
+#define           RFlag_SysReserved_WDis   RFlag246
+
+
+//读写端口
+#define           GPIO_WEn0                RP5 // (       WRP )Drv1
+#define           GPIO_WEn1                RP6 // (       WRP )Drv1
+#define           GPIO_Data0               RP7 // ( RRP   WRP )Drv1
+#define           GPIO_Data1               RP8
+#define           ParaMem_Addr             RP9 // (       WRP )Drv1
+#define           ParaMem_Num              RP10// ( RRP   WRP )Drv1
+#define           DSP_FreqDiv              RP11// ( RRP   WRP )Drv1
+#define           StandBy_WRCfg            RP12// (       WRP )Drv2
+#define           StandBy_WRSel            RP13// (       WRP )Drv2
+#define           StandBy_RDCfg            RP14// ( RRP       )
+#define           USI_SelPort              RP14// (       WRP )Drv0
+#define           RandomData               RP15// ( RRP       )
+#define           USI_Num                  RP15// (       WRP )Drv0
+
+#define            ADM_FirW                RP30
+#define            ADM_Data                RP31
+#define			   LMS_ANEX_WVn2           RP32
+#define			   LMS_ANEX_WMu			   RP33
+#define			   LMS_ANEX_WEn            RP33
+#define			   LMS_ANEX_WRn            RP34
+#define			   LMS_ANEX_RD             RP34// (       RRP )
+#define  		   LMS_W_Mu                RP35
+#define			   LMS_W_16D               RP36
+#define			   LMS_R_16D               RP36
+#define			   LMS_W_24W               RP37
+#define			   LMS_R_24W               RP37
+#define            Volt_Vref2              RP38// (       WRP )
+#define            ADC_PortSel             RP39// (       WRP )
+#define            GPIO_Set0               RP40// (       WRP )
+#define            GPIO_Set1               RP41// (       WRP )
+#define            ADC_SD                  RP42// (       RRP )
+#define            ADC_Cfg                 RP42// (       WRP )
+#define            ADC_FiltHD              RP43
+#define            Barrel0_Ctrl            RP44
+#define            Barrel1_Ctrl            RP45// ( RRP       )
+#define            Volt_Vref3              RP46// ( WRP       )
+//#define            Barrel3_Ctrl              RP47
+#define            Multi64_XYL             RP48// ( RRP       )
+#define            Multi64_XYH             RP49// ( RRP       )
+#define            Multi64_Y               RP48
+#define            Multi64_X               RP49
+#define            Multi64_Cfg             RP50// ( WRP       )
+
+
+#define            ATReg_Addr              RP51
+#define            ATReg_RDData			   RP52// ( RRP       )
+#define            ATReg_WRData            RP52// (       WRP )
+#define            BGBAT_Cfg               RP53// (       WRP )
+#define            SAR_Data                RP54// (       RRP )
+#define            SAR_Cfg                 RP54// (       WRP )
+#define            Flash_jiami             RP55// (       WRP )
+#define            Flash_Data              RP56// (       WRP )
+#define            USI_Data                RP57// (       WRP )
+#define            Multi24_XY              RP58// ( RRP       )
+#define            Multi24_Y               RP58
+#define            Multi24_X               RP59
+
+
+//--------------------------------------------------
+#define            Timer1_Time             RP60
+#define            Timer2_Time             RP61
+#define            WatchDog_Time           RP62
+#define            Timer0_Time             RP63
+#define            RTC_Time                RP62
+
+
+#define            WatchDogInt_Disable     Set_Int_Dis0
+#define            WatchDogInt_Enable      Set_Int_En0
+#define            Timer0Int_Disable       Set_Int_Dis16
+#define            Timer0Int_Enable        Set_Int_En16
+#define            Timer1Int_Disable       Set_Int_Dis17
+#define            Timer1Int_Enable        Set_Int_En17
+#define            Timer2Int_Disable       Set_Int_Dis18
+#define            Timer2Int_Enable        Set_Int_En18
+
+
+//==========================扩展单目操作定义============================
+//滚筒操作
+//=========================== 驱动级应用定义 ===========================
+//控制码：0xd7d6d5d4d3d2d1d0:
+//          d4~d0:移位位数
+//          d5:0:左移;1:右移
+//          d7:0:循环移;1:补0移
+#define            Barrel0_Op(X)           RF_EXT18(X)
+#define            Barrel1_Op(X)           RF_EXT19(X)
+
+//带符号右移操作
+#define RF_Sft16SR1(X)          RF_EXT10(X)
+#define RF_Sft16SR2(X)          RF_EXT11(X)
+#define RF_Sft16SR4(X)          RF_EXT12(X)
+#define RF_Sft16SR8(X)          RF_EXT13(X)
+#define RF_Sft32SR1(X)          RF_EXT14(X)
+#define RF_Sft32SR2(X)          RF_EXT15(X)
+#define RF_Sft32SR4(X)          RF_EXT16(X)
+#define RF_Sft32SR8(X)          RF_EXT17(X)
+
+//限幅操作
+#define RF_Lmt32T16(X)             RF_EXT8(X)   
+#define RF_Lmt32T24(X)             RF_EXT9(X)
+//======================================================================
+
+
+#define            RTimer_Int_En           Set_UserInt4_En
+#define            RTimer_Int_Dis          Set_UserInt4_Dis
+
+#define            MemSetRAM4K_Enable       MemSet1_Enable; MemSet0_Disable
+#define            MemSetPath_Enable        MemSet1_Disable;MemSet0_Enable
+#define            MemSetAutoAddr_Enable    MemSet1_Enable; MemSet0_Enable
+#define            MemSet_Disable           MemSet0_Disable;MemSet1_Disable
+
+//DSP内部端口
+#define            DAC_IIR1_HD              M[RA6+13*MMU_BASE]
+#define            DAC_CFG                  M[RA6+14*MMU_BASE]
+#define            IIR_PATH1_BANK           M[RA6+16*MMU_BASE]
+#define            IIR_PATH1_HD             M[RA6+17*MMU_BASE]
+#define            IIR_PATH3_BANK           M[RA6+18*MMU_BASE]
+#define            IIR_PATH3_HD             M[RA6+19*MMU_BASE]
+
+#define            IIR_BANK_Sel             M[RA6+6*MMU_BASE]
+#define            IIR_BANK_Colum           M[RA6+7*MMU_BASE]
+#define            IIR_BANK_HD              M[RA6+8*MMU_BASE]
+#define            FFT128_GAIN              M[RA6+5*MMU_BASE]   //Read
+#define            I2S_CFG                  M[RA6+5*MMU_BASE]   //Write
+
+#define            SelCfg_ADC_ANA           //Set_LevelH41;Set_LevelH40
+#define            SelCfg_ADC_PATH0         //Set_LevelH41;Set_LevelL40
+#define            SelCfg_ADC_PATH1         //Set_LevelL41;Set_LevelH40
+#define            SelCfg_ADC_Telico        //Set_LevelL41;Set_LevelL40
+#define            DisCfg_ADC               //Set_LevelH41;Set_LevelH40
+
+//StandBy资源分配
+//Ctrl<4>  :  HALT_MODE            DEFAULT : Not_HaltMode
+//Ctrl<6:5>:  VSDM_VOLT_CTRL       DEFAULT : SEL_VSDM_2.5V
+//Ctrl<8:7>:  SAR_PATH_SEL         DEFAULT : PATH0
+//Ctrl<9>  :  PUMP_ENABLE          DEFAULT : DISABLE
+//Ctrl<10> :  POWERDOWN_MCU        DEFAULT : NOT_POWERDOWN
+//Ctrl<11> :  PAD_OC1_CTRL         DEFAULT : NOT_OE
+//Ctrl<12> :  NULL
+//Ctrl<13> :  NULL
+//Ctrl<14> :  DIS_RST_OSC          DEFAULT : NOT_DISABLE
+//Ctrl<15> :  SEL_PD_OSC           DEFAULT : PD
+
+//Pulse<16>:  VREF_CFG
+//Pulse<17>:  STANDBY_CTRLWORD
+//Pulse<18>:  SET_STANDBY_RS
+//Pulse<19>:  SET_OSC
+//Pulse<20>:  WRITE QBST<1:0>(DBCPU<1:0>)
+//Pulse<21>:  WRITE QBST<3:2>(DBCPU<3:2>)
+//Pulse<22>:  WRITE CPU_VOLT
+//Pulse<23>:  NULL
+
+//QBST<3:0>
+//QBST<3:2>:  CHARGE_CURRENT_CTRL  DEFAULT : 5mA
+//QBST<1:0>:  PAD_OC0_CTRL         DEFAULT : PAD_OC0 = CHARGE_OK_FLAGE
+
+#endif /*_Resource_Allocation_DEF_*/

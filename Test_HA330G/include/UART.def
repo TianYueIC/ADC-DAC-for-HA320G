@@ -1,0 +1,22 @@
+#ifndef _UART_DEF_
+#define _UART_DEF_
+
+//=========================== 函数声明 ===========================
+#ifndef _UART_F_
+    extern UART_Init;
+    extern UART_Putchar;
+    extern UART_Puts;
+    extern UART_PutDword;
+    extern UART_SetRev;
+    extern UART_CheckEnd;
+    extern UART_WaitEnd;
+    extern UART_ReadBuf;
+    extern UART_Gets;
+#endif
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+#include <USI.def>
+
+//=========================== 驱动级应用定义 ===========================
+#endif _UART_DEF_

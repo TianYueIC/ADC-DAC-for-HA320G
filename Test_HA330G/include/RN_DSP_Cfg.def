@@ -1,0 +1,207 @@
+#define		RN_CFG_DSP48M         0x1000
+#define		RN_CFG_DSP24M         0x2000
+#define		RN_CFG_DSP12M         0x4000
+
+//定义DAC模块的工作频率 fdac
+#define		RN_CFG_FLOW_DIV3In    0x100
+#define     RN_CFG_FLOW_DIVPASS   0x200
+#define		RN_CFG_FLOW_DIV2      0x001
+#define		RN_CFG_FLOW_DIV4      0x002
+#define		RN_CFG_FLOW_DIV8      0x004
+#define		RN_CFG_FLOW_DIV16     0x008
+#define		RN_CFG_FLOW_DIV32     0x010
+#define		RN_CFG_FLOW_DIV64     0x020
+#define		RN_CFG_FLOW_DIV128    0x040
+#define		RN_CFG_FLOW_DIV256    0x080
+
+//以下为 FlowRAM 和 ADC_DAC 的速率配置
+#define     RN_CFG_ADC_DIV4       0x200    //clk_adc = cp_flow/2
+#define     RN_CFG_ADC_DIV2       0x400
+#define     RN_CFG_ADC_DIV1       0x800
+
+#define     RN_CFG_MEM_DIV2048    0x001    //clk_mem = cp_flow/2048
+#define     RN_CFG_MEM_DIV1024    0x002
+#define     RN_CFG_MEM_DIV512     0x004
+#define     RN_CFG_MEM_DIV256     0x008
+#define     RN_CFG_MEM_DIV128     0x010
+#define     RN_CFG_MEM_DIV64      0x020
+
+#define     RN_CFG_DAC_DIV1       0x000    //dac_data_rate = adc_data_rate
+#define     RN_CFG_DAC_DIV2       0x040    //dac_data_rate = 1/2*adc_data_rate
+#define     RN_CFG_DAC_DIV4       0x0C0    //dac_data_rate = 1/4*adc_data_rate
+#define     RN_CFG_DAC_DIV8       0x1C0    //dac_data_rate = 1/8*adc_data_rate
+
+#define     RN_BANK_LENTH         32       //Bank的Dword长度
+
+//-------------------------------------------------------
+#define     RN_CFG_IIRB_GAIN2      0x200
+#define     RN_CFG_IIRB_GAIN1      0x100
+#define     RN_CFG_IIRB_GAIN1B2    0x080
+#define     RN_CFG_IIRB_GAIN1B4    0x040
+
+#define     RN_CFG_IIRB_QSFTL0     0x08
+#define     RN_CFG_IIRB_QSFTL1     0x10
+#define     RN_CFG_IIRB_QSFTL2     0x20
+
+#define     RN_CFG_IIRB_DSFTR0     0x0
+#define     RN_CFG_IIRB_DSFTR1     0x4
+
+#define     RN_CFG_IIRB_XSFTR0     0x0
+#define     RN_CFG_IIRB_XSFTR2     0x2
+#define     RN_CFG_IIRB_XSFTL0     0x0
+#define     RN_CFG_IIRB_XSFTL1     0x1
+
+#define     RN_CFG_IIRB_OR4        0x3
+#define     RN_CFG_IIRB_OR8        0x2
+#define     RN_CFG_IIRB_OR12       0x1
+#define     RN_CFG_IIRB_OR16       0x0
+
+#define     RN_SEL_IIRB_SynSftR0   0x100
+#define     RN_SEL_IIRB_SynSftR1   0x200
+#define     RN_SEL_IIRB_SynSftR2   0x400
+
+#define     RN_SEL_IIRB_ROW0       0x1
+#define     RN_SEL_IIRB_ROW1       0x2
+#define     RN_SEL_IIRB_ROW2       0x4
+#define     RN_SEL_IIRB_ROW3       0x8
+
+#define     RN_SEL_IIRB_COL0       0x01
+#define     RN_SEL_IIRB_COL1       0x02
+#define     RN_SEL_IIRB_COL2       0x04
+#define     RN_SEL_IIRB_COL3       0x08
+#define     RN_SEL_IIRB_COL4       0x10
+#define     RN_SEL_IIRB_COL5       0x20
+#define     RN_SEL_IIRB_COL6       0x40
+#define     RN_SEL_IIRB_COL7       0x80
+#define     RN_SEL_IIRB_COL0T7     0xff
+#define     RN_SEL_IIRB_COL0T3     0x0f
+
+
+#define     RN_SEL_IIRB_XB0        0x00
+#define     RN_SEL_IIRB_XB1        0x10
+#define     RN_SEL_IIRB_XB2        0x20
+#define     RN_SEL_IIRB_XB3        0x30
+
+#define     RN_SEL_IIRB_CB0        0x00
+#define     RN_SEL_IIRB_CB1        0x40
+
+
+#define     ADDR_SUB_STA0007      0x10000000
+#define     ADDR_SUB_STA0815      0x10000080
+
+#define     ADDR_NRC_VS0007       0x10000100
+
+
+
+//以下为 乘累加器MAC 的功能配置
+#define     RN_CFG_MAC_HDMUL       0x00
+#define     RN_CFG_MAC_HDSQURE     0x04
+#define     RN_CFG_MAC_HDMODU      0x08
+#define     RN_CFG_MAC_HDCONST24   0x1C
+#define     RN_CFG_MAC_HDCONST16   0x0C
+
+#define     RN_CFG_MAC_QM1M0H16    0x00
+#define     RN_CFG_MAC_QM1M0M16    0x01
+#define     RN_CFG_MAC_QM1L32      0x02
+
+#define     RN_CFG_MAC_ACC         0x20
+#define     RN_CFG_MAC_DISOE       0x40
+#define     RN_CFG_MAC_Q2207_LMT   0x80
+
+#define     RN_CFG_MAC_TYPE0       RN_CFG_MAC_HDMUL+RN_CFG_MAC_QM1M0H16    //X[n]*Y[n] / X[n]*X[n]
+#define     RN_CFG_MAC_TYPE1       RN_CFG_MAC_HDMODU+RN_CFG_MAC_QM1M0H16   //X[n]_H16*Y[n]_H16 & X[n]_H16*Y[n]_L16
+#define     RN_CFG_MAC_TYPE2       RN_CFG_MAC_HDCONST16+RN_CFG_MAC_QM1M0H16//X[n]*CONST
+#define     RN_CFG_MAC_TYPE3       RN_CFG_MAC_HDCONST16+RN_CFG_MAC_QM1M0M16  //X[n]*CONST  
+#define     RN_CFG_MAC_TYPE0ACC    RN_CFG_MAC_HDMUL+RN_CFG_MAC_QM1M0H16+RN_CFG_MAC_ACC   //X[n]_H16*Y[n]_H16 & X[n]_H16*Y[n]_L16
+
+#define     RN_CFG_MAC_TYPE0L       RN_CFG_MAC_HDMUL+RN_CFG_MAC_QM1M0M16    //X[n]*Y[n] / X[n]*X[n]
+#define     RN_CFG_MAC_TYPE1L       RN_CFG_MAC_HDMODU+RN_CFG_MAC_QM1M0M16   //X[n]_H16*Y[n]_H16 & X[n]_H16*Y[n]_L16
+#define     RN_CFG_MAC_TYPE2L       RN_CFG_MAC_HDCONST16+RN_CFG_MAC_QM1M0M16//X[n]*CONST
+#define     RN_CFG_MAC_TYPE3L       RN_CFG_MAC_HDCONST16+RN_CFG_MAC_QM1M0M16+RN_CFG_MAC_Q2207_LMT//X[n]*CONST带限幅
+
+//典型选配：（假设主频工作在32MHz，K=1024）
+//
+//------------------------------------------------------------------
+//条件1：
+//   ADC 采样率为     fs_ad  = 16*2KHz(两路ADC)，时钟频率为 4 MHz
+//   DSP 运算采样率为 fs_dsp = 16KHz，时钟频率为32 MHz
+//   DAC 采用2倍预内插，调制后播放速率 fsdm = fs_dsp*2*64 = 2 MHz
+//                      工作时钟频率 fdac = 4*fsdm = 8 MHz
+//   Memory 工作速率  fmem = fs_ad/2 = 16KHz
+//配置：
+//   RN_CFG_DSP48M + RN_CFG_FLOW_DIV3In + RN_CFG_FLOW_DIVPASS
+#define  RN_CFG_FLOW_TYPE0   RN_CFG_DAC_DIV2+RN_CFG_MEM_DIV512+RN_CFG_ADC_DIV2
+#define  RN_CFG_FLOW_TYPE1   RN_CFG_DAC_DIV2+RN_CFG_MEM_DIV2048+RN_CFG_ADC_DIV1
+#define  RN_CFG_FLOW_TYPE2   RN_CFG_DAC_DIV2+RN_CFG_MEM_DIV256+RN_CFG_ADC_DIV1
+#define  RN_CFG_FLOW_TYPE3   RN_CFG_DAC_DIV1+RN_CFG_MEM_DIV512+RN_CFG_ADC_DIV2
+//------------------------------------------------------------------
+//条件2：
+//   ADC 采样率为     fs_ad  = 32KHz，时钟频率为 2 MHz
+//   DSP 运算采样率为 fs_dsp = 16KHz，时钟频率为32 MHz
+//   DAC 采用2倍预内插，调制后播放速率 fsdm = fs_dsp*2*64 = 2 MHz
+//                      工作时钟频率 fdac = 4*fsdm = 8 MHz
+//   Memory 工作速率  fmem = fs_ad/2 = 32KHz
+//配置：
+//   RN_CFG_DSP48M + RN_CFG_FLOW_DIV4
+//   RN_CFG_DAC_DIV2+RN_CFG_MEM_DIV1024+RN_CFG_ADC_DIV8
+
+//------------------------------------------------------------------
+//条件3：
+//   ADC 采样率为     fs_ad  = 128KHz，时钟频率为8 MHz
+//   DSP 运算采样率为 fs_dsp = 16KHz，时钟频率为32 MHz
+//   DAC 采用2倍预内插，调制后播放速率 fsdm = fs_dsp*2*64 = 2 MHz
+//                      工作时钟频率 fdac = 4*fsdm = 8 MHz
+//   Memory 工作速率  fmem = fs_ad/2 = 64KHz
+//配置：
+//   RN_CFG_DSP48M + RN_CFG_FLOW_DIV4
+//   RN_CFG_DAC_DIV2+RN_CFG_MEM_DIV256+RN_CFG_ADC_DIV2
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//定义ADC的配置参数
+#define  RN_ADCPORT_ANAPARA                    0b00001
+#define  RN_ADCPORT_ADC0CFG                    0b00010
+#define  RN_ADCPORT_ADC1CFG                    0b00100
+#define  RN_ADCPORT_AGC0                       0b01000
+#define  RN_ADCPORT_AGC1                       0b10000
+#define  RN_ADDR_ADC_TABLE                     0x60000000
+#define  RN_CFG_ADC_AD0ENABLE                  0b1101
+#define  RN_CFG_ADC_AD1ENABLE                  0b1110
+#define  RN_CFG_ADC_INTEGI0                    0b11000000
+
+
+//定义I2S的配置参数，适用于2个并行ADC
+#define  RN_I2S_MCLK                          0b00000010000
+#define  RN_I2S_SCLK                          0b00000000000
+#define  RN_I2S_DATA_BUF                      0b00000100000
+#define  RN_I2S_DATA_ADC                      0b00000000000
+//#define  RN_I2S_TDM_MOD0                      0b00001000000
+//#define  RN_I2S_TDM_MOD1                      0b00010000000
+//#define  RN_I2S_TDM_MOD2                      0b00100000000
+//#define  RN_I2S_TDM_MOD3                      0b01000000000
+//#define  RN_I2S_TDM_MOD02                     0b00101000000
+//#define  RN_I2S_TDM_MOD13                     0b01010000000
+//#define  RN_I2S_TDM_MOD0123                   0b01111000000
+#define  RN_I2S_TDM_MOD0                      0b00101000000
+#define  RN_I2S_TDM_MOD1                      0b01010000000
+#define  RN_I2S_TDM_MOD01                     0b01111000000
+#define  RN_I2S_TDMCNT_EN                     0b10000000000
+#define  RN_I2S_TDMCNT_DIS                    0b00000000000
+#define  RN_I2S_BPS_DIV0                      0b00000000001
+#define  RN_I2S_BPS_DIV1                      0b00000000010
+#define  RN_I2S_BPS_DIV2                      0b00000000100
+#define  RN_I2S_BPS_DIV3                      0b00000001000
+
+//I2S数据直接来自ADC0输出，L与R通道均为有效数据，BIT率为16K*16。用于测试输出等
+#define  RN_I2S_MODE_SLRAD0     RN_I2S_SCLK+RN_I2S_DATA_ADC+RN_I2S_TDM_MOD0+RN_I2S_BPS_DIV2
+#define  RN_CFG_I2S_TYPE2       RN_CFG_DAC_DIV2+RN_CFG_MEM_DIV256+RN_CFG_ADC_DIV1
+
+//所有I2S-Buffer模式中，L通道取b15~b0，R通道取b31~b16，根据需要安排数据格式
+//I2S数据来自I2S-Buffer输出，Buffer地址步进为2，BIT率为16K*16
+#define  RN_I2S_MODE_SLRBUFST1  RN_I2S_SCLK+RN_I2S_DATA_BUF+RN_I2S_TDM_MOD0+RN_I2S_BPS_DIV2
+//#define  RN_CFG_I2S_TYPE2       RN_CFG_DAC_DIV2+RN_CFG_MEM_DIV256+RN_CFG_ADC_DIV1
+
+//I2S数据来自I2S-Buffer输出，Buffer地址步进为1，BIT率为16K*16*2，适用于同时输出两个声道
+#define  RN_I2S_MODE_SLRBUFST2  RN_I2S_SCLK+RN_I2S_DATA_BUF+RN_I2S_TDM_MOD0+RN_I2S_BPS_DIV1
+#define  RN_CFG_I2S_TYPE3       RN_CFG_DAC_DIV1+RN_CFG_MEM_DIV256+RN_CFG_ADC_DIV1
+
+
+

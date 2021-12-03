@@ -1,0 +1,31 @@
+#ifndef _INIT_DEF_
+#define _INIT_DEF_
+
+#ifndef _INIT_F_
+    extern Sys_Init;
+    extern Mem_Init;
+    extern DC_Init;
+    extern IO_Init_GD25;
+    extern FFT_Init;
+	extern IIR_PATH1_LP4Class;
+	extern IIR_PATH1_HP4Class;
+//	extern Sim_Init;
+	extern _IIR_BANK_INIT;
+//	extern _IIR_BANK_SetHD;
+//	extern _ADC_Table_Init;
+//	extern Start_VBNX1;
+//	extern _IIR_PATH1_LP32Init;
+//	extern _IIR0_SetHD_100DB;
+//	extern _IIR1_SetHD_100DB;
+	extern IIR_PATH3_HP340Init;
+	extern IIR_PATH3_HP120Init;
+	extern IIR_PATH3_HP140Init;
+	
+//	extern _ADC0_INIT;
+//	extern _ADC1_INIT;
+#endif /* _INIT_F_ */
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _INIT_DEF_ */

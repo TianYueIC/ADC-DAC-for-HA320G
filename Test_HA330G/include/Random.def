@@ -1,0 +1,16 @@
+#ifndef _RANDOM_DEF_
+#define _RANDOM_DEF_
+
+//=========================== 函数声明 ===========================
+#ifndef _RANDOM_F_
+    extern Random_Gets;
+    extern _RandomGet;
+    extern _Random_Get1;
+
+#endif /* _RANDOM_F_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#endif /* _RANDOM_DEF_ */

@@ -1,0 +1,19 @@
+#ifndef _MARCHC_DEF_
+#define _MARCHC_DEF_
+
+#ifndef _MARCHC_T_
+    extern Marchc_NoMMU;
+    extern Marchc_Cache;
+#endif /* _MARCHC_T_ */
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+//=========================== 驱动级应用定义 ===========================
+
+#define Marchc_M2_Code    0x2
+#define Marchc_M3_Code    0x3
+#define Marchc_M4_Code    0x4
+#define Marchc_M5_Code    0x5
+#define Marchc_M6_Code    0x6
+
+#endif /* _MARCHC_DEF_ */

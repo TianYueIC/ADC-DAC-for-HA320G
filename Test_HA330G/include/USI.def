@@ -1,0 +1,21 @@
+#ifndef _USI_DEF_
+#define _USI_DEF_
+
+//=========================== 函数声明 ===========================
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+
+//=========================== 驱动级应用定义 ===========================
+#define Counter0_Port       0b00001
+#define Counter1_Port       0b00010
+#define Counter2_Port       0b00100
+#define Data_Port           0b01000
+#define Config_Port         0b10000
+
+#define COM0    0b0001
+#define COM1    0b0010
+#define COM2    0b0100
+#define COM3    0b1000
+
+#endif _USI_DEF_

@@ -1,0 +1,18 @@
+#ifndef _SPI_MASTER_DEF_
+#define _SPI_MASTER_DEF_
+
+//=========================== 函数声明 ===========================
+#ifndef _SPI_MASTER_F_
+    extern SPI_Master_Init;
+    extern SPI_Master_Puts;
+    extern SPI_Master_Puts_Prot;
+    extern SPI_Master_Gets_Prot;
+#endif
+
+//=========================== 硬件资源定义 ===========================
+#include <resource_allocation.def>
+#include <USI.def>
+
+//=========================== 驱动级应用定义 ===========================
+
+#endif _SPI_MASTER_DEF_
