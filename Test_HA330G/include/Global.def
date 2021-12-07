@@ -288,7 +288,7 @@
 #define L64_M3_A4           0x7542de75 // 64*3+4 = 196
 #define L64_M3_A5           0x6a85bcea // 64*3+5 = 197
 #define L64_M2_A2           0x68297D50 // 64*2+2 = 130
-//#define L64_M2_A4            // 64*2+4 = 132
+#define L64_M2_A4           0x20A5F543 // 64*2+4 = 132
 #define L64_M2_A4_A2        0x0297D50C // 64*2+4+2 = 134
 #define L64_M28_A1          0x52c58b17 // 64*28+1 = 1793
 #define L64_M48_A1          0x6520a881 // 64*48+1 = 3073
@@ -383,18 +383,18 @@
 
 // =================== 全局变量定义 ===================
 // NR
-//------------ADC\DAC Global-----------2021/11/28 16:17:13
+//------------ADC\DAC Global-----------2021/12/6 11:07:06 更新MIC0变量
 #define g_Cnt_Frame        		M[RA4+0*MMU_BASE]
 #define g_DAC_Cfg       		M[RA4+1*MMU_BASE]
 #define g_Vol       			M[RA4+2*MMU_BASE]
-#define g_Weight_Frame_0   		M[RA4+3*MMU_BASE]
-#define g_LastBank_Average_0    M[RA4+4*MMU_BASE]
-#define g_ADC_DC_0              M[RA4+5*MMU_BASE]
-#define g_ADC_CFG_0             M[RA4+6*MMU_BASE]
-#define g_Weight_Frame_1   		M[RA4+7*MMU_BASE]
-#define g_LastBank_Average_1    M[RA4+8*MMU_BASE]
-#define g_ADC_DC_1              M[RA4+9*MMU_BASE]
-#define g_ADC_CFG_1             M[RA4+10*MMU_BASE]
+#define g_WeightFrame_Now_0     M[RA4+3*MMU_BASE]
+#define g_WeightFrame_Next_0    M[RA4+4*MMU_BASE]
+#define g_Vpp_0                 M[RA4+5*MMU_BASE]
+#define g_LastBank_Average_0    M[RA4+6*MMU_BASE]
+#define g_ADC_DC_0         		M[RA4+7*MMU_BASE]
+#define g_ADC_CFG_0             M[RA4+8*MMU_BASE]
+#define g_SmallSignal_Count_0   M[RA4+9*MMU_BASE]
+
 //------------ADC\DAC Global-----------
 
 

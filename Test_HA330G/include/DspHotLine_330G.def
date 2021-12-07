@@ -1,6 +1,6 @@
 ////////////////////////////
 // DspHotLine.def for HA330 (Core:HA320G)
-// WENDI YANG 2021/11/19
+// WENDI YANG 2021/12/3 13:34:29
 ////////////////////////////
 //	Modified Notes
 //	1. 加入CntFWB的宏定义(在b7:b0) 和 CntFWB32b的宏定义(在b31:b24)，方便设置CntF、CntB、CntW
@@ -23,6 +23,8 @@
 	//extern _SendFFT128;
 	//extern _Win_FFT;
 	extern FFT_Fast128_HotLineRun;
+	//extern _Send2IFFT128;
+	extern IFFT_Fast128_HotLineRun;
 #endif /* _DSPHOTLINE_330G_F_ */
 
 //硬件宏
@@ -61,42 +63,50 @@
 
 
 ////======== DAM ParaNum 地址分配 宏定义 ========////
-//#define	DMA_ParaNum_助记符							0b值		//	说明													
-//#define	DMA_nParaNum_助记符							0b值		//	说明	
+//#define	DMA_ParaNum_助记符									0b值		//	说明													
+//#define	DMA_nParaNum_助记符									0b值		//	说明	
 
 //HotLine #0----DMA_ParaNum_GetADC_Ave_Max_Min	
 //				用于将ADC FlowRAM的数据搬移到Gram0中，同时进行STA运算，获得ave，max，min统计量
-#define	DMA_ParaNum_GetADC_Ave_Max_Min		0b00000	//0	
-#define	DMA_nParaNum_GetADC_Ave_Max_Min		0b11111	//0	
+#define	DMA_ParaNum_GetADC_Ave_Max_Min				0b00000	//0	
+#define	DMA_nParaNum_GetADC_Ave_Max_Min				0b11111	//0	
 
 //HotLine #1----DMA_ParaNum_MAC_RffC
 //				将GRAM0的数据乘常数
-#define	DMA_ParaNum_MAC_RffC				0b00001	//1	
-#define	DMA_nParaNum_MAC_RffC				0b11110	//1	
+#define	DMA_ParaNum_MAC_RffC									0b00001	//1	
+#define	DMA_nParaNum_MAC_RffC									0b11110	//1	
 
 //HotLine #2----DMA_ParaNum_Send_DAC
 //				用于DAC数据写回.完成移位、四舍五入，并将数据搬移到FlowRAM中
-#define	DMA_ParaNum_Send_DAC				0b00010	//2	
-#define	DMA_nParaNum_Send_DAC				0b11101	//2	
+#define	DMA_ParaNum_Send_DAC									0b00010	//2	
+#define	DMA_nParaNum_Send_DAC									0b11101	//2	
 
-#define	DMA_ParaNum_FFT128_ClrRAM		0b00011	//3	用于FFT的RAM清零
-#define	DMA_nParaNum_FFT128_ClrRAM	0b11100	//3	
+//HotLine #3----DMA_ParaNum_FFT128_ClrRAM
+//				用于FFT的RAM清零(无需改PRAM配置)，禁止外部调用！
+#define	DMA_ParaNum_FFT128_ClrRAM							0b00011	//3	用于FFT的RAM清零
+#define	DMA_nParaNum_FFT128_ClrRAM						0b11100	//3	
 
-#define	DMA_ParaNum_MAC_Rff					0b00100	//4			
-#define	DMA_nParaNum_MAC_Rff				0b11011	//4
+//HotLine #4----DMA_ParaNum_MAC_Rff
+//				MAC双序列乘法
+#define	DMA_ParaNum_MAC_Rff										0b00100	//4			
+#define	DMA_nParaNum_MAC_Rff									0b11011	//4
 
-#define	DMA_ParaNum_FMT_Send2FFT128					0b00101	//5			
+//HotLine #5----DMA_ParaNum_FMT_Send2FFT128
+//				FMT单序列运算，写入FFT128 RAM特殊通道，禁止外部调用！
+#define	DMA_ParaNum_FMT_Send2FFT128						0b00101	//5			
 #define	DMA_nParaNum_FMT_Send2FFT128					0b11010	//5	
-//
-//#define	DMA_ParaNum_					0b00110	//6			
-//#define	DMA_nParaNum_					0b11001	//6	暂未使用
-//
-//#define	DMA_ParaNum_					0b00111	//7			
-//#define	DMA_nParaNum_					0b11000	//7	暂未使用
-//
-//#define	DMA_ParaNum_					0b01000	//8			
-//#define	DMA_nParaNum_					0b10111	//8	暂未使用
-//
+
+//HotLine #6----DMA_ParaNum_ALU_Send2IFFT128
+//				ALU单序列，逆FFT求共轭，写入FFT128 RAM特殊通道，禁止外部调用！
+#define	DMA_ParaNum_ALU_Send2IFFT128					0b00110	//6			
+#define	DMA_nParaNum_ALU_Send2IFFT128				0b11001	//6	暂未使用
+
+#define	DMA_ParaNum_FMT_GetH16					0b00111	//7			
+#define	DMA_nParaNum_FMT_GetH16				0b11000	//7	暂未使用
+
+#define	DMA_ParaNum_ALU_RffC					0b01000	//8			
+#define	DMA_nParaNum_ALU_RffC					0b10111	//8	暂未使用
+
 //#define	DMA_ParaNum_					0b01001	//9			
 //#define	DMA_nParaNum_					0b10110	//9	暂未使用
 //
@@ -166,6 +176,8 @@
 //#define	DMA_ParaNum_					0b11111	//31	灵活使用（默认位置）		
 //#define	DMA_nParaNum_					0b00000	//31	灵活使用（默认位置）
 
+#define	DMA_ParaNum_ADDA_Flow					0b11111	//31	ADDA进程	
+#define	DMA_nParaNum_ADDA_Flow				0b00000	//31	
 
 
 
@@ -204,25 +216,6 @@
 #define	CntFWB13_32b	0x19000000	//	13	
 #define	CntFWB14_32b	0x33000000	//	14	
 
-////======== MGRP_PATH 的宏定义 ========////
-//#define     DMA_PATH0    		0x1  
-//#define     DMA_PATH1    		0x2  
-//#define     DMA_PATH2    		0x4  
-//#define     DMA_PATH3    		0x8  
-//#define     DMA_PATH4    		0x10 
-//#define     DMA_PATH5    		0x20 
-//#define     DMA_PATHIO    	0x80 
-#define     DMA_PATH_1w2    	0b000110
-#define     DMA_PATH_1w5    	0b100010
-
-//#define     MGRP_PATH1    		0x8  
-//#define     MGRP_PATH2    		0x10 
-//#define     MGRP_PATH3    		0x20 
-//#define     MGRP_PATH4    		0x40 
-//#define     MGRP_PATH5    		0x80 
-//#define     MGRP_PATHIO    		0x200
-#define     MGRP_PATH_1w2    		0x18
-#define     MGRP_PATH_1w5    		0x88
 
 /////////
 

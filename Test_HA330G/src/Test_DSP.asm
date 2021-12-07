@@ -120,6 +120,10 @@ L_Calibration:
     GPIO_WEn0 = RD0;
     RD0 = GPIO_IN|GPIO_PULL;
     GPIO_Set0 = RD0;
+    RD0 = GP0_7;
+    GPIO_WEn0 = RD0;
+    RD0 = GPIO_IN|GPIO_PULL;
+    GPIO_Set0 = RD0;
 
     //RD0 = 0b11;//使能双MIC
     //RD0 = 0b10;//使能MIC1
@@ -141,7 +145,7 @@ L_UART_init:
 		send_para(RD0);
 		call UART_PutDword_COM1;
 #endif
-
+/*
     RD0 = RN_GRAM3;
     RA1 = RD0;
 	//写测试数据
@@ -217,7 +221,7 @@ L_UART_init:
     RD0 = 0;
     M[RA1++] = RD0;
     CPU_WorkDisable;
-		
+*/		
 		
 			//开始测试！等待按键GP0-3
 L_Wait_Key0:
@@ -229,17 +233,6 @@ L_Wait_Key0:
 	//if(RD0_Bit3 == 1) goto L_Wait_Key0;
 #endif
    
-//    RD0 = RN_ADCPORT_AGC0;
-//    RD1 = 0xFF;
-//    ////Try ADC
-//    ADC_CPUCtrl_Enable;
-//    //配置ADC0    
-//    ADC_PortSel = RD0;
-//    //RD0 = 0x7F;
-//    ADC_Cfg = RD1;
-//    RD0 = 0;
-//    ADC_PortSel = RD0;
-//    ADC_CPUCtrl_Disable;  
     
     CPU_SimpleLevel_H;
     
@@ -301,9 +294,7 @@ Loop:   //main
     M[RA1++] = RD0;
     CPU_WorkDisable;   
 */
-
 //此处可修改算法，音频流在RN_GRAM_IN
-
 
 
 //音量调整 测试用
@@ -495,16 +486,7 @@ L_Get_ADC_AD_Even:
     
     //有新数据
 L_Get_ADC_DATA:
-////查到数据，切回S5
-//RD2 = RD1;
-//RD1 = RN_SP5;
-//RP_B15;
-//Set_Pulse_Ext8;
-//nop;nop;
-//RD1 = RD2
-
-    RA0 = RD1;
-        
+    RA0 = RD1;        
     call Get_ADC_Function;
 
 	RD0 = 0;
@@ -512,76 +494,111 @@ L_Get_ADC_DATA:
 
 //////////////////////////////////////////////////////////////////////////
 //  名称:
-//      Find_n_k
+//      Find_k
 //  功能:
-//      通过总增益计算n、k。总音量=6*n+k，0<=k<6
+//      通过总增益计算DAC档位配置值，以及k与移位个数。总音量=-6*n-k，0<=k<6。n∈非负整数 
 //  参数:
-//      RD0:总音量，32bit有符号数
+//      RD0:总增益，32bit有符号数,单位dB
 //  返回值：
 //		RD0:k
-//      RD1:-n
+//		RD1:右移位数
 //////////////////////////////////////////////////////////////////////////
-Sub_AutoField Find_n_k;
-    if(RD0_Bit31 ==1) goto L_Find_n_k_0;
-    if(RD0_nZero) goto L_Find_n_k_1;
+Sub_AutoField Find_k;
+
+    RD2 = 0;
+
+    if(RD0_Bit31 == 1) goto L_Find_k_0;
+    if(RD0_nZero) goto L_Find_k_1;
     //0dB
-    RD0 = 0;
+    RD0 = 0x8080;
     RD1 = 0;
-    goto L_Find_n_k_End;    
-L_Find_n_k_1:        
-    // 总增益0-12dB    
-    RD0 -= 6;
-    if(RD0_nZero) goto L_Find_n_k_2;
-    // 6dB
-    RD0 = 0;
-    RD1 = -1;
-    goto L_Find_n_k_End;        
-L_Find_n_k_2:
-    if(RD0_Bit31 == 0) goto L_Find_n_k_3;
-    // 1-5dB
-    RF_Neg(RD0);    //-(n-6)
-    RD1 = -1;   //n
-    goto L_Find_n_k_End;
-L_Find_n_k_3:
-    // >=7dB
-    RD0 = 0;
-    RD1 = -2;    
-    goto L_Find_n_k_End;
-  
-//2021/11/28 15:18:59 废弃，大音量时不做微调    
-//    RD0 -= 6;
-//    if(RQ_nBorrow) goto L_Find_n_k_4;
-//    // 7-11dB
-//    RF_Neg(RD0);    //-(n-12)
-//    RD1 = -2;   //n
-//    goto L_Find_n_k_End;
-//L_Find_n_k_4:
-//    // >=12dB  
-//    RD0 = 0;
-//    RD1 = -2;
-//    goto L_Find_n_k_End;    
+    goto L_Find_k_End;
+        
+L_Find_k_1:        
+    // 总增益>0
+    RD0 = 0xF0C0;
+    RD1 = 0;
+    goto L_Find_k_End;           
     
-L_Find_n_k_0:  
+L_Find_k_0:  
     //总增益为负数
-    RF_Neg(RD0);    // 总增益求负便于算法设计
-    RD2 = RD0;
-    RD0 -= 72;  /////////////////////////////暂定，小音量极限值
-    if(RQ_Borrow) goto L_Find_n_k_6;
-    //小音量截顶
-    RD0 = 0;
-    RD1 = 12;   /////////////////////////////小音量极限值/6，跟随小音量极限值一并调整  
-    goto L_Find_n_k_End;    
+    RD0 += 5;
+    if(RD0_Bit31 == 1) goto L_Find_k_2;
+    //-1~-5dB
+    RD1 = 5;
+    RD1 -= RD0;
+    RD0 = 0x8080;
+    goto L_Find_k_End;
+                      
+L_Find_k_2:
+    RD0 += 6;
+    if(RD0_Bit31 == 1) goto L_Find_k_3;
+    //-6~-11dB
+    RD1 = 5;
+    RD1 -= RD0;
+    RD0 = 0x8040;
+    goto L_Find_k_End;
     
-L_Find_n_k_6:       //调整范围内
-    RD0 = RD2;
-    RD1 = -1;       //n
-L_Find_n_k_5:
-    RD1 ++;  
-    RD0 -= 6;
-    if(RD0_Bit31 == 0) goto L_Find_n_k_5;   
-    RD0 += 6;       //余数k，总增益=6*n+k，k<6  
-      
-L_Find_n_k_End:
+L_Find_k_3:    
+    RD0 += 6;
+    if(RD0_Bit31 == 1) goto L_Find_k_4;
+    //-12~-17dB
+    RD1 = 5;
+    RD1 -= RD0;
+    RD0 = 0x8000;
+    goto L_Find_k_End;
+    
+L_Find_k_4:    
+    RD0 += 6;
+    if(RD0_Bit31 == 1) goto L_Find_k_5;
+    //-18~-23dB
+    RD1 = 5;
+    RD1 -= RD0;
+    RD0 = 0x4000;
+    goto L_Find_k_End;
+
+L_Find_k_5:    
+    RD0 += 6;
+    if(RD0_Bit31 == 1) goto L_Find_k_6;
+    //-24~-29dB
+    RD1 = 5;
+    RD1 -= RD0;
+    RD0 = 0x2000;
+    goto L_Find_k_End;
+
+L_Find_k_6:    
+    RD0 += 6;
+    if(RD0_Bit31 == 1) goto L_Find_k_7;
+    //-30~-35dB
+    RD1 = 5;
+    RD1 -= RD0;
+    RD0 = 0x1000;
+    goto L_Find_k_End;
+
+L_Find_k_7:
+    RD0 += 6;
+    RD2 ++;
+    if(RD0_Bit31 == 1) goto L_Find_k_7;
+    //<-35dB
+    RD1 = 5;
+    RD1 -= RD0;
+    RD0 = 0x1000;
+    
+L_Find_k_End:
+    RD3 = RD0;    
+	RD0 = g_DAC_Cfg;
+    RD0_ClrBit6;
+    RD0_ClrBit7;
+    RD0_ClrBit12;
+    RD0_ClrBit13;
+    RD0_ClrBit14;
+    RD0_ClrBit15;   //g_DAC_Cfg初始化，清零配置位
+    RD0 += RD3;
+    g_DAC_Cfg = RD0;    
+    
+    RD0 = RD1;
+    RD1 = RD2;
+
     Return_AutoField(0*MMU_BASE);
 
 //////////////////////////////////////////////////////////////////////////
@@ -606,113 +623,31 @@ Sub_AutoField DAC_Tab;
     RD0 --;
     if(RQ_Zero) goto L_DAC_Tab_4;
     //余数k=5
-    RD0 = 0x47FA47FA;   
+    RD0 = 0x0FF60FF6;   
     goto L_DAC_Tab_End;
 L_DAC_Tab_0:
     //余数k=0    
-    RD0 = 0;   //          
+    RD0 = 0;        
     goto L_DAC_Tab_End;
 L_DAC_Tab_1:
-    //余数k=1,RD0=1/10^(1/20),q15
-    RD0 = 0x72147214;    
+    //余数k=1
+    RD0 = 0x64296429;    
     goto L_DAC_Tab_End;
 L_DAC_Tab_2:
-    //余数k=2,RD0=1/10^(2/20),q15    
-    RD0 = 0x65AC65AC;    
+    //余数k=2,
+    RD0 = 0x4B594B59;    
     goto L_DAC_Tab_End;
 L_DAC_Tab_3:
     //余数k=3   
-    RD0 = 0x5A9D5A9D; 
+    RD0 = 0x353B353B; 
     goto L_DAC_Tab_End;
 L_DAC_Tab_4:
     //余数k=4    
-    RD0 = 0x50C350C3;   
+    RD0 = 0x21862186;   
        
 L_DAC_Tab_End:
     Return_AutoField(0*MMU_BASE);
 
-
-//////////////////////////////////////////////////////////////////////////
-//  名称:
-//      DAC_UpdateCfg
-//  功能:
-//      通过移位数n，确定DAC_Cfg中IIR与CIC参数，以及CPU移位数
-//  参数:
-//      RD0:-n
-//  返回值：
-//      RD1: CPU移位数
-//      RD0: DAC_Cfg中IIR与CIC参数
-//////////////////////////////////////////////////////////////////////////
-Sub_AutoField DAC_UpdateCfg;
-    
-    RD2 = RD0;
-    RD0 -= 5;
-    if(RD0_Bit31 == 1) goto L_DAC_UpdateCfg_0;   
-    //n>=5，右移n-5位，IIR档位-3，Mult档位-2
-    RD1 = RD0;  //暂存移位值
-    RD0 = 0x1000;
-    goto L_DAC_UpdateCfg_End;
-
-L_DAC_UpdateCfg_0:
-    RD0 = RD2;
-    RD0 -= 4;
-    if(RD0_nZero) goto L_DAC_UpdateCfg_1;   
-    //n=4，右移0位，IIR档位-3，Mult档位-1
-    RD0 = 0x1040;
-    RD1 = 0;    //右移0位
-    goto L_DAC_UpdateCfg_End;
-    
-L_DAC_UpdateCfg_1:
-    RD0 = RD2;
-    RD0 -= 3;
-    if(RD0_nZero) goto L_DAC_UpdateCfg_2;   
-    //n=3，右移0位，IIR档位-3，Mult档位0
-    RD0 = 0x1080;
-    RD1 = 0;    //右移0位
-    goto L_DAC_UpdateCfg_End;
-        
-L_DAC_UpdateCfg_2:
-    RD0 = RD2;
-    RD0 -= 2;
-    if(RD0_nZero) goto L_DAC_UpdateCfg_3;   
-    //n=2，右移0位，IIR档位-2，Mult档位0
-    RD0 = 0x2080;
-    RD1 = 0;    //右移0位
-    goto L_DAC_UpdateCfg_End;    
-    
-L_DAC_UpdateCfg_3:
-    RD0 = RD2;
-    RD0 -= 1;
-    if(RD0_nZero) goto L_DAC_UpdateCfg_4;   
-    //n=1，右移0位，IIR档位-1，Mult档位0
-    RD0 = 0x4080;
-    RD1 = 0;    //右移0位
-    goto L_DAC_UpdateCfg_End;      
-        
-L_DAC_UpdateCfg_4:
-    RD0 = RD2;
-    if(RD0_nZero) goto L_DAC_UpdateCfg_5;   
-    //n=0，右移0位，IIR档位0，Mult档位0
-    RD0 = 0x8080;
-    RD1 = 0;    //右移0位
-    goto L_DAC_UpdateCfg_End;      
-
-L_DAC_UpdateCfg_5:
-    RD0 = RD2;
-    RD0 ++;
-    if(RD0_nZero) goto L_DAC_UpdateCfg_6;   
-    //n=-1，右移0位，IIR档位0，Mult档位1
-    RD0 = 0x80C0;
-    RD1 = 0;    //右移0位
-    goto L_DAC_UpdateCfg_End;      
-    
-L_DAC_UpdateCfg_6:
-    //n=-2，右移0位，IIR档位1，Mult档位1
-    RD0 = 0xF0C0;
-    RD1 = 0;    //右移0位
-    
-L_DAC_UpdateCfg_End:    
-    Return_AutoField(0*MMU_BASE);
 
 //////////////////////////////////////////////////////////////////////////
 //  名称:
@@ -723,59 +658,44 @@ L_DAC_UpdateCfg_End:
 //      无
 //  返回值：
 //		无
-//  说明：
-//      g_DAC_Cfg: bit15-12:IIR输出增益；bit7 6：CIC输出增益。1000 10是默认值，此时0dB
-//      g_Vol：音量档位（dB），暂定32bit定点数
-//      g_Weight_Frame_0：高8位为当前帧权位(*2)，小数点在bit1上。例：0b1111表示-0.5
+//  说明：  
+//      g_DAC_Cfg               bit15-12:IIR输出增益；bit7 6：CIC输出增益。1000 10是默认值，此时0dB
+//      g_Vol                   音量档位（dB），暂定32bit定点数
+//      g_WeightFrame_Now_0     当前帧权位
+//      g_WeightFrame_Next_0    下一帧权位
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField Send_DAC;
 	
-    RD0 = g_Weight_Frame_0;   //高8位为当前帧权位(*2)
-    RF_GetH8(RD0);
-    RD0_SignExtL8;
+    RD0 = g_WeightFrame_Now_0;
+    RF_ShiftL1(RD0);//E*2       
     RD1 = RD0;
     RD0 += RD1;
-    RD0 += RD1;     //RD0*3,相当于权位E*6
-    RD0 += 6;       //2021/11/28 15:11:58修改，CIC初始档位0b10变为0b11
+    RD0 += RD1;     //E*6
     RD0 += g_Vol;   //总增益=6*E+音量值
-    
-    call Find_n_k;
-    RD2 = RD1;  //n
-
+    call Find_k;   
+    RD2 = RD1;  //右移位数 
     call DAC_Tab;
-    RD3 = RD0;  // 查表结果c在RD3上        
-    RD0 = RD2;
-    call DAC_UpdateCfg;
-
-    RD2 = RD0;  // DAC_Cfg中IIR与CIC参数
-	RD0 = g_DAC_Cfg;
-    RD0_ClrBit6;
-    RD0_ClrBit7;
-    RD0_ClrBit12;
-    RD0_ClrBit13;
-    RD0_ClrBit14;
-    RD0_ClrBit15;   //g_DAC_Cfg初始化，清零配置位
-    RD0 += RD2;
-    g_DAC_Cfg = RD0;
-
     //先进行乘法
-    RD0 = RD3;  //c在RD3上
-    RD3 = RD1;  //移位数据
-
-    if(RD0_Zero) goto L_Send_DAC_Odd;   //6的整数倍，无需乘法
+    if(RD0_Zero) goto L_Send_DAC_xx;
+    //非6的整数倍，插kx   
     RD1 = RD0;    
 	RD0 = RN_GRAM_IN; 
     RA0 = RD0;
-	RD0 = RN_GRAM_IN; 
+	RD0 = RN_GRAM1; ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
     RA1 = RD0;
     RD0 = RD1;
     call _MAC_RffC;          
 
-L_Send_DAC_Odd:
-    
     RD0 = RN_GRAM_IN; 
-    call DATA_XX;   //插原值    
-        
+    RD1 = RN_GRAM1;
+    call DATA_kX;
+    goto L_Send_DAC_Odd;
+L_Send_DAC_xx:
+    //6的整数倍，插原值
+    RD0 = RN_GRAM_IN; 
+    call DATA_XX;   
+
+L_Send_DAC_Odd:        
 	RD1 = FlowRAM_Addr1;	
     RD0 = g_Cnt_Frame;
     if(RD0_Bit0==1) goto L_Send_DAC_Even;
@@ -786,31 +706,97 @@ L_Send_DAC_Even:
 	RD0 = RN_GRAM_IN;
     RA0 = RD0;
     RA1 = RD1;
-    RD0 = RD3;
+    RD0 = RD2;
     call _Send_DAC_SignSftR_RndOff;
+    //更新权位
+    RD0 = g_WeightFrame_Next_0;    
+    g_WeightFrame_Now_0 = RD0;
     
-    //更新g_Weight_Frame_0
-    RD1 = g_Weight_Frame_0;   //高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器 
-    RF_GetMH8(RD1);
-    RF_RotateR8(RD1);
-    RD0 = g_Weight_Frame_0;   //高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器 
-    RD0_ClrByteH8;
-    RD0 += RD1;
-    g_Weight_Frame_0 = RD0;
 
     //帧计数器累加
     g_Cnt_Frame ++;    
-     
+
     Return_AutoField(0*MMU_BASE);    
     
     
+//////////////////////////////////////////////////////////////////////////
+//  名称:
+//      DATA_kX 
+//  功能:
+//      插kX
+//  参数:
+//      RD0 源数据x地址 
+//      RD1 kx地址
+//  返回值：
+//		无
+//////////////////////////////////////////////////////////////////////////
+Sub_AutoField DATA_kX;
+
+    push RA2;
+    
+    RA0 = RD0;
+    RA2 = RD1;
+    RD3 = RD0;
+    MemSetRAM4K_Enable; //使用扩展端口或RAM特殊配置时使能
+    RD0 = DMA_PATH0;
+    M[RA0] = RD0;
+    M[RA2] = RD0;
+    MemSet_Disable;     //配置结束
+
+    //申请128字节缓冲区
+    RD0 = 32*MMU_BASE;
+    RSP -= RD0;
+    RA1 = RSP;   
+
+    CPU_WorkEnable;
+    //拷贝并内插,至缓冲区
+    RD2 = 16;
+L_DATA_kX_L0:
+    RD0 = M[RA0]; //源数据x
+    RD1 = M[RA2]; //kx
+    RF_GetL16(RD0);
+    RF_GetL16(RD1);
+    RF_RotateR16(RD1);
+    RD0 += RD1;
+    M[RA1++] = RD0;
+     
+    RD0 = M[RA0++]; //源数据x
+    RD1 = M[RA2++]; //kx
+    RF_GetH16(RD0);
+    RF_GetH16(RD1);
+    RF_RotateR16(RD1);
+    RD0 += RD1;
+    M[RA1++] = RD0; 
+    
+    RD2 --;
+    if(RQ_nZero) goto L_DATA_kX_L0;
+    //拷贝回原地址
+    RD0 = RD3;
+    RA0 = RD0;
+    RA1 = RSP;
+    RD2 = 16;
+L_DATA_kX_L1:
+    RD0 = M[RA1++];
+    M[RA0++] = RD0;
+    RD0 = M[RA1++];
+    M[RA0++] = RD0;
+    RD2 --;
+    if(RQ_nZero) goto L_DATA_kX_L1;
+    CPU_WorkDisable;
+
+    //释放128字节缓冲区
+    RD0 = 32*MMU_BASE;
+    RSP += RD0;
+    
+    pop RA2;
+    Return_AutoField(0);
 //////////////////////////////////////////////////////////////////////////
 //  名称:
 //      DATA_XX 
 //  功能:
 //      插原值
 //  参数:
-//      RD0 : 源地址
+//      RD0 源数据地址
 //  返回值：
 //		无
 //////////////////////////////////////////////////////////////////////////
@@ -874,6 +860,7 @@ L_DATA_XX_L1:
     pop RA2;
     Return_AutoField(0);
 
+
 //////////////////////////////////////////////////////////////////////////
 //  名称:
 //      ADC0_Weight
@@ -884,30 +871,27 @@ L_DATA_XX_L1:
 //  返回值：
 //		无
 //  全局变量：
-//      g_Weight_Frame_0：  高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
+//      g_WeightFrame_Now_0 当前帧权位
 //      g_ADC_DC_0:         累加和计数器（权位0）
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField ADC0_Weight;
 
     // 根据帧权位左右移累加和，使权位置0
     RD1 = RD0;
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);              // 当前帧权位
+    RD0 = g_WeightFrame_Now_0;
     if(RD0_Zero) goto L_ADC_Weight_End; 
-    RD0_SignExtL8;   
-    if(RD0_Bit3 == 0) goto L_ADC_Weight_0;
+    if(RD0_Bit31 == 0) goto L_ADC_Weight_0;
     // 权位为负数
-    if(RD0_Bit0 == 0) goto L_ADC_Weight_1;
-    RD0 --; //-2.5当做-3计算，-3.5当做-4计算
 L_ADC_Weight_1:
     RF_Sft32SR1(RD1);
-    RD0 ++;
     RD0 ++;
     if(RD0_nZero) goto L_ADC_Weight_1;
     goto L_ADC_Weight_End;
 L_ADC_Weight_0:
-    // 权位为2
-    RF_ShiftL2(RD1);     
+    // 权位为正数
+    RF_ShiftL1(RD1);     
+    RD0 --;
+    if(RD0_nZero) goto L_ADC_Weight_0;
 L_ADC_Weight_End:   // 当前帧累加和在RD1上（权位0）            
         
     //平均值累加器 += 当前帧累加和（权位0）
@@ -927,7 +911,7 @@ L_ADC_Weight_End:   // 当前帧累加和在RD1上（权位0）
 //  返回值：
 //		RD0:紧凑型格式，需要减去的直流值（外部进行权重对齐，并拼凑为H16、L16格式），即前512帧平均值（权位同步）
 //  全局变量：
-//      g_Weight_Frame_0：      高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
+//      g_WeightFrame_Now_0     当前帧权位
 //		g_LastBank_Average_0    高8位为直流配置值；低16位为前512帧平均值，权位为0；bit16为当前块（512帧）是否改过档位的标志位。1：改过，0：未改过 
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField ADC0_C0;
@@ -937,25 +921,22 @@ Sub_AutoField ADC0_C0;
 
     // 根据帧权位左右移平均值，使权位置0
     RD1 = RD0;
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);              // 当前帧权位
+    RD0 = g_WeightFrame_Now_0;  // 当前帧权位
     if(RD0_Zero) goto L_ADC0_C0_End; 
-    RD0_SignExtL8;   
-    if(RD0_Bit3 == 0) goto L_ADC0_C0_0;
+    if(RD0_Bit31 == 0) goto L_ADC0_C0_0;
     // 权位为负数
-    if(RD0_Bit0 == 0) goto L_ADC0_C0_1;
-    RD0 --; //-2.5当做-3计算，-3.5当做-4计算
 L_ADC0_C0_1:
     RF_ShiftL1(RD1);     
-    RD0 ++;
     RD0 ++;
     if(RD0_nZero) goto L_ADC0_C0_1;
     goto L_ADC0_C0_End;
 L_ADC0_C0_0:
-    // 权位为2
-    RF_Sft32SR2(RD1);
+    // 权位为正数
+    RF_Sft32SR1(RD1);
+    RD0 --;
+    if(RD0_nZero) goto L_ADC0_C0_0;
 L_ADC0_C0_End:             
-    //RD1:前512帧平均值（权位同步）
+    //RD1:前512帧平均值（权位同步后）
     RD0 = RD1;
 	RD0_ClrByteH16;
 	RD1 = RD0;
@@ -969,116 +950,67 @@ L_ADC0_C0_End:
 //  功能:
 //      ADC0小信号处理
 //  参数:
-//      RD0:Vpp
+//      无
 //  返回值：
 //		RD0:    0:当前属于小信号帧；1:当前不属于小信号帧
 //  全局变量：
-//      g_Weight_Frame_0：      高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
+//		g_Vpp_0                 当前帧Vpp
+//		g_SmallSignal_Count_0   连续小信号帧计数器
+//		g_WeightFrame_Now_0     当前帧权位                
+//		g_WeightFrame_Next_0    下一帧权位               
 //		g_ADC_CFG_0;            高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField ADC0_SmallSignal;
-
+    
+    RD0 = g_Vpp_0;
     RD0_ClrBit8;
     RD0_ClrBit9;
     RD0_ClrBit10;
+    RD0_ClrBit11;
     RD0_ClrByteL8;
-    if(RD0_Zero) goto L_ADC0_SmallSignal_0;  //Vpp<2^11
+    if(RD0_Zero) goto L_ADC0_SmallSignal_0;  //Vpp<2^12
     //未检测到小信号，清零计数器，跳走
-    RD0 = g_Weight_Frame_0;         // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteL16;
-    g_Weight_Frame_0 = RD0;         // 小信号帧计数器清零
+    g_SmallSignal_Count_0 = 0;        
     goto L_ADC0_SmallSignal_End;     
 
 L_ADC0_SmallSignal_0:
     //检测到小信号
-    RD0 = g_Weight_Frame_0;         // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteH16;
-    RD1 = 512;  //小信号帧计数器
+    RD0 = g_SmallSignal_Count_0;
+    RD1 = 128;  //小信号帧计数器
     RD0 -= RD1;
     if(RD0_Zero) goto L_ADC0_SmallSignal_1; 
     //不满足连续x帧小信号，计数器++，跳走
-    g_Weight_Frame_0 ++;
-    goto L_ADC0_SmallSignal_6;  // 当前帧属于小信号帧，跳过大信号处理
+    g_SmallSignal_Count_0 ++;
+    goto L_ADC0_SmallSignal_5;  // 当前帧属于小信号帧，跳过大信号处理
         
 L_ADC0_SmallSignal_1:           // 小信号计数器达标，进行增益放大处理
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteL16;             // 计数器清零
-    g_Weight_Frame_0 = RD0;
+    g_SmallSignal_Count_0 = 0;                // 计数器清零
     
-    RD0 = g_ADC_CFG_0;      // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-    RF_GetH16(RD0);         // 高16位ADC前置放大器配置值
-    if(RD0_Bit10 == 1) goto L_ADC0_SmallSignal_6; // 27dB档位，已到顶，不调整   
-    if(RD0_Bit9 == 0) goto L_ADC0_SmallSignal_2;
-    // 24dB档位，调至27dB，E-0.5
-    RD0_SetBit10;
-    RD1 = RD0;                  // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);              // 当前帧权位（*2）
-    RD0 --;
-    RD0_ClrByteH24;            
-    RF_RotateL16(RD0);
-    RD2 = RD0;    
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;    
-    RD0 += RD2;
-    g_Weight_Frame_0 = RD0;
-    goto L_ADC0_SmallSignal_5;    
-L_ADC0_SmallSignal_2:
-    if(RD0_Bit1 == 1) goto L_ADC0_SmallSignal_3;
-    //当前为-6dB,调至6dB,权位置0，E-2
-    RD0_SetBit1;
-    RD0_SetBit2;
-    RD0_SetBit3;
-    RD1 = RD0;                  // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;    
-    g_Weight_Frame_0 = RD0;     // 下一帧权位为0        
-    goto L_ADC0_SmallSignal_5;    
-L_ADC0_SmallSignal_3:
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);              // 当前帧权位（*2）
-    RD0 -= 4;
-    if(RD0_nZero) goto L_ADC0_SmallSignal_4;
-    //当前帧权位为2，权位置0,E-2    
-    RD0 = g_ADC_CFG_0;      // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-    RF_GetH16(RD0);         // 高16位ADC前置放大器配置值
-    RF_ShiftL2(RD0);
-    RF_ShiftL2(RD0);
-    RD0 += 15;  
-    RD1 = RD0;                  // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;    
-    g_Weight_Frame_0 = RD0;     // 下一帧权位为0        
-    goto L_ADC0_SmallSignal_5;    
-L_ADC0_SmallSignal_4:    
-    //正常调整，增加6dB,E-1
-    RD0 = g_ADC_CFG_0;      // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-    RF_GetH16(RD0);         // 高16位ADC前置放大器配置值
-    RF_ShiftL2(RD0);
-    RD0 += 3;  
-    RD1 = RD0;                  // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);              // 当前帧权位（*2）
-    RD0 --;
-    RD0 --;
-    RD0_ClrByteH24;            
-    RF_RotateL16(RD0);
-    RD2 = RD0;    
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;    
-    RD0 += RD2;
-    g_Weight_Frame_0 = RD0;
-
-L_ADC0_SmallSignal_5:
-    RD0 = g_LastBank_Average_0;   //bit16为当前块（512帧）是否改过档位的标志位
-    RD0_SetBit16;        
-    g_LastBank_Average_0 = RD0;
-    RD0 = g_ADC_CFG_0;        // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值 
-    RD0_ClrByteH16;       
-    RF_RotateL16(RD1);
-    RD0 += RD1;    
+    RD0 = g_WeightFrame_Now_0;
+    if(RD0_nZero) goto L_ADC0_SmallSignal_2;
+    //当前E=0，下一帧变为-2
+    RD0 = -2;
+	g_WeightFrame_Next_0 = RD0;
+    RD0 = g_ADC_CFG_0;
+    RD0_ClrByteH16;
+    RD1 = 0x3ff0000;
+    RD0 += RD1;
     g_ADC_CFG_0 = RD0;
+    goto L_ADC0_SmallSignal_4;
+L_ADC0_SmallSignal_2:        
+    if(RD0_Bit31 == 0) goto L_ADC0_SmallSignal_3;
+    //当前E=-2，到顶不调整
+    goto L_ADC0_SmallSignal_5;
+L_ADC0_SmallSignal_3:
+    //当前E=2，下一帧变为0
+    g_WeightFrame_Next_0 = 0;
+    RD0 = g_ADC_CFG_0;
+    RD0_ClrByteH16;
+    RD1 = 0x3f0000;
+    RD0 += RD1;
+    g_ADC_CFG_0 = RD0;  
 
+L_ADC0_SmallSignal_4:
     //ADC_Cfg更新
     RD0 = g_ADC_CFG_0;
     RF_GetH16(RD0);
@@ -1093,7 +1025,7 @@ L_ADC0_SmallSignal_5:
     ADC_PortSel = RD0;
     ADC_CPUCtrl_Disable;
 
-L_ADC0_SmallSignal_6:    
+L_ADC0_SmallSignal_5:    
     RD0 = 0;       
     Return_AutoField(0);
 
@@ -1108,107 +1040,46 @@ L_ADC0_SmallSignal_End:
 //  功能:
 //      ADC0大信号处理
 //  参数:
-//      RD0:Vpp
+//      无
 //  返回值：
 //		无
 //  全局变量：
-//      g_Weight_Frame_0：      高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
+//		g_Vpp_0                 当前帧Vpp
+//		g_WeightFrame_Now_0     当前帧权位                
+//		g_WeightFrame_Next_0    下一帧权位               
 //		g_ADC_CFG_0;            高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField ADC0_StrongSignal;
-
+    
+    RD0 = g_Vpp_0;
     if(RD0_Bit15 == 0) goto L_ADC0_StrongSignal_End; 
-    if(RD0_Bit14 == 0) goto L_ADC0_StrongSignal_End; 
-    //bit14 15都为1，减少增益
-    
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);             
-    RD0 -= 4;
-    if(RD0_Zero) goto L_ADC0_StrongSignal_End;  //当前权位为2，无法缩小，结束
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器        
-    if(RD0_Bit24 == 0) goto L_ADC0_StrongSignal_0;
-    //当前帧为.5权位，调至24dB,E+0.5
-    RD0 = g_ADC_CFG_0;          // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-    RF_GetH16(RD0);             // 高16位ADC前置放大器配置值
-    RD0_ClrBit10;
-    RD1 = RD0;                  // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);              // 当前帧权位（*2）
-    RD0 ++;
-    RF_RotateL16(RD0);
-    RD2 = RD0;    
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;    
-    RD0 += RD2;
-    g_Weight_Frame_0 = RD0;
-    goto L_ADC0_StrongSignal_3;       
-L_ADC0_StrongSignal_0:
-    //非.5权位
-    RD0 = g_ADC_CFG_0;          // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-    RF_GetH16(RD0);             // 高16位ADC前置放大器放大倍数
-    if(RD0_Bit4 == 1) goto L_ADC0_StrongSignal_1;
-    //当前6dB,增益变为-6dB,E=2
-//2021/12/2 9:29:29 存疑，当前6dB权位2的可能没考虑
-    RD0_ClrBit1;    
-    RD0_ClrBit2;    
-    RD0_ClrBit3;    
-    RD1 = RD0;                  // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;
-    RD0_SetBit18;        
-    g_Weight_Frame_0 = RD0;     // 下一帧权位为2        
-    goto L_ADC0_StrongSignal_3;          
-L_ADC0_StrongSignal_1:    
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);              // 当前帧权位（*2）
-    if(RD0_nZero) goto L_ADC0_StrongSignal_2;
-
-//2021/12/2 11:35:51跳过E=2
-goto L_ADC0_StrongSignal_End;
-
-    //当前帧权位为0，增益-12dB,E=2
-    RD0 = g_ADC_CFG_0;          // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-    RF_GetH16(RD0);             // 高16位ADC前置放大器配置值
-    RF_ShiftR2(RD0);
-    RF_ShiftR2(RD0);            // 根据配置表右移四位
-    RD1 = RD0;                  // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0;     // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;
-    RD0_SetBit18;        
-    g_Weight_Frame_0 = RD0;     // 下一帧权位为2        
+//    if(RD0_Bit14 == 0) goto L_ADC0_StrongSignal_End; 
+    //bit14 15都为1，减少增益    
+    RD0 = g_WeightFrame_Now_0;
+    if(RD0_nZero) goto L_ADC0_StrongSignal_0;  
+    //E=0,调整为2
+    RD0 = 2;
+    g_WeightFrame_Next_0 = RD0;
+    RD1 = 0x70000; 
     goto L_ADC0_StrongSignal_3;
-L_ADC0_StrongSignal_2:
-    //其他情况，增益-6dB,E+1
-    RD0 = g_ADC_CFG_0;          // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-    RF_GetH16(RD0);         // 高16位ADC前置放大器配置值
-    RF_ShiftR2(RD0);        // 根据配置表右移2位
-    RD1 = RD0;              // 暂存ADC前置放大器配置值
-    RD0 = g_Weight_Frame_0; // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RF_GetH8(RD0);          // 当前帧权位（*2）
-    RD0 ++;
-    RD0 ++;
-    RF_RotateL16(RD0);
-    RD2 = RD0;    
-    RD0 = g_Weight_Frame_0;   // 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-    RD0_ClrByteMH8;    
-    RD0 += RD2;
-    g_Weight_Frame_0 = RD0;
-    
+L_ADC0_StrongSignal_0:
+    if(RD0_Bit31 == 1) goto L_ADC0_StrongSignal_2;
+    //E=2,无法降低
+    goto L_ADC0_StrongSignal_End;
+L_ADC0_StrongSignal_2:    
+    //E=-2,调整为0
+    RD0 = 0;
+    g_WeightFrame_Next_0 = RD0;
+    RD1 = 0x3ff0000;
+      
 L_ADC0_StrongSignal_3:
-    //根据档位配置当前帧权位、ADC前置放大器配置值
-    RD0 = g_LastBank_Average_0;   //bit16为当前块（512帧）是否改过档位的标志位
-    RD0_SetBit16;        
-    g_LastBank_Average_0 = RD0;
-    RD0 = g_ADC_CFG_0;        // 高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值 
-    RD0_ClrByteH16;       
-    RF_RotateL16(RD1);
-    RD0 += RD1;    
-    g_ADC_CFG_0 = RD0;
-
     //ADC_Cfg更新
     RD0 = g_ADC_CFG_0;
-    RF_GetH16(RD0);
-    RD1 = RD0;     
+    RD0_ClrByteH16;
+    RD0 += RD1;
+    g_ADC_CFG_0 = RD0;
+    RF_RotateR16(RD1);
+
     RD0 = RN_ADCPORT_AGC0;
     ////Try ADC
     ADC_CPUCtrl_Enable;
@@ -1228,38 +1099,121 @@ L_ADC0_StrongSignal_End:
 //  功能:
 //      对ADC获得的数据统计，以此为据去直流、调增益
 //  参数:
-//      无
+//      RA0     AD_buf数据指针
 //  返回值：
 //		无
 //  说明：
 //      (a)帧计数器,                    g_Cnt_Frame
 //		(b)每一路MIC需要4个全局变量
-//			(1)帧权位                   g_Weight_Frame_0 : 高8位为当前帧权位（*2），中高8位为下一帧权位（*2），低16位为连续小信号帧计数器
-//			(2)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为前512帧平均值，权位为0；bit16为当前块（512帧?┦欠窀墓滴坏谋曛疚弧?：改过，0：未改过 
-//			(3)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
-//			(4)配置值寄存器             g_ADC_CFG_0 ：高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
+//			(1)当前帧权位               g_WeightFrame_Now_0 
+//			(2)下一帧权位               g_WeightFrame_Next_0 
+//			(3)当前帧Vpp                g_Vpp_0
+//			(4)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为去直流修正值，权位为0；bit16为当前块（512帧）是否改过档位的标志位，1：改过，0：未改过 
+//			(5)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
+//			(6)配置值寄存器             g_ADC_CFG_0 ：高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
+//			(7)连续小信号帧计数器       g_SmallSignal_Count_0      
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField Get_ADC_Function;
+    
+    RD0 = RA0;
+    RD2 = RD0;
+    //////1、数据统计
+    //权位修正：硬件增益非整倍数，需要软件修正
+    RD0 = g_WeightFrame_Now_0;
+    if(RD0_Zero) goto L_ExpFix_End;
+    if(RD0_Bit31 == 1) goto L_ExpFix_1;
+    //E=2
+    RD1 = 0x60006000;   //修正值
+    goto L_ExpFix_0;
+L_ExpFix_1:
+    //E=-2
+    RD1 = 0x68B968B9;   //修正值
+    goto L_ExpFix_0;
+L_ExpFix_0:
+    //RA0@ADBUFF
+    //临时修改ParaMEM
+    //配置DMA_Ctrl参数，包括地址.长度
+	RD0 = RN_PRAM_START+DMA_ParaNum_MAC_RffC*MMU_BASE*8;
+	RA2 = RD0;
+	// 4*MMU_BASE: Step1  
+	RD0 = 0x06040002;//Step1
+	M[RA2+4*MMU_BASE] = RD0;
+	// 5*MMU_BASE: Null
+	RD0 = 0x00000002;//Step2
+	M[RA2+5*MMU_BASE] = RD0;
+    //////MAC_RFFC
+    	// 设置Group与PATH的连接
+		MemSetPath_Enable;  //设置Group通道使能
+		M[RA0+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
 
-    //////1、数据统计    
+		MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+		// 连接到PATH1
+		M[RA0] = DMA_PATH2;
+
+		//配置MAC参数
+		MAC_CFG = RN_CFG_MAC_TYPE2;     //MAC写指令端口 //X[n]*CONST/32768
+		MAC_Const = RD1;    //MAC写Const端口//CONST为16位，高低16位写相同数据
+		MemSet_Disable;     //配置结束
+
+		//配置DMA_Ctrl参数，包括地址.长度
+		RD0 = RN_PRAM_START+DMA_ParaNum_MAC_RffC*MMU_BASE*8;
+		RA2 = RD0;
+		// 1*MMU_BASE: CntW+源地址DW
+		RD0 = RA0;//源地址0
+		RF_ShiftR2(RD0);           //变为Dword地址
+		RD0_ClrByteH8;
+		RD1 = CntFWB4_32b;          //CntW is 4
+		RD0 += RD1;
+		M[RA2+1*MMU_BASE] = RD0;
+		// 2*MMU_BASE:
+		RD0 = RA0;//目标地址
+		RF_ShiftR2(RD0);           //变为Dword地址
+		RD0 -= 2;                  //流水线前1次写无效
+		RD0_ClrByteH8;
+		RD1 = CntFWB2_32b;          //CntB is 2
+		RD0 += RD1;
+		M[RA2+2*MMU_BASE] = RD0;            //CntF is 0
+	
+		//选择DMA_Ctrl通道，并启动运算
+		//此段待修改2021/11/19 9:36:43
+		ParaMem_Num = DMA_PATH2;
+		ParaMem_Addr = DMA_nParaNum_MAC_RffC;
+		nop;nop;nop;nop;nop;nop;
+		Wait_While(Flag_DMAWork==0);//此段待修改2021/11/19 9:36:38
+		
+			//归还bank
+		MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+		M[RA0] = DMA_PATH5;
+		MemSet_Disable;     //配置结束
+
+    //归还ParaMem
+    // 4*MMU_BASE: Step1  
+	RD0 = 0x06040001;//Step1
+	M[RA2+4*MMU_BASE] = RD0;
+	// 5*MMU_BASE: Null
+	RD0 = 0x00000001;//Step2
+	M[RA2+5*MMU_BASE] = RD0;
+
+L_ExpFix_End:    
+
 	//ALU计算xi-g_LastBank_Average_0，g_LastBank_Average_0：前一块（512帧）数据的均值
+    RD0 = RD2;
+    RA0 = RD0;
 	RD0 = RN_GRAM_IN;
 	RA1 = RD0;
 	call ADC0_C0;   //RD0:紧凑型格式，需要减去的直流值（外部进行权重对齐，并拼凑为H16、L16格式），即前512帧平均值（权位同步）
 	call _GetADC_Ave_Max_Min;   //1.RD0：结果的累加和，即SUM(Xi-C),32bit有符号数 2.RD1：峰峰值，Vpp=Max-Min，32bit有符号数
-    RD3 = RD1;  
+    g_Vpp_0 = RD1;  
     call ADC0_Weight;     //更新累加和  
-       
-//goto L_ADC_Bias_Adj_Start;        
-    
+
+//goto L_ADC_Bias_Adj_Start;//////////////!!!!!!!!!!!!测试用
+           
     //////2、AGC增益调整
     // 2.1小信号处理
-    RD0 = RD3;  // Vpp
     call ADC0_SmallSignal;
     
     if(RD0_Zero) goto L_ADC_Bias_Adj_Start; //当前属于小信号帧，跳过大信号处理
     // 2.2大信号处理
-    RD0 = RD3;  // Vpp
     call ADC0_StrongSignal;
 
     //////3、去直流
@@ -1334,18 +1288,21 @@ L_ADC_TEST_End1:
     if(RD0_Bit8 == 1) goto L_ADC_Bias_Adj_End;  //判是否满512帧，不满跳过                 
     call ADC0_Step;
     RD2 = RD0;          //当前512帧平均值
-//RD0 = g_Cnt_Frame;
-//send_para(RD0);
-//call UART_PutDword_COM1;
-//send_para(RD3);
-//call UART_PutDword_COM1;
-//RD0 = g_Weight_Frame_0;
-//send_para(RD0);
-//call UART_PutDword_COM1;
-//RD0 = g_LastBank_Average_0;
-//send_para(RD0);
-//call UART_PutDword_COM1;               
-
+RD0 = g_Cnt_Frame;
+send_para(RD0);
+call UART_PutDword_COM1;
+RD0 = g_Vpp_0;
+send_para(RD0);
+call UART_PutDword_COM1;
+RD0 = g_WeightFrame_Now_0;
+send_para(RD0);
+call UART_PutDword_COM1;
+RD0 = g_DAC_Cfg;
+send_para(RD0);
+call UART_PutDword_COM1;                             
+RD0 = g_ADC_CFG_0;
+send_para(RD0);
+call UART_PutDword_COM1;   
     RD0 = g_Cnt_Frame;  //帧计数器                              
     if(RD0_Bit9 == 1) goto L_ADC_Bias_Adj_End;  // 判是否满1024帧，不满跳走不做计算         
     RD0 = g_LastBank_Average_0;                 // 高8位为直流配置值；低16位为前512帧平均值，权位为0；bit16为当前块（512帧）是否改过档位的标志位，1：改过，0：未改过 
