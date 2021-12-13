@@ -116,7 +116,15 @@ L_Calibration:
 
 
     //GP0_3  ，按键
-    RD0 = GP0_0|GP0_1|GP0_2|GP0_3|GP0_4|GP0_5|GP0_6|GP0_7;
+    RD0 = GP0_3;
+    GPIO_WEn0 = RD0;
+    RD0 = GPIO_IN|GPIO_PULL;
+    GPIO_Set0 = RD0;
+    RD0 = GP0_4;
+    GPIO_WEn0 = RD0;
+    RD0 = GPIO_IN|GPIO_PULL;
+    GPIO_Set0 = RD0;
+    RD0 = GP0_7;
     GPIO_WEn0 = RD0;
     RD0 = GPIO_IN|GPIO_PULL;
     GPIO_Set0 = RD0;
@@ -141,83 +149,7 @@ L_UART_init:
 		send_para(RD0);
 		call UART_PutDword_COM1;
 #endif
-/*
-    RD0 = RN_GRAM3;
-    RA1 = RD0;
-	//写测试数据
-    MemSetRAM4K_Enable; //使用扩展端口或RAM特殊配置时使能
-    RD0 = DMA_PATH0;
-    M[RA1] = RD0;
-    MemSet_Disable;     //配置结束
-    
-    CPU_WorkEnable;
-    CPU_SimpleLevel_H;
-    RD0 = 0x30fb0000;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x76415a82;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x76417fff;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x30fb5a82;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0xcf050000;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x89bfa57e;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x89bf8001;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0xcf05a57e;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x30fb0000;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x76415a82;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x76417fff;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x30fb5a82;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0xcf050000;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x89bfa57e;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0x89bf8001;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    RD0 = 0xcf05a57e;
-    M[RA1++] = RD0;
-    RD0 = 0;
-    M[RA1++] = RD0;
-    CPU_WorkDisable;
-*/		
+		
 		
 			//开始测试！等待按键GP0-3
 L_Wait_Key0:
@@ -254,41 +186,6 @@ Loop:   //main
     
     CPU_WorkEnable;
     CPU_SimpleLevel_H;
-
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;//
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;//
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    RD0 = 0;
-//    M[RA1++] = RD0;
-//    CPU_WorkDisable;   
-
 
     //1kHz正弦信号
     RD0 = 0x30fb0000;

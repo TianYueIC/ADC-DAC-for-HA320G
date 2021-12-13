@@ -325,6 +325,45 @@ L_DSP_HotLine_init_ALU_Send2IFFT128://#6	ALU单序列，写入FFT128 RAM特殊通道
 		// 7*MMU_BASE: FData==== -1
 		RD0 = -1;
 		M[RA0+7*MMU_BASE] = RD0;
+L_DSP_HotLine_init_9: 
+L_DSP_HotLine_init_FMT_Send_DAC://#9	DAC 插值处理
+	RD0 = RN_PRAM_START+DMA_ParaNum_FMT_Send_DAC*MMU_BASE*8;//热线地址
+    RA0 = RD0;		
+    // 0*MMU_BASE: CntW+源地址0 DW，默认值：GRAM0
+	RD0 = RN_GRAM0;
+    RF_ShiftR2(RD0);           //变为Dword地址
+    RD0 -= 1;                    //调整适应流水线,前1个无效
+    RD0_ClrByteH8;
+    M[RA0+0*MMU_BASE] = RD0;            //CntF is 0
+    // 1*MMU_BASE: CntW+源地址1 DW，默认值：GRAM0(插原值)
+    RD0 ++;
+    RD0_ClrByteH8;
+    RD1 = 0x7a000000;          //CntW is 3
+    RD0 += RD1;
+    M[RA0+1*MMU_BASE] = RD0;
+    // 2*MMU_BASE: CntB+目标地址DW，默认值：GRAM0+16DW
+    RD0 = RN_GRAM0+16*MMU_BASE;   //Z(n)首地址//换成目标地址
+    RF_ShiftR2(RD0);           //变为Dword地址
+    RD0 -=2;
+    RD0_ClrByteH8;
+    RD1 = 0x7e000000;          //CntB is 1
+    RD0 += RD1;
+    M[RA0+2*MMU_BASE] = RD0;
+    // 3*MMU_BASE: Step0
+    RD0 = 0x04080001;//Step0
+    M[RA0+3*MMU_BASE] = RD0;
+    // 4*MMU_BASE: Step1
+    RD0 = 0x06040001;//Step1
+    M[RA0+4*MMU_BASE] = RD0;
+    // 5*MMU_BASE: Step2
+    RD0 = 0x00000002;//Step2
+    M[RA0+5*MMU_BASE] = RD0;
+    // 6*MMU_BASE: Loop_Num
+    RD0 = FL_M3_A3;//在这里设置序列长度
+    M[RA0+6*MMU_BASE] = RD0;  //Loop_Num   
+    // 7*MMU_BASE: FData==== -1
+    RD0 = -1;
+    M[RA0+7*MMU_BASE] = RD0;
 
 /*/////HOTLIINE 模板-------
 L_DSP_HotLine_init_0: 
@@ -418,6 +457,8 @@ L_DSP_HotLine_init_ALU_RFFC://#3	用于ALU单序列运算，可用于RAM清零
 //  返回值:
 //      1.RD0：结果的累加和，即SUM(Xi-C),32bit有符号数
 //      2.RD1：峰峰值，Vpp=Max-Min，32bit有符号数
+//	注意：
+//		ADC专用函数，bank未归还，禁止外部调用！
 ////////////////////////////////////////////////////////
 Sub_AutoField _GetADC_Ave_Max_Min;
 		push RA2;
@@ -461,10 +502,10 @@ Sub_AutoField _GetADC_Ave_Max_Min;
 		nop;nop;nop;nop;nop;nop;
 		Wait_While(Flag_DMAWork==0);
 		
-		//归还bank
-		MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
-		M[RA0] = DMA_PATH5;
-		MemSet_Disable;     //配置结束
+//	//暂不归还bank，SendDAC后再归还Bank
+//	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+//	M[RA0] = DMA_PATH5;
+//	MemSet_Disable;     //配置结束
 		
 		//读回STA结果，VPP
 		MemSetRAM4K_Enable;
@@ -559,21 +600,13 @@ Sub_AutoField _MAC_RffC;
 //		3.RD0:常数为16bit紧凑型有符号数,H16、L16应写相同的值(如0x7FFF7FFF).最大7FFF，对应表示32767/32768=0.99997
 //  返回值:
 //      无
+//  注意：
+//		ADC专用函数，bank未归还，禁止外部调用！
 ////////////////////////////////////////////////////////
 Sub_AutoField _MAC_RffC_ADC;    
 		
     push RA2;    
-    //RA0@ADBUFF
-    //配置DMA_Ctrl参数，包括地址.长度
-	RD0 = RN_PRAM_START+DMA_ParaNum_MAC_RffC*MMU_BASE*8;
-	RA2 = RD0;
-	// 4*MMU_BASE: Step1  
-	RD0 = 0x06040002;//Step1
-	M[RA2+4*MMU_BASE] = RD0;
-	// 5*MMU_BASE: Null
-	RD0 = 0x00000002;//Step2
-	M[RA2+5*MMU_BASE] = RD0;
-    //////MAC_RFFC
+
     // 设置Group与PATH的连接
 	MemSetPath_Enable;  //设置Group通道使能
 	M[RA0+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
@@ -605,17 +638,18 @@ Sub_AutoField _MAC_RffC_ADC;
 	RD1 = CntFWB2_32b;          //CntB is 2
 	RD0 += RD1;
 	M[RA2+2*MMU_BASE] = RD0;            //CntF is 0
+	// 4*MMU_BASE: Step1  
+	RD0 = 0x06040002;//Step1
+	M[RA2+4*MMU_BASE] = RD0;
+	// 5*MMU_BASE: Null
+	RD0 = 0x00000002;//Step2
+	M[RA2+5*MMU_BASE] = RD0;
 	
 	//选择DMA_Ctrl通道，并启动运算
 	ParaMem_Num = DMA_PATH2;
 	ParaMem_Addr = DMA_nParaNum_MAC_RffC;
 	nop;nop;nop;nop;nop;nop;
-	Wait_While(Flag_DMAWork==0);//此段待修改2021/11/19 9:36:38
 	
-		//归还bank
-	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
-	M[RA0] = DMA_PATH5;
-	MemSet_Disable;     //配置结束
 
     //归还ParaMem
     // 4*MMU_BASE: Step1  
@@ -624,6 +658,11 @@ Sub_AutoField _MAC_RffC_ADC;
 	// 5*MMU_BASE: Null
 	RD0 = 0x00000001;//Step2
 	M[RA2+5*MMU_BASE] = RD0;		
+	Wait_While(Flag_DMAWork==0);
+//	//暂不归还bank，SendDAC后再归还Bank
+//	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+//	M[RA0] = DMA_PATH5;
+//	MemSet_Disable;     //配置结束
 
     pop RA2;
     Return_AutoField(0);     
@@ -639,6 +678,8 @@ Sub_AutoField _MAC_RffC_ADC;
 //      3.RD0: 取0时，直接搬移数据。取1~14时，进行移位，并四舍五入。
 //  返回值:
 //      无
+//	注意：
+//		DAC专用函数，禁止外部调用！
 ////////////////////////////////////////////////////////
 Sub_AutoField _Send_DAC_SignSftR_RndOff;    
 		push RA2;
@@ -676,8 +717,8 @@ Sub_AutoField _Send_DAC_SignSftR_RndOff;
 		RD0 += RD1;
 		M[RA2+1*MMU_BASE] = RD0;
 		//RD0 = 0x02020002;//Step1//1/4抽点！
-		RD0 = 0x02020001;//Step1//1/8抽点！ TEST！
-		M[RA2+4*MMU_BASE] = RD0;
+//	RD0 = 0x02020001;//Step1//1/8抽点！ TEST！
+//	M[RA2+4*MMU_BASE] = RD0;
 		//只做数据搬移
 		MemSet1_Enable;
 		ALU_PATH2_CFG = Op32Bit+Rf_SftL0;     //ALU1写指令端口
@@ -690,6 +731,11 @@ Sub_AutoField _Send_DAC_SignSftR_RndOff;
 		goto L_Send_DAC_END;
 
 L_ALU2_SignSftR_RndOff:
+	//准备移位
+	RD0=RD2;		//移N-1次
+	RD0--;
+	if(RD0_Zero) goto L_ALU2_RoundOff_SFTR;	//移位1次，不做舍位。
+	//PRAM
 		RD0 = RA0;   		
 		RF_ShiftR2(RD0);           //变为Dword地址
 		RD0 -=2;
@@ -697,12 +743,8 @@ L_ALU2_SignSftR_RndOff:
 		RD1 = 0x75000000;          //CntW is 3
 		RD0 += RD1;
 		M[RA2+1*MMU_BASE] = RD0;
-		RD0 = 0x02020001;//Step1
-		M[RA2+4*MMU_BASE] = RD0;
-		//准备移位
-		RD0=RD2;				//移N-1次
-		RD0--;
-		if(RD0_Zero) goto L_ALU2_RoundOff_SFTR;	//移位1次，不做舍位。
+//	RD0 = 0x02020001;//Step1
+//	M[RA2+4*MMU_BASE] = RD0;
 L_ALU2_SignSftR_Bit3:	
 		if(RD0_Bit3 == 0) goto L_ALU2_SignSftR_Bit2;
 		//配置ALU参数 --- 右移8bit
@@ -776,8 +818,8 @@ L_ALU2_RoundOff_SFTR:
 		RD0 += RD1;
 		M[RA2+1*MMU_BASE] = RD0;
 		//RD0 = 0x02020002;//Step1
-		RD0 = 0x02020001;//Step1 TEST 1/8抽点！
-		M[RA2+4*MMU_BASE] = RD0;
+//	RD0 = 0x02020001;//Step1 TEST 1/8抽点！
+//	M[RA2+4*MMU_BASE] = RD0;
 		//配置ALU参数右移1bit
 		MemSet1_Enable;
 		ALU_PATH2_CFG = Op16Bit+Rf_SftSR1;     //ALU1写指令端口
@@ -798,7 +840,89 @@ L_Send_DAC_END:
 		Return_AutoField(0);         
 
 
+////////////////////////////////////////////////////////
+//  名称:
+//      _Send_DAC_Interpolation
+//  功能:
+//      数据插值，供DAC使用。
+//		两个源地址RA0，RA1的L16_0,L16_1组合为RA2的Data_0,H16_0,H16_1组合为RA2的Data_1
+//  参数:
+//      1.RA0: 源地址0(in),紧凑型16bit
+//      2.RA1: 源地址1(in),紧凑型16bit.当RA1==RA0时,可实现插原值.
+//      2.RA2: 目标地址(out),紧凑型16bit,RA2不可以和RA0\RA1一样，必须异地址，32DW
+//  返回值:
+//      无
+//	注意：
+//		DAC专用函数，禁止外部调用！2021/12/13 10:21:24
+////////////////////////////////////////////////////////
+Sub_AutoField _Send_DAC_Interpolation;   
+	RD0 = RA2;
+	RD2 = RD0; 
+	
+    MemSetPath_Enable;  //设置Group通道使能
+    M[RA0+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
+    M[RA1+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
+    M[RA2+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
 
+    MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+    //配置相关的4KRAM
+    M[RA0] = DMA_PATH1;//把RA0挂在path1
+    M[RA1] = DMA_PATH1;//把RA0挂在path1
+    M[RA2] = DMA_PATH1;//把RA0挂在path1
+    
+    //配置参数
+    RD0 = 0x8282;//先取L16			//取虚部0x8282;//取实部0x4141
+    FMT_CFG = RD0;     //ALU1写指令端口
+    MemSet_Disable;     //配置结束
+    
+    RD0 = RN_PRAM_START+DMA_ParaNum_FMT_Send_DAC*MMU_BASE*8;//热线地址
+    RA2 = RD0;		
+    // 0*MMU_BASE: CntW+源地址0 DW，默认值：GRAM0
+	RD0 = RA0;
+    RF_ShiftR2(RD0);           //变为Dword地址
+    RD0 -= 1;                    //调整适应流水线,前1个无效
+    RD0_ClrByteH8;
+    M[RA2+0*MMU_BASE] = RD0;            //CntF is 0
+    // 1*MMU_BASE: CntW+源地址1 DW，默认值：GRAM0(插原值)
+    RD0 = RA1;
+    RF_ShiftR2(RD0);           //变为Dword地址
+    RD0_ClrByteH8;
+    RD1 = 0x7a000000;          //CntW is 3
+    RD0 += RD1;
+    M[RA2+1*MMU_BASE] = RD0;
+    // 2*MMU_BASE: CntB+目标地址DW，默认值：GRAM0+16DW
+    RD0 = RD2;   			//换成目标地址
+    RF_ShiftR2(RD0);           //变为Dword地址
+    RD0 -=2;
+    RD0_ClrByteH8;
+    RD1 = 0x7e000000;          //CntB is 1
+    RD0 += RD1;
+    M[RA2+2*MMU_BASE] = RD0;
+
+	//选择DMA_Ctrl通道，并启动运算
+	ParaMem_Num = DMA_PATH1;
+	ParaMem_Addr = DMA_nParaNum_FMT_Send_DAC;
+	nop;nop;nop;nop;nop;nop;
+	
+	RD0++;
+	M[RA2+2*MMU_BASE] = RD0;	//FMT-H16的首地址	
+	
+	Wait_While(Flag_DMAWork==0);//等待FMT-L16结束
+
+	//配置参数
+	MemSet1_Enable;
+    RD0 = 0x4141;//取H16
+    FMT_CFG = RD0;     //ALU1写指令端口
+    MemSet_Disable;     //配置结束
+
+	//选择DMA_Ctrl通道，并启动运算
+	ParaMem_Num = DMA_PATH1;
+	ParaMem_Addr = DMA_nParaNum_FMT_Send_DAC;
+	nop;nop;nop;nop;nop;nop;
+	Wait_While(Flag_DMAWork==0);//等待FMT-H16结束
+
+	Return_AutoField(0);  
+	
 ////////////////////////////////////////////////////////
 //  名称:
 //      _FFT_ClrRAM

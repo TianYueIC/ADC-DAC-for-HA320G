@@ -541,7 +541,7 @@ Sub_AutoField DAC_INIT_330G;
 		//DAC全局变量初始化初始化
 		//RD0 = 0x802300;   //测试用
 		//RD0 = 0x808380;   //E=0
-
+        
 		//RD0 = 0x808180;   //测试用，!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         RD0 = 0x808180;   //E=0，Y2不拉
 		//RD0 = 0x808380;   //测试用
@@ -702,7 +702,6 @@ L_DAC_En_330G://暂定重新启动DAC时，Bank已由FW维护好，无需清零
 		Return_AutoField(0*MMU_BASE);
 
 
-
 ////////////////////////////////////////////////////////
 //  名称:
 //      IIR_SetLP_97DB_DAC330G
@@ -727,6 +726,7 @@ L_DAC_En_330G://暂定重新启动DAC时，Bank已由FW维护好，无需清零
 //              b系数为负时，求补，然后符号位置1
 //      IIR指标
 ////////////////////////////////////////////////////////
+
 
 //[5 5 5 3] - [24  2  1.2  20/9]
 Sub_AutoField IIR_SetLP_97DB_DAC330G;
@@ -794,6 +794,7 @@ DAC_IIR1_HD = RD0;
 RD0 = 0x9793;
 DAC_IIR1_HD = RD0;
 DAC_IIR1_HD = RD0;
+
 // IIR3
 RD0 = 0x30CF;
 DAC_IIR1_HD = RD0;
@@ -815,10 +816,7 @@ RD0 = 0x8000;
 DAC_IIR1_HD = RD0;
 DAC_IIR1_HD = RD0;
 
-
 Return_AutoField(0*MMU_BASE);
-
-
 //////////////////////////////////////////////////////////
 ////  名称:
 ////      IIR_PATH3_HP500Init
@@ -989,6 +987,8 @@ L_Get_ADC_DATA:
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField Get_ADC_Function;
     
+    RD0 = RA0;
+    RD2 = RD0;
     //////1、数据统计
     //权位修正：硬件增益非整倍数，需要软件修正
     RD0 = g_WeightFrame_Now_0;
@@ -1025,7 +1025,7 @@ L_ExpFix_End:
     g_Vpp_0 = RD1;  
     call ADC0_Weight;     //更新累加和  
 
-//goto L_ADC_Bias_Adj_Start;//////////////!!!!!!!!!!!!测试用
+goto L_ADC_Bias_Adj_Start;//////////////!!!!!!!!!!!!测试用
            
     //////2、AGC增益调整
     // 2.1小信号处理
@@ -1063,7 +1063,7 @@ L_ADC_Bias_Adj_Start:
 //call UART_PutDword_COM1;                             
 //RD0 = g_ADC_CFG_0;
 //send_para(RD0);
-//call UART_PutDword_COM1;
+//call UART_PutDword_COM1;   
     //RD0 = g_WeightFrame_Now_0;
     //if(RD0_nZero) goto L_ADC_Bias_Adj_End;      //E!=0,不做硬件直流调整                             
     RD0 = g_Cnt_Frame;  //帧计数器                              
@@ -1115,19 +1115,28 @@ Sub_AutoField Send_DAC;
     RD1 = RD0;    
 	RD0 = RN_GRAM_IN; 
     RA0 = RD0;
-	RD0 = RN_GRAM1;     ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
+	RD0 = RN_GRAM_IN; ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
+    RD0 += 16*MMU_BASE;
     RA1 = RD0;
     RD0 = RD1;
     call _MAC_RffC;          
 
-    RD0 = RN_GRAM_IN;   ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！ 
-    RD1 = RN_GRAM1;
-    call DATA_kX;
+    RD0 = RN_GRAM_IN; 
+    RA0 = RD0;
+	RD0 = RN_GRAM_IN; ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
+    RD0 += 16*MMU_BASE;    
+    RA1 = RD0;
+    RD0 = RN_GRAM1; 
+    RA2 = RD0;
+    call _Send_DAC_Interpolation;   
     goto L_Send_DAC_Odd;
 L_Send_DAC_xx:
-    //6的整数倍，插原值
     RD0 = RN_GRAM_IN; 
-    call DATA_XX;   
+    RA0 = RD0;
+    RA1 = RD0;
+    RD0 = RN_GRAM1; 
+    RA2 = RD0;
+    call _Send_DAC_Interpolation;   
 
 L_Send_DAC_Odd:        
 	RD1 = FlowRAM_Addr1;	
@@ -1137,7 +1146,7 @@ L_Send_DAC_Odd:
 L_Send_DAC_Even:
     
     //移位
-	RD0 = RN_GRAM_IN;
+	RD0 = RN_GRAM1;
     RA0 = RD0;
     RA1 = RD1;
     RD0 = RD2;
@@ -1410,7 +1419,7 @@ Sub_AutoField ADC0_SmallSignal;
 L_ADC0_SmallSignal_0:
     //检测到小信号
     RD0 = g_SmallSignal_Count_0;
-    RD1 = 512;  //小信号帧计数器
+    RD1 = 128;  //小信号帧计数器
     RD0 -= RD1;
     if(RD0_Zero) goto L_ADC0_SmallSignal_1; 
     //不满足连续x帧小信号，计数器++，跳走

@@ -6,8 +6,8 @@
 #define CHIP_320G_Libin_F
 
 #ifdef CHIP_320G_Libin_F
-    #define RN_VREF_VAL      0x73e // 0x800(电压高) ~ 0x83F(电压低) 6bit有效
-    #define RN_FREQ_VAL      0x5e // 0x100(高频率) ~ 0x17F(低频率) 7bit有效
+    #define RN_VREF_VAL      0x743 // 0x800(电压高) ~ 0x83F(电压低) 6bit有效
+    #define RN_FREQ_VAL      0x62 // 0x100(高频率) ~ 0x17F(低频率) 7bit有效
     #define RN_ADDC_VAL      0b1000//small
     //#define RN_ADDC_VAL      0b0111//small
     //#define RN_ADDC_VAL      0b0100
