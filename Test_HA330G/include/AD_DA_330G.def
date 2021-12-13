@@ -22,6 +22,8 @@
     extern	DAC_INIT_330G;
     extern	IIR_SetLP_109DB_DAC330G;
     extern	ADC_En_nDis_330G;
+    extern	Get_ADC;
+    extern	Send_DAC;
 #endif /* _AD_DA_330G_F_ */
 //=========================== 硬件资源定义 ===========================
 #include <resource_allocation.def>

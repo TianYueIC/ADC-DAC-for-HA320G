@@ -17,6 +17,7 @@
 	extern DSP_HotLine_init;
 	extern _GetADC_Ave_Max_Min;
 	extern _MAC_RffC;
+	extern _MAC_RffC_ADC;
 	extern _Send_DAC_SignSftR_RndOff;
 	//extern _FFT_ClrRAM;
 	extern _MAC_Rff;

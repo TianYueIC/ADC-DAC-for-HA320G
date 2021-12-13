@@ -548,8 +548,86 @@ Sub_AutoField _MAC_RffC;
 		
 		pop RA2;
 		Return_AutoField(0);     
+////////////////////////////////////////////////////////
+//  名称:
+//      _MAC_RffC_ADC
+//  功能:
+//      ADC使用的序列乘常数，源地址目标地址都是AD_buf
+//  参数:
+//      1.RA0:源指针(in),RA0数据为紧凑型16bit(中间不需要插0)
+//      2.RA1:目标指针(out),紧凑型16bit
+//		3.RD0:常数为16bit紧凑型有符号数,H16、L16应写相同的值(如0x7FFF7FFF).最大7FFF，对应表示32767/32768=0.99997
+//  返回值:
+//      无
+////////////////////////////////////////////////////////
+Sub_AutoField _MAC_RffC_ADC;    
 		
-		
+    push RA2;    
+    //RA0@ADBUFF
+    //配置DMA_Ctrl参数，包括地址.长度
+	RD0 = RN_PRAM_START+DMA_ParaNum_MAC_RffC*MMU_BASE*8;
+	RA2 = RD0;
+	// 4*MMU_BASE: Step1  
+	RD0 = 0x06040002;//Step1
+	M[RA2+4*MMU_BASE] = RD0;
+	// 5*MMU_BASE: Null
+	RD0 = 0x00000002;//Step2
+	M[RA2+5*MMU_BASE] = RD0;
+    //////MAC_RFFC
+    // 设置Group与PATH的连接
+	MemSetPath_Enable;  //设置Group通道使能
+	M[RA0+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
+
+	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+	// 连接到PATH1
+	M[RA0] = DMA_PATH2;
+
+	//配置MAC参数
+	MAC_CFG = RN_CFG_MAC_TYPE2;     //MAC写指令端口 //X[n]*CONST/32768
+	MAC_Const = RD1;    //MAC写Const端口//CONST为16位，高低16位写相同数据
+	MemSet_Disable;     //配置结束
+
+	//配置DMA_Ctrl参数，包括地址.长度
+	RD0 = RN_PRAM_START+DMA_ParaNum_MAC_RffC*MMU_BASE*8;
+	RA2 = RD0;
+	// 1*MMU_BASE: CntW+源地址DW
+	RD0 = RA0;//源地址0
+	RF_ShiftR2(RD0);           //变为Dword地址
+	RD0_ClrByteH8;
+	RD1 = CntFWB4_32b;          //CntW is 4
+	RD0 += RD1;
+	M[RA2+1*MMU_BASE] = RD0;
+	// 2*MMU_BASE:
+	RD0 = RA0;//目标地址
+	RF_ShiftR2(RD0);           //变为Dword地址
+	RD0 -= 2;                  //流水线前1次写无效
+	RD0_ClrByteH8;
+	RD1 = CntFWB2_32b;          //CntB is 2
+	RD0 += RD1;
+	M[RA2+2*MMU_BASE] = RD0;            //CntF is 0
+	
+	//选择DMA_Ctrl通道，并启动运算
+	ParaMem_Num = DMA_PATH2;
+	ParaMem_Addr = DMA_nParaNum_MAC_RffC;
+	nop;nop;nop;nop;nop;nop;
+	Wait_While(Flag_DMAWork==0);//此段待修改2021/11/19 9:36:38
+	
+		//归还bank
+	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+	M[RA0] = DMA_PATH5;
+	MemSet_Disable;     //配置结束
+
+    //归还ParaMem
+    // 4*MMU_BASE: Step1  
+	RD0 = 0x06040001;//Step1
+	M[RA2+4*MMU_BASE] = RD0;
+	// 5*MMU_BASE: Null
+	RD0 = 0x00000001;//Step2
+	M[RA2+5*MMU_BASE] = RD0;		
+
+    pop RA2;
+    Return_AutoField(0);     
+
 ////////////////////////////////////////////////////////
 //  名称:
 //      _Send_DAC_SignSftR_RndOff
