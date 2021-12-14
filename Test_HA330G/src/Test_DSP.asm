@@ -174,7 +174,7 @@ Loop:   //main
     call Get_ADC;
     nop;nop;nop;nop;
     if(RD0_nZero) goto Loop;
-/*
+
 //使用测试数据替代ADC输入
     RD0 = RN_GRAM_IN;
     RA1 = RD0;
@@ -187,42 +187,79 @@ Loop:   //main
     CPU_WorkEnable;
     CPU_SimpleLevel_H;
 
-    //1kHz正弦信号
-    RD0 = 0x30fb0000;
+//    //1kHz正弦信号
+//    RD0 = 0x30fb0000;
+//    M[RA1++] = RD0;
+//    RD0 = 0x76415a82;
+//    M[RA1++] = RD0;
+//    RD0 = 0x76417ffe;//
+//    M[RA1++] = RD0;
+//    RD0 = 0x30fb5a82;
+//    M[RA1++] = RD0;
+//    RD0 = 0xcf050000;
+//    M[RA1++] = RD0;
+//    RD0 = 0x89bfa57e;
+//    M[RA1++] = RD0;
+//    RD0 = 0x89bf8001;
+//    M[RA1++] = RD0;
+//    RD0 = 0xcf05a57e;
+//    M[RA1++] = RD0;
+//    RD0 = 0x30fb0000;
+//    M[RA1++] = RD0;
+//    RD0 = 0x76415a82;
+//    M[RA1++] = RD0;
+//    RD0 = 0x76417ffe;//
+//    M[RA1++] = RD0;
+//    RD0 = 0x30fb5a82;
+//    M[RA1++] = RD0;
+//    RD0 = 0xcf050000;
+//    M[RA1++] = RD0;
+//    RD0 = 0x89bfa57e;
+//    M[RA1++] = RD0;
+//    RD0 = 0x89bf8001;
+//    M[RA1++] = RD0;
+//    RD0 = 0xcf05a57e;
+//    M[RA1++] = RD0;
+
+
+    RD0 = 0x0C3E0000;
     M[RA1++] = RD0;
-    RD0 = 0x76415a82;
+    RD0 = 0x1D9016A0;
     M[RA1++] = RD0;
-    RD0 = 0x76417ffe;//
+    RD0 = 0x1D901FFF;//
     M[RA1++] = RD0;
-    RD0 = 0x30fb5a82;
+    RD0 = 0x0C3E16A0;
     M[RA1++] = RD0;
-    RD0 = 0xcf050000;
+    RD0 = 0xF3C10000;
     M[RA1++] = RD0;
-    RD0 = 0x89bfa57e;
+    RD0 = 0xE26FE95F;
     M[RA1++] = RD0;
-    RD0 = 0x89bf8001;
+    RD0 = 0xE26FE000;
     M[RA1++] = RD0;
-    RD0 = 0xcf05a57e;
+    RD0 = 0xF3C1E95F;
     M[RA1++] = RD0;
-    RD0 = 0x30fb0000;
+    RD0 = 0x0C3E0000;
     M[RA1++] = RD0;
-    RD0 = 0x76415a82;
+    RD0 = 0x1D9016A0;
     M[RA1++] = RD0;
-    RD0 = 0x76417ffe;//
+    RD0 = 0x1D901FFF;//
     M[RA1++] = RD0;
-    RD0 = 0x30fb5a82;
+    RD0 = 0x0C3E16A0;
     M[RA1++] = RD0;
-    RD0 = 0xcf050000;
+    RD0 = 0xF3C10000;
     M[RA1++] = RD0;
-    RD0 = 0x89bfa57e;
+    RD0 = 0xE26FE95F;
     M[RA1++] = RD0;
-    RD0 = 0x89bf8001;
+    RD0 = 0xE26FE000;
     M[RA1++] = RD0;
-    RD0 = 0xcf05a57e;
+    RD0 = 0xF3C1E95F;
     M[RA1++] = RD0;
+
+
+
     CPU_WorkDisable; 
 //此处可修改算法，音频流在RN_GRAM_IN
-*/
+
 
 //音量调整 测试用
 //    RD0 = RD6;////////////////////2021/12/9 19:54:52 小乐专用

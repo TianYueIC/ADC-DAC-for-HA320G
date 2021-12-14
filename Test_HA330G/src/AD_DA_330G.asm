@@ -1100,57 +1100,172 @@ L_ADC_Bias_Adj_End:
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField Send_DAC;
 	
-    RD0 = g_WeightFrame_Now_0;
-    RF_ShiftL1(RD0);//E*2       
+//    RD0 = g_WeightFrame_Now_0;
+//    RF_ShiftL1(RD0);//E*2       
+//    RD1 = RD0;
+//    RD0 += RD1;
+//    RD0 += RD1;     //E*6
+//    RD0 += g_Vol;   //总增益=6*E+音量值
+//    call Find_k;   
+//    RD2 = RD1;  //右移位数 
+//    call DAC_Tab;
+//    //先进行乘法
+//    if(RD0_Zero) goto L_Send_DAC_xx;
+//    //非6的整数倍，插kx   
+//    RD1 = RD0;    
+//	RD0 = RN_GRAM_IN; 
+//    RA0 = RD0;
+//	RD0 = RN_GRAM_IN; ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
+//    RD0 += 16*MMU_BASE;
+//    RA1 = RD0;
+//    RD0 = RD1;
+//    call _MAC_RffC;          
+//
+//    RD0 = RN_GRAM_IN; 
+//    RA0 = RD0;
+//	RD0 = RN_GRAM_IN; ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
+//    RD0 += 16*MMU_BASE;    
+//    RA1 = RD0;
+//    RD0 = RN_GRAM1; 
+//    RA2 = RD0;
+//    call _Send_DAC_Interpolation;   
+//    goto L_Send_DAC_Odd;
+//L_Send_DAC_xx:
+//    RD0 = RN_GRAM_IN; 
+//    RA0 = RD0;
+//    RA1 = RD0;
+//    RD0 = RN_GRAM1; 
+//    RA2 = RD0;
+//    call _Send_DAC_Interpolation;   
+//
+//L_Send_DAC_Odd:        
+//	RD1 = FlowRAM_Addr1;	
+//    RD0 = g_Cnt_Frame;
+//    if(RD0_Bit0==1) goto L_Send_DAC_Even;
+//	RD1 = FlowRAM_Addr0;	
+//L_Send_DAC_Even:
+//    
+//    //移位
+//	RD0 = RN_GRAM1;
+//    RA0 = RD0;
+//    RA1 = RD1;
+//    RD0 = RD2;
+//    call _Send_DAC_SignSftR_RndOff;
+    
+    RD0 = RN_GRAM_IN;
+    RA0 = RD0;
+    RD0 = RN_GRAM1;
+    RA1 = RD0;
+    MemSetRAM4K_Enable; //使用扩展端口或RAM特殊配置时使能
+    RD0 = DMA_PATH0;
+    M[RA0] = RD0;
+    M[RA1] = RD0;
+    MemSet_Disable;     //配置结束
+
+    //申请128字节缓冲区
+    RD0 = 32*MMU_BASE;
+    RSP -= RD0;
+    RA1 = RSP;   
+
+    CPU_WorkEnable;
+    //拷贝并内插,至缓冲区
+    RD2 = 16;
+L_DATA_XXX_L0:
+    
+    RD0 = g_Cnt_Frame;
+    if(RD0_Bit8 == 0) goto L_L8_0; 
+
+    RD3 = M[RA0++];
+    RD0 = RD3;
+    RF_GetL16(RD0);
     RD1 = RD0;
-    RD0 += RD1;
-    RD0 += RD1;     //E*6
-    RD0 += g_Vol;   //总增益=6*E+音量值
-    call Find_k;   
-    RD2 = RD1;  //右移位数 
-    call DAC_Tab;
-    //先进行乘法
-    if(RD0_Zero) goto L_Send_DAC_xx;
-    //非6的整数倍，插kx   
-    RD1 = RD0;    
-	RD0 = RN_GRAM_IN; 
-    RA0 = RD0;
-	RD0 = RN_GRAM_IN; ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
-    RD0 += 16*MMU_BASE;
-    RA1 = RD0;
-    RD0 = RD1;
-    call _MAC_RffC;          
+    RF_RotateR16(RD1);
+    RD0 += RD1;    
+    M[RA1++] = RD0;
 
-    RD0 = RN_GRAM_IN; 
-    RA0 = RD0;
-	RD0 = RN_GRAM_IN; ///////////////////////！！！！！！！！！暂定寄存器 ！！！！！！
-    RD0 += 16*MMU_BASE;    
-    RA1 = RD0;
-    RD0 = RN_GRAM1; 
-    RA2 = RD0;
-    call _Send_DAC_Interpolation;   
-    goto L_Send_DAC_Odd;
-L_Send_DAC_xx:
-    RD0 = RN_GRAM_IN; 
-    RA0 = RD0;
-    RA1 = RD0;
-    RD0 = RN_GRAM1; 
-    RA2 = RD0;
-    call _Send_DAC_Interpolation;   
+    RD0 = RD3;
+    RF_GetH16(RD0);
+    RD1 = RD0;
+    RF_RotateR16(RD1);
+    RD0 += RD1;    
+    M[RA1++] = RD0;    
+    goto L_L8_1;
 
-L_Send_DAC_Odd:        
-	RD1 = FlowRAM_Addr1;	
+L_L8_0:
+
+    RD3 = M[RA0++];
+    RD0 = RD3;
+    RF_GetL16(RD0);
+    RD0_SignExtL16;
+    RF_ShiftL1(RD0);
+    RD0_ClrByteH16;    
+    M[RA1++] = RD0;
+     
+    RD0 = RD3; 
+    RF_GetH16(RD0);
+    RD0_SignExtL16;
+    RF_ShiftL1(RD0);
+    RD0_ClrByteH16;    
+    M[RA1++] = RD0; 
+
+L_L8_1:
+        
+    RD2 --;
+    if(RQ_nZero) goto L_DATA_XXX_L0;
+    RD0 = RN_GRAM1;
+    RA0 = RD0;
+    RA1 = RSP;
+    RD2 = 16;
+L_DATA_XXX_L1:
+    RD0 = M[RA1++];
+    M[RA0++] = RD0;
+    RD0 = M[RA1++];
+    M[RA0++] = RD0;
+    RD2 --;
+    if(RQ_nZero) goto L_DATA_XXX_L1;
+    CPU_WorkDisable;
+
+    //释放128字节缓冲区
+    RD0 = 32*MMU_BASE;
+    RSP += RD0;
+    
+    
+    
     RD0 = g_Cnt_Frame;
     if(RD0_Bit0==1) goto L_Send_DAC_Even;
-	RD1 = FlowRAM_Addr0;	
-L_Send_DAC_Even:
+    //偶数帧
     
-    //移位
 	RD0 = RN_GRAM1;
     RA0 = RD0;
+	RD1 = FlowRAM_Addr0;
     RA1 = RD1;
-    RD0 = RD2;
+    RD0 = 0;
     call _Send_DAC_SignSftR_RndOff;
+       
+
+    goto L_Send_DAC_Even_End;
+		
+L_Send_DAC_Even:
+    //奇数帧
+    
+//    RD0 = RN_GRAM_IN; 
+//    RA0 = RD0;
+//    RA1 = RD0;
+//    RD0 = RN_GRAM1; 
+//    RA2 = RD0;
+//    call _Send_DAC_Interpolation;   
+    
+	RD0 = RN_GRAM1;
+    RA0 = RD0;
+	RD1 = FlowRAM_Addr1;	
+    RA1 = RD1;
+    RD0 = 0;
+    call _Send_DAC_SignSftR_RndOff;
+
+L_Send_DAC_Even_End:
+
+
+
     //更新权位
     RD0 = g_WeightFrame_Next_0;    
     g_WeightFrame_Now_0 = RD0;
