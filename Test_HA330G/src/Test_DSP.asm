@@ -225,8 +225,6 @@ Loop:   //main
 */
 
 //音量调整 测试用
-//    RD0 = RD6;////////////////////2021/12/9 19:54:52 小乐专用
-//    g_Vol = RD0;
 
 //GPIO7按下减小音量，GPIO3按下增大音量
 	RD0 = GPIO_Data0;
@@ -275,54 +273,8 @@ L_TEST_3_1:
     RD2 = 2000*100;     
     call _Delay_RD2;
 L_TEST_END3:
-
   
 /////////音量调整结束
-/*    
-    //2021/12/9 19:14:40 小乐要求做Vol>0部分，用作增益放大，仅此算法使用
-    RD0 = g_Vol;
-    RD6 = RD0;
-    RD0 -= 40;
-    if(RD0_Bit31 == 1) goto L_TEST0_2;
-    g_Vol = 40; //音量上限
-L_TEST0_2:    
-    RD0 = g_Vol;
-    if(RD0_Bit31 == 1) goto L_TEST0_END;
-    RD0 = RN_GRAM_IN;
-    RA1 = RD0;
-	//写测试数据
-    MemSetRAM4K_Enable; //使用扩展端口或RAM特殊配置时使能
-    RD0 = DMA_PATH0;
-    M[RA1] = RD0;
-    MemSet_Disable;     //配置结束    
-    CPU_WorkEnable;
-L_TEST0_1:    
-    RD2 = 16;
-    RD0 = RN_GRAM_IN;
-    RA1 = RD0;    
-L_TEST0_0:
-    RD0 = M[RA1];
-    RD1 = RD0;
-    RD0_SignExtL16; 
-    RF_ShiftL1(RD0);
-	RD0_ClrByteH16;
-    RD3 = RD0;
-    RD0 = RD1;
-	RD0_ClrByteL16;
-    RF_ShiftL1(RD0);
-    RD0 += RD3;
-    M[RA1++] = RD0;
-    RD2 --;
-    if(RQ_nZero) goto L_TEST0_0;    
-        
-    RD0 = g_Vol;            
-    RD0 -= 6;
-    g_Vol = RD0;
-    if(RD0_Bit31 == 0) goto L_TEST0_1;        
-    CPU_WorkDisable; 
-
-L_TEST0_END:
-*/
 
     call Send_DAC;        
     goto Loop;
