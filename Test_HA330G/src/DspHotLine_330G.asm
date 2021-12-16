@@ -678,8 +678,6 @@ Sub_AutoField _MAC_RffC_ADC;
 //      3.RD0: 取0时，直接搬移数据。取1~14时，进行移位，并四舍五入。
 //  返回值:
 //      无
-//	注意：
-//		DAC专用函数，禁止外部调用！
 ////////////////////////////////////////////////////////
 Sub_AutoField _Send_DAC_SignSftR_RndOff;    
 		push RA2;
@@ -717,8 +715,8 @@ Sub_AutoField _Send_DAC_SignSftR_RndOff;
 		RD0 += RD1;
 		M[RA2+1*MMU_BASE] = RD0;
 		//RD0 = 0x02020002;//Step1//1/4抽点！
-//	RD0 = 0x02020001;//Step1//1/8抽点！ TEST！
-//	M[RA2+4*MMU_BASE] = RD0;
+		RD0 = 0x02020001;//Step1//1/8抽点！ TEST！
+		M[RA2+4*MMU_BASE] = RD0;
 		//只做数据搬移
 		MemSet1_Enable;
 		ALU_PATH2_CFG = Op32Bit+Rf_SftL0;     //ALU1写指令端口
@@ -731,11 +729,6 @@ Sub_AutoField _Send_DAC_SignSftR_RndOff;
 		goto L_Send_DAC_END;
 
 L_ALU2_SignSftR_RndOff:
-	//准备移位
-	RD0=RD2;		//移N-1次
-	RD0--;
-	if(RD0_Zero) goto L_ALU2_RoundOff_SFTR;	//移位1次，不做舍位。
-	//PRAM
 		RD0 = RA0;   		
 		RF_ShiftR2(RD0);           //变为Dword地址
 		RD0 -=2;
@@ -743,8 +736,12 @@ L_ALU2_SignSftR_RndOff:
 		RD1 = 0x75000000;          //CntW is 3
 		RD0 += RD1;
 		M[RA2+1*MMU_BASE] = RD0;
-//	RD0 = 0x02020001;//Step1
-//	M[RA2+4*MMU_BASE] = RD0;
+		RD0 = 0x02020001;//Step1
+		M[RA2+4*MMU_BASE] = RD0;
+		//准备移位
+		RD0=RD2;				//移N-1次
+		RD0--;
+		if(RD0_Zero) goto L_ALU2_RoundOff_SFTR;	//移位1次，不做舍位。
 L_ALU2_SignSftR_Bit3:	
 		if(RD0_Bit3 == 0) goto L_ALU2_SignSftR_Bit2;
 		//配置ALU参数 --- 右移8bit
@@ -818,8 +815,8 @@ L_ALU2_RoundOff_SFTR:
 		RD0 += RD1;
 		M[RA2+1*MMU_BASE] = RD0;
 		//RD0 = 0x02020002;//Step1
-//	RD0 = 0x02020001;//Step1 TEST 1/8抽点！
-//	M[RA2+4*MMU_BASE] = RD0;
+		RD0 = 0x02020001;//Step1 TEST 1/8抽点！
+		M[RA2+4*MMU_BASE] = RD0;
 		//配置ALU参数右移1bit
 		MemSet1_Enable;
 		ALU_PATH2_CFG = Op16Bit+Rf_SftSR1;     //ALU1写指令端口
@@ -837,7 +834,7 @@ L_Send_DAC_END:
 		M[RA1] = DMA_PATH5;
 		MemSet_Disable;     //配置结束
 		pop RA2;
-		Return_AutoField(0);         
+		Return_AutoField(0);     
 
 
 ////////////////////////////////////////////////////////
