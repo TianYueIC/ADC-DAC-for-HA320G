@@ -225,8 +225,7 @@ Loop:   //main
 */
 
 //音量调整 测试用
-
-//GPIO7按下减小音量，GPIO3按下增大音量
+//GPIO7按下减小音量，GPIO3按下增大音量,GPIO4按下在最大最小音量间切换
 	RD0 = GPIO_Data0;
 	if(RD0_Bit3 == 0) goto L_TEST_1;
 	goto  L_TEST_END1;   

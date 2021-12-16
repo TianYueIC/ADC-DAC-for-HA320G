@@ -1025,7 +1025,7 @@ L_ExpFix_End:
     g_Vpp_0 = RD1;  
     call ADC0_Weight;     //更新累加和  
 
-goto L_ADC_Bias_Adj_Start;//////////////!!!!!!!!!!!!测试用
+//goto L_ADC_Bias_Adj_Start;//////////////!!!!!!!!!!!!测试用
            
     //////2、AGC增益调整
     // 2.1小信号处理
