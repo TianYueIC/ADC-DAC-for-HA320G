@@ -132,7 +132,7 @@ L_Calibration:
     //RD0 = 0b11;//使能双MIC
     //RD0 = 0b10;//使能MIC1
 	//RD0 = 0b01;//使能MIC0
-	RD0 = 0b01;//使能MIC0
+	RD0 = 0b11;//使能MIC0
 	call AD_DA_INIT_330G;
     RD2 = 4000*2000;
     call _Delay_RD2;// 延时10ms等待信号稳定（切换通道后信号建立时间<1ms）
@@ -169,6 +169,9 @@ L_Wait_Key0:
 
     RD0 = 0;
     g_Vol = RD0;    //音量调整值
+    
+    
+    
 Loop:   //main
     
     call Get_ADC;
@@ -225,7 +228,6 @@ Loop:   //main
 */
 
 //音量调整 测试用
-
 //GPIO7按下减小音量，GPIO3按下增大音量
 	RD0 = GPIO_Data0;
 	if(RD0_Bit3 == 0) goto L_TEST_1;
@@ -272,10 +274,14 @@ L_TEST_3_1:
     g_Vol = RD0;
     RD2 = 2000*100;     
     call _Delay_RD2;
-L_TEST_END3:
-  
+L_TEST_END3:  
 /////////音量调整结束
-
+    
+    
+    
+    
+    
+    RD0 = RN_GRAM_IN;
     call Send_DAC;        
     goto Loop;
 

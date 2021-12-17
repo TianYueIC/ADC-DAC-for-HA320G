@@ -387,25 +387,27 @@
 #define g_Cnt_Frame        		M[RA4+0*MMU_BASE]
 #define g_DAC_Cfg       		M[RA4+1*MMU_BASE]
 #define g_Vol       			M[RA4+2*MMU_BASE]
-#define g_WeightFrame_Now_0     M[RA4+3*MMU_BASE]
-#define g_WeightFrame_Next_0    M[RA4+4*MMU_BASE]
-#define g_Vpp_0                 M[RA4+5*MMU_BASE]
-#define g_LastBank_Average_0    M[RA4+6*MMU_BASE]
-#define g_ADC_DC_0         		M[RA4+7*MMU_BASE]
-#define g_ADC_CFG_0             M[RA4+8*MMU_BASE]
-#define g_SmallSignal_Count_0   M[RA4+9*MMU_BASE]
+#define g_Mic_Sta       		M[RA4+3*MMU_BASE]
+#define g_Vpp_0                 M[RA4+4*MMU_BASE]
+#define g_LastBank_Average_0    M[RA4+5*MMU_BASE]
+#define g_ADC_DC_0         		M[RA4+6*MMU_BASE]
+#define g_ADC_CFG_0             M[RA4+7*MMU_BASE]
+#define g_Vpp_1                 M[RA4+8*MMU_BASE]
+#define g_LastBank_Average_1    M[RA4+9*MMU_BASE]
+#define g_ADC_DC_1         		M[RA4+10*MMU_BASE]
+#define g_ADC_CFG_1             M[RA4+11*MMU_BASE]
 
 //------------ADC\DAC Global-----------
 
 
-#define g_classFrameCount       M[RA4+11*MMU_BASE]	//后续再修改
-#define g_class                 M[RA4+11*MMU_BASE]
+#define g_classFrameCount       M[RA4+12*MMU_BASE]	//后续再修改
+#define g_class                 M[RA4+12*MMU_BASE]
 #define g_class_Offset          (6*MMU_BASE)
-#define g_class_cur             M[RA4+11*MMU_BASE]
-#define g_count_1               M[RA4+11*MMU_BASE]
-#define g_count_2               M[RA4+11*MMU_BASE]
-#define g_count_3               M[RA4+11*MMU_BASE]
-#define g_m_10                  M[RA4+11*MMU_BASE]
+#define g_class_cur             M[RA4+12*MMU_BASE]
+#define g_count_1               M[RA4+12*MMU_BASE]
+#define g_count_2               M[RA4+12*MMU_BASE]
+#define g_count_3               M[RA4+12*MMU_BASE]
+#define g_m_10                  M[RA4+12*MMU_BASE]
 #define g_ADC_Bias_Adj          M[RA4+12*MMU_BASE]// ADC直流偏移调整挡位[0,63]，默认值32
 #define g_dBGain_Bank           M[RA4+13*MMU_BASE]
 #define g_dBGain_Bank_Offset    (13*MMU_BASE)
@@ -621,8 +623,11 @@
 #define RN_XRAM7                (RN_XRAM6+1024)                                 // 1024Byte
 
 // ============================ GRAM0 ============================
-#define RN_GRAM_IN              RN_GRAM0                                        // 512Byte
-#define RN_GRAM_OUT             RN_GRAM0                                        // 512Byte
+#define RN_GRAM_IN              RN_GRAM0                                 
+#define RN_GRAM_OUT             RN_GRAM0                       
+#define RN_GRAM_IN1             (RN_GRAM0+128)                          
+#define RN_GRAM_DAC_kx          (RN_GRAM0+256)                                     
+#define RN_GRAM_DAC_Cache       (RN_GRAM0+512)                                     
 
 // ============================ GRAM1 ============================
 #define RN_myTableMod_ADDR          RN_GRAM1                                    // 2048Byte [cos|sin]

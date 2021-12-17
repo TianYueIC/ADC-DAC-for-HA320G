@@ -456,7 +456,7 @@ L_DSP_HotLine_init_ALU_RFFC://#3	用于ALU单序列运算，可用于RAM清零
 //			3.RD0:需要从RA0中减去的直流值C（外部进行权重对齐，并拼凑为H16、L16格式）
 //  返回值:
 //      1.RD0：结果的累加和，即SUM(Xi-C),32bit有符号数
-//      2.RD1：峰峰值，Vpp=Max-Min，32bit有符号数
+//      2.RD1：当前帧最大绝对值，32bit有符号数
 //	注意：
 //		ADC专用函数，bank未归还，禁止外部调用！
 ////////////////////////////////////////////////////////
@@ -515,13 +515,16 @@ Sub_AutoField _GetADC_Ave_Max_Min;
 		// 当前帧最大值max
 		RF_GetH16(RD0);
 		RD0_SignExtL16;
-		RD1 = RD0;	//max
+		RF_Abs(RD0);
+		RD1 = RD0;	
 		// 当前帧最小值min
 		RD0 = RD2;
 		RD0_SignExtL16;//min
-		// RD1 =峰峰值  Vpp = max-min
-		RD1 -= RD0;
-		
+		RF_Abs(RD0);
+		RD0 -= RD1;
+		if(RQ_Borrow) goto L_VPP_0;
+        RD1 += RD0;
+L_VPP_0:
 		//读回STA结果，Sum(Xi-C)
 		MemSetRAM4K_Enable;
 		RD0 = STA1_Read;//累加和<23:0>    
