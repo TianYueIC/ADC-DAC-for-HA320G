@@ -171,7 +171,6 @@ L_Wait_Key0:
     g_Vol = RD0;    //音量调整值
     
     
-    
 Loop:   //main
     
     call Get_ADC;
@@ -276,9 +275,6 @@ L_TEST_3_1:
     call _Delay_RD2;
 L_TEST_END3:  
 /////////音量调整结束
-    
-    
-    
     
     
     RD0 = RN_GRAM_IN;

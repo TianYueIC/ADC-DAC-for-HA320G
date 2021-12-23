@@ -101,20 +101,20 @@
 //HotLine #6----DMA_ParaNum_ALU_Send2IFFT128
 //				ALU单序列，逆FFT求共轭，写入FFT128 RAM特殊通道，禁止外部调用！
 #define	DMA_ParaNum_ALU_Send2IFFT128					0b00110	//6			
-#define	DMA_nParaNum_ALU_Send2IFFT128				0b11001	//6	暂未使用
+#define	DMA_nParaNum_ALU_Send2IFFT128				0b11001	//6
 
 #define	DMA_ParaNum_FMT_GetH16					0b00111	//7			
-#define	DMA_nParaNum_FMT_GetH16				0b11000	//7	暂未使用
+#define	DMA_nParaNum_FMT_GetH16				0b11000	//7
 
 #define	DMA_ParaNum_ALU_RffC					0b01000	//8			
-#define	DMA_nParaNum_ALU_RffC					0b10111	//8	暂未使用
+#define	DMA_nParaNum_ALU_RffC					0b10111	//8	
 
-#define	DMA_ParaNum_FMT_Send_DAC					0b01001	//9			
-#define	DMA_nParaNum_FMT_Send_DAC					0b10110	//
+#define	DMA_ParaNum_SingleSerPSD					0b01001	//9			
+#define	DMA_nParaNum_SingleSerPSD					0b10110	//
 
-//#define	DMA_ParaNum_					0b01010	//10			
-//#define	DMA_nParaNum_					0b10101	//10	暂未使用
-//
+#define	DMA_ParaNum_FMT_Send_DAC					0b01010	//10			
+#define	DMA_nParaNum_FMT_Send_DAC					0b10101	//10
+
 //#define	DMA_ParaNum_					0b01011	//11			
 //#define	DMA_nParaNum_					0b10100	//11	暂未使用
 //

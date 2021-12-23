@@ -10,8 +10,7 @@
 ////////////////////////////
 
 #define _AD_DA_330G_F_
-#define ADC0_12dB    //AGC初始档位          
-//#define ADC0_15dB          
+        
 
 #include <CPU11.def>
 #include <resource_allocation.def>
@@ -42,18 +41,13 @@ CODE SEGMENT AD_DA_330G_code;
 //      2.ADC使用的全局变量-----------------------------（全局变量待修改更新）
 //      (a)帧计数器,                    g_Cnt_Frame
 //		(b)每一路MIC需要4个全局变量
-//			(1)当前帧权位               g_WeightFrame_Now_0 
-//			(2)下一帧权位               g_WeightFrame_Next_0 
-//			(3)当前帧Vpp                g_Vpp_0
-//			(4)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为去直流修正值，权位为0；bit16为当前块（512帧）是否改过档位的标志位，1：改过，0：未改过 
-//			(5)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
-//			(6)配置值寄存器             g_ADC_CFG_0 ：高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-//			(7)连续小信号帧计数器       g_SmallSignal_Count_0      
+//			(1)当前帧Vpp                g_Vpp_0
+//			(2)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为去直流修正值，权位为0；bit16为当前块（512帧）是否改过档位的标志位，1：改过，0：未改过 
+//			(3)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
+//			(4)配置值寄存器             g_ADC_CFG_0 ：高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
 //      3.DAC使用的全局变量-----------------------------（全局变量待修改更新）
-//          g_DAC_Cfg               bit15-12:IIR输出增益；bit7 6：CIC输出增益。1000 10是默认值，此时0dB
-//          g_Vol                   音量档位（dB），暂定32bit定点数
-//          g_WeightFrame_Now_0     当前帧权位
-//          g_WeightFrame_Next_0    下一帧权位
+//          g_DAC_Cfg                   bit15-12:IIR输出增益；bit7 6：CIC输出增益。1000 10是默认值，此时0dB
+//          g_Vol                       音量档位（dB），暂定32bit定点数
 ////////////////////////////////////////////////////////
 Sub_AutoField AD_DA_INIT_330G;
 
@@ -117,13 +111,10 @@ Sub_AutoField AD_DA_INIT_330G;
 //      2.ADC使用的全局变量
 //      (a)帧计数器,                    g_Cnt_Frame
 //		(b)每一路MIC需要4个全局变量
-//			(1)当前帧权位               g_WeightFrame_Now_0 
-//			(2)下一帧权位               g_WeightFrame_Next_0 
-//			(3)当前帧Vpp                g_Vpp_0
-//			(4)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为去直流修正值，权位为0；bit16为当前块（512帧）是否改过档位的标志位，1：改过，0：未改过 
-//			(5)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
-//			(6)配置值寄存器             g_ADC_CFG_0 ：高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
-//			(7)连续小信号帧计数器       g_SmallSignal_Count_0      
+//			(1)当前帧Vpp                g_Vpp_0
+//			(2)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为去直流修正值，权位为0；bit16为当前块（512帧）是否改过档位的标志位，1：改过，0：未改过 
+//			(3)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
+//			(4)配置值寄存器             g_ADC_CFG_0 ：高16位ADC前置放大器配置值，低16位ADC_CFG端口配置值
 //
 ////////////////////////////////////////////////////////
 Sub_AutoField ADC_INIT_330G;
@@ -155,12 +146,12 @@ Sub_AutoField ADC_INIT_330G;
     g_Mic_Sta = RD0;
     ADC_Cfg = RD0;
     
-		// 前置放大器，放大倍数选择方法：正常声音经放大后，峰峰值在6~128mV之间。
+    // 前置放大器，放大倍数选择方法：正常声音经放大后，峰峰值在6~128mV之间。
     RD0 = RN_ADCPORT_AGC0+RN_ADCPORT_AGC1;
     ADC_PortSel = RD0;
     RD0 = g_ADC_CFG_0;    //配置值寄存器, g_ADC_CFG_0 ：高16位ADC前置放大器放大倍数
     RF_GetH16(RD0);
-		//RD0 = 0b00000111111;//测试用   12dB
+	//RD0 = 0b00000111111;//测试用   12dB
     ADC_Cfg = RD0;
     
     //直流值默认为7
@@ -168,10 +159,10 @@ Sub_AutoField ADC_INIT_330G;
     RD0 = g_LastBank_Average_0;			//g_LastBank_Average_0 ：高8位为直流配置值
     RF_GetH8(RD0);
 
-		//RD0 = RN_ADDC_VAL;//测试用 RN_ADDC_VAL
-		Volt_Vref2 = RD0;
-		//MIC1
-		Volt_Vref3 = RD0;
+	//RD0 = RN_ADDC_VAL;//测试用 RN_ADDC_VAL
+	Volt_Vref2 = RD0;
+	//MIC1
+	Volt_Vref3 = RD0;
     
     //配置ADC，两路一起配置
     RD0 = RN_ADCPORT_ADC0CFG+RN_ADCPORT_ADC1CFG;
@@ -188,7 +179,7 @@ Sub_AutoField ADC_INIT_330G;
     //配置IIR for ADC
     call IIR_SetLP_89DB_ADC330G;
     
-		//归还端口
+	//归还端口
     RD0 = 0;
     ADC_PortSel = RD0;
     ADC_CPUCtrl_Disable;
@@ -321,6 +312,14 @@ RD0_SetBit5;
 //    		      7399, D0B9, 66F3, 9949    //a系数为负时，求补；为正时，符号位取反
 ////////////////////////////////////////////////////////
 Sub_AutoField IIR_SetLP_89DB_ADC330G;
+
+//    RD2 = 30;
+//L_IIR_SetLP_0:
+//	RD0 = M[RAX++];
+//	ADC_FiltHD = RD0;  //b0
+//    RD2 --;
+//    if(RQ_nZero) goto L_IIR_SetLP_0
+
 		//  IIR0
 		//  083D, 8D2B, 0674, 8D2B, 083D
 		//        7358, D00A, 64F7, 9850
@@ -468,8 +467,8 @@ L_ADC_En_nDis_330G_MIC0:		//MIC0 配置
     
     RD1 = RD3;
     RF_GetL16(RD1);
-		RF_RotateL16(RD1);//配置值寄存器, g_ADC_CFG ：高16位ADC前置放大器放大倍数
-		RD0 = ADC_CFG_Init;
+	RF_RotateL16(RD1);//配置值寄存器, g_ADC_CFG ：高16位ADC前置放大器放大倍数
+	RD0 = ADC_CFG_Init;
     RD1 += RD0;
     g_ADC_CFG_0 = RD1;//配置值寄存器写回
     
@@ -478,35 +477,35 @@ L_ADC_En_nDis_330G_MIC0:		//MIC0 配置
 		
 L_ADC_En_nDis_330G_MIC1:			//MIC1 配置	
 		//配置MIC1 直流值
-//		RD0 = g_LastBank_Average_1;			//g_LastBank_Average_1 : 高8位为直流配置值
-//		RF_GetH8(RD0);
-//		Volt_Vref3 = RD0;
-//		
-//    //配置MIC1 AGC增益
-//		RD0 = RN_ADCPORT_AGC1;
-//		RD1 = RD3;
-//		RF_GetH16(RD1);
-//		ADC_CPUCtrl_Enable;	
-//    ADC_PortSel = RD0;    
-//    ADC_Cfg = RD1;
-//    
-//    //配置MIC1 ADC_CFG
-//    RD0 = RN_ADCPORT_ADC1CFG;
-// 		RD1 = ADC_CFG_Init;
-//    ADC_PortSel = RD0;    
-//    ADC_Cfg = RD1;
+		RD0 = g_LastBank_Average_1;			//g_LastBank_Average_1 : 高8位为直流配置值
+		RF_GetH8(RD0);
+		Volt_Vref3 = RD0;
+		
+    //配置MIC1 AGC增益
+		RD0 = RN_ADCPORT_AGC1;
+		RD1 = RD3;
+		RF_GetH16(RD1);
+		ADC_CPUCtrl_Enable;	
+    ADC_PortSel = RD0;    
+    ADC_Cfg = RD1;
+    
+    //配置MIC1 ADC_CFG
+    RD0 = RN_ADCPORT_ADC1CFG;
+ 		RD1 = ADC_CFG_Init;
+    ADC_PortSel = RD0;    
+    ADC_Cfg = RD1;
     
     //归还端口
-//    RD0 = 0;
-//    ADC_PortSel = RD0;
-//    ADC_CPUCtrl_Disable;
-//    
-//    RD1 = RD3;
-//    RF_GetH16(RD1);
-//		RF_RotateL16(RD1);//配置值寄存器, g_ADC_CFG ：高16位ADC前置放大器放大倍数
-//		RD0 = ADC_CFG_Init;
-//    RD1 += RD0;
-//    g_ADC_CFG_1 = RD1;//配置值寄存器写回
+    RD0 = 0;
+    ADC_PortSel = RD0;
+    ADC_CPUCtrl_Disable;
+    
+    RD1 = RD3;
+    RF_GetH16(RD1);
+		RF_RotateL16(RD1);//配置值寄存器, g_ADC_CFG ：高16位ADC前置放大器放大倍数
+		RD0 = ADC_CFG_Init;
+    RD1 += RD0;
+    g_ADC_CFG_1 = RD1;//配置值寄存器写回
 L_ADC_En_nDis_330G_END:    
     Return_AutoField(0*MMU_BASE);
 
@@ -618,80 +617,6 @@ L_InitADCFlowBank:
 		//SDM_DRV0_ENABLE;SDM_DRV1_ENABLE;    //3倍驱动
 
 		Return_AutoField(0*MMU_BASE);
-
-////////////////////////////////////////////////////////
-//  名称:
-//      DAC_En_nDis_330G
-//  功能:
-//      HA330G DAC关闭和重开
-//  参数:
-//      RD0: 0关闭DAC，1开启DAC
-//  返回值:
-//      无
-//  说明：
-//      1.函数配置DAC的模拟和数字设置
-//      2.DAC使用的全局变量
-//        (a)配置值寄存器, g_DAC_Cfg ：低16位DAC_CFG端口配置值 bit15-12:IIR输出增益；bit7 6：CIC输出增益。1000 01是默认值，此时0dB
-//        (b)g_Vol：音量档位（dB），暂定32bit定点数
-//
-////////////////////////////////////////////////////////
-Sub_AutoField DAC_En_nDis_330G;
-		if(RD0_nZero) goto L_DAC_En_330G;
-L_DAC_nDis_330G://关闭DAC和Class-D输出
-		SDM_DRV0_DISABLE;
-		SDM_DRV1_DISABLE;
-		DAC_Disable;
-		Return_AutoField(0*MMU_BASE);
-L_DAC_En_330G://暂定重新启动DAC时，Bank已由FW维护好，无需清零
-		RD0 = FlowRAM_Addr0;
-		RA0 = RD0;      //Bank0地址
-		RD0 = FlowRAM_Addr1;
-		RA1 = RD0;      //Bank1地址
-		//配置Flow_RAM为DMA_Flow操作
-		MemSetRAM4K_Enable;  //Set_All
-		RD0 = DMA_PATH5;
-		M[RA0] = RD0;
-		M[RA1] = RD0;
-		MemSet_Disable; //Set_All
-
-		MemSetRAM4K_Enable;
-		DAC_Enable;
-
-		//配置DAC参数
-		RD0 = g_DAC_Cfg ;
-		//RD0 = 0x80F380;   //测试用//
-		//RD0 = 0x8083C0;   //测试用//E=0
-		//RD0 = 0x808380;   //测试用，E=-6
-		DAC_CFG = RD0;
-		MemSet_Disable;     //配置结束
-
-		//ADC-->DAC过程
-		//准备进程Flow参数映像
-		RD0 = RN_PRAM_START+DMA_ParaNum_ADDA_Flow*MMU_BASE*8;
-		RA0 = RD0;
-		RD0=RN_CFG_DAC_DIV1+RN_CFG_MEM_DIV512+RN_CFG_ADC_DIV2;
-		M[RA0+0*MMU_BASE] = RD0;
-		RD0 = 0;   //Bank起始地址
-		RF_ShiftR2(RD0);           //变为Dword地址
-		RF_Not(RD0);               //硬件要求
-		M[RA0+2*MMU_BASE] = RD0;
-		RD0 = 0x1e01fffd; //0x70ff0001;
-		M[RA0+1*MMU_BASE] = RD0;  //Loop_Nums
-
-		//选择DMA_Flow通道，并启动运算
-		RD0 = 0x80;
-		ParaMem_Num = RD0;
-		RD0 = DMA_nParaNum_ADDA_Flow;
-		ParaMem_Addr = RD0;
-
-
-		// 使能DAC Class-D 输出
-		SDM_DRV0_ENABLE;    //1倍驱动，默认值，不修改
-		//SDM_DRV1_ENABLE;    //2倍驱动
-		//SDM_DRV0_ENABLE;SDM_DRV1_ENABLE;    //3倍驱动
-
-		Return_AutoField(0*MMU_BASE);
-
 
 ////////////////////////////////////////////////////////
 //  名称:
@@ -970,7 +895,7 @@ L_Get_ADC_DATA:
 //         Mic状态                      g_Mic_Sta：bit0上1代表MIC0打开，bit1上1代表MIC1打开
 //		(b)每一路MIC需要以下全局变量
 //			(1)当前帧最大绝对值         g_Vpp_0
-//			(2)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为去直流修正值，权位为0；bit16为当前块（512帧）是否改过档位的标志位，1：改过，0：未改过 
+//			(2)前一块（512帧）平均值    g_LastBank_Average_0 : 高8位为直流配置值；低16位为去直流修正值，权位为0；
 //			(3)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField Get_ADC_Function;
@@ -1061,8 +986,6 @@ L_ADC_Bias_Adj_End:
 //  全局变量：  
 //      g_DAC_Cfg               bit15-12:IIR输出增益；bit7 6：CIC输出增益。1000 10是默认值，此时0dB
 //      g_Vol                   音量档位（dB），暂定32bit定点数
-//      g_WeightFrame_Now_0     当前帧权位
-//      g_WeightFrame_Next_0    下一帧权位
 //  备注：
 //      占用RN_GRAM0整块bank
 //////////////////////////////////////////////////////////////////////////
