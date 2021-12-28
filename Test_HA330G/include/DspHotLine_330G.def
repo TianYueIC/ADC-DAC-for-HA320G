@@ -1,12 +1,13 @@
 ////////////////////////////
 // DspHotLine.def for HA330 (Core:HA320G)
-// WENDI YANG 2021/12/3 13:34:29
+// WENDI YANG 2021/12/27 16:09:14
 ////////////////////////////
 //	Modified Notes
 //	1. 加入CntFWB的宏定义(在b7:b0) 和 CntFWB32b的宏定义(在b31:b24)，方便设置CntF、CntB、CntW
 //	2. 加入DMA_ParaNum的宏定义，分配PRAM地址
 //	3. 加入DSP端口宏定义
-//	4. 
+//	4. 热线标号暂时向后移位，让出0~6，供算法部门调试用
+//	5. 
 ////////////////////////////
 
 
@@ -14,19 +15,37 @@
 #define _DSPHOTLINE_330G_DEF_
 
 #ifndef _DSPHOTLINE_330G_F_
-	extern DSP_HotLine_init;
-	extern _GetADC_Ave_Max_Min;
-	extern _MAC_RffC;
-	extern _MAC_RffC_ADC;
-	extern _Send_DAC_SignSftR_RndOff;
-	extern _Send_DAC_Interpolation;
-	//extern _FFT_ClrRAM;
-	extern _MAC_Rff;
-	//extern _SendFFT128;
-	//extern _Win_FFT;
-	extern FFT_Fast128_HotLineRun;
-	//extern _Send2IFFT128;
-	extern IFFT_Fast128_HotLineRun;
+    //1.供外部调用的函数
+	extern DSP_HotLine_init;            //热线初始化函数。
+	extern FFT_Fast128_HotLineRun;      //FFT128运算，实现wola子带分析
+	extern IFFT_Fast128_HotLineRun;     //IFFT128运算，实现子带综合
+	extern ALU_RFFC_CFGLEN;             //ALU1，单序列运算，可配置运算器CFG、数据长度、常数
+	extern ALU_RFF_CFGLEN;              //ALU1，双序列运算，可配置运算器CFG、数据长度
+	extern MAC_RFFC_CFGLEN;             //MAC，单序列运算，可配置运算器CFG、数据长度、常数
+	extern MAC_Rff_CFGLEN;              //MAC，双序列运算，可配置运算器CFG、数据长度
+	extern LMT_CFGLEN;                  //LMT，双序列运算，可配置运算器CFG、数据长度
+	
+	//2.固定长度的函数，谨慎调用。注意：step和长度不可更改。
+	extern _MAC_RffC;                   //固定长度的MAC，单序列乘常数。
+	extern _MAC_Rff;                    //固定长度的MAC，双序列乘。
+	extern _FMT_GetH16;                 //FMT获得H16，固定长度。
+	extern ALU_Shift_Qbit_16b_32DW;     //ALU移位，原址写回，固定长度。
+	extern SingleSerPSD;                //计算功率谱，固定长度。
+	
+	//3.禁止外部调用的函数
+	extern _GetADC_Ave_Max_Min;         //ADC数据特殊处理，getADC使用。禁止外部调用。	
+	extern _MAC_RffC_ADC;               //ADC数据特殊处理。禁止外部调用。
+	extern _Send_DAC_SignSftR_RndOff;   //DAC数据特殊处理，SendDAC使用。禁止外部调用。
+	extern _Send_DAC_Interpolation;     //DAC数据特殊处理，SendDAC使用。禁止外部调用。
+	//extern _FFT_ClrRAM;               //FFT数据特殊处理，FFT_Fast128_HotLineRun使用。禁止外部调用。
+	//extern _SendFFT128;               //FFT数据特殊处理，FFT_Fast128_HotLineRun使用。禁止外部调用。
+	//extern _Win_FFT;                  //FFT数据加窗，FFT_Fast128_HotLineRun使用。禁止外部调用。
+	//extern _Win_FFT_IFFT;             //IFFT数据加窗，IFFT_Fast128_HotLineRun使用。禁止外部调用。
+	//extern _Send2IFFT128;             //IFFT数据特殊处理，FFT_Fast128_HotLineRun使用。禁止外部调用。
+	//extern _FMT_GetH16_IFFT;            //FMT获得H16，IFFT数据特殊处理，FFT_Fast128_HotLineRun使用。禁止外部调用。
+	//extern ALU_Shift_Qbit_16b_32DW_IFFT;//ALU移位，IFFT数据特殊处理，FFT_Fast128_HotLineRun使用。禁止外部调用。
+	
+	
 #endif /* _DSPHOTLINE_330G_F_ */
 
 //硬件宏
@@ -34,31 +53,31 @@
 ////======== DSP端口 的宏定义 ========////
 //写端口
 #define	ALU_PATH1_CFG						M[RA6+0*MMU_BASE]	
-#define	ALU_PATH1_Const					M[RA6+1*MMU_BASE]	
+#define	ALU_PATH1_Const						M[RA6+1*MMU_BASE]	
 #define	ALU_PATH2_CFG						M[RA6+2*MMU_BASE]	
-#define	ALU_PATH2_Const					M[RA6+3*MMU_BASE]	
-#define	LMT_CFG									M[RA6+4*MMU_BASE]	
-//#define	I2S_CFG									M[RA6+5*MMU_BASE]	
-//#define	IIR_BANK_Sel						M[RA6+6*MMU_BASE]	
+#define	ALU_PATH2_Const						M[RA6+3*MMU_BASE]	
+#define	LMT_CFG								M[RA6+4*MMU_BASE]	
+//#define	I2S_CFG							M[RA6+5*MMU_BASE]	
+//#define	IIR_BANK_Sel					M[RA6+6*MMU_BASE]	
 //#define	IIR_BANK_Colum					M[RA6+7*MMU_BASE]	
-//#define	IIR_BANK_HD							M[RA6+8*MMU_BASE]	
-#define	MAC_CFG									M[RA6+9*MMU_BASE]	
-#define	MAC_Const								M[RA6+10*MMU_BASE]	
-#define	FMT_CFG									M[RA6+11*MMU_BASE]	
-#define	MAC64_CFG								M[RA6+12*MMU_BASE]	
-//#define	DAC_IIR1_HD							M[RA6+13*MMU_BASE]	
-//#define	DAC_CFG									M[RA6+14*MMU_BASE]	
+//#define	IIR_BANK_HD						M[RA6+8*MMU_BASE]	
+#define	MAC_CFG								M[RA6+9*MMU_BASE]	
+#define	MAC_Const							M[RA6+10*MMU_BASE]	
+#define	FMT_CFG								M[RA6+11*MMU_BASE]	
+#define	MAC64_CFG							M[RA6+12*MMU_BASE]	
+//#define	DAC_IIR1_HD						M[RA6+13*MMU_BASE]	
+//#define	DAC_CFG							M[RA6+14*MMU_BASE]	
 //#define	IIR_PATH1_BANK					M[RA6+16*MMU_BASE]	
-//#define	IIR_PATH1_HD						M[RA6+17*MMU_BASE]	
+//#define	IIR_PATH1_HD					M[RA6+17*MMU_BASE]	
 //#define	IIR_PATH3_BANK					M[RA6+18*MMU_BASE]	
-//#define	IIR_PATH3_HD						M[RA6+19*MMU_BASE]	
+//#define	IIR_PATH3_HD					M[RA6+19*MMU_BASE]	
 //读端口
-#define	STA1_Read								M[RA6+0*MMU_BASE]	
-#define	STA2_Read								M[RA6+1*MMU_BASE]	
-#define	STA3_Read								M[RA6+2*MMU_BASE]	
-#define	STA4_Read								M[RA6+3*MMU_BASE]	
-#define	MAC_Read								M[RA6+4*MMU_BASE]	
-//#define	FFT128_GAIN							M[RA6+5*MMU_BASE]	
+#define	STA1_Read							M[RA6+0*MMU_BASE]	
+#define	STA2_Read							M[RA6+1*MMU_BASE]	
+#define	STA3_Read							M[RA6+2*MMU_BASE]	
+#define	STA4_Read							M[RA6+3*MMU_BASE]	
+#define	MAC_Read							M[RA6+4*MMU_BASE]	
+//#define	FFT128_GAIN						M[RA6+5*MMU_BASE]	
 
 
 
@@ -68,89 +87,94 @@
 //#define	DMA_ParaNum_助记符									0b值		//	说明													
 //#define	DMA_nParaNum_助记符									0b值		//	说明	
 
-//HotLine #0----DMA_ParaNum_GetADC_Ave_Max_Min	
-//				用于将ADC FlowRAM的数据搬移到Gram0中，同时进行STA运算，获得ave，max，min统计量
-#define	DMA_ParaNum_GetADC_Ave_Max_Min				0b00000	//0	
-#define	DMA_nParaNum_GetADC_Ave_Max_Min				0b11111	//0	
+//热线标号暂时向后移位，让出0~6，供算法部门调试用
 
-//HotLine #1----DMA_ParaNum_MAC_RffC
-//				将GRAM0的数据乘常数
-#define	DMA_ParaNum_MAC_RffC									0b00001	//1	
-#define	DMA_nParaNum_MAC_RffC									0b11110	//1	
-
-//HotLine #2----DMA_ParaNum_Send_DAC
-//				用于DAC数据写回.完成移位、四舍五入，并将数据搬移到FlowRAM中
-#define	DMA_ParaNum_Send_DAC									0b00010	//2	
-#define	DMA_nParaNum_Send_DAC									0b11101	//2	
-
-//HotLine #3----DMA_ParaNum_FFT128_ClrRAM
-//				用于FFT的RAM清零(无需改PRAM配置)，禁止外部调用！
-#define	DMA_ParaNum_FFT128_ClrRAM							0b00011	//3	用于FFT的RAM清零
-#define	DMA_nParaNum_FFT128_ClrRAM						0b11100	//3	
-
-//HotLine #4----DMA_ParaNum_MAC_Rff
-//				MAC双序列乘法
-#define	DMA_ParaNum_MAC_Rff										0b00100	//4			
-#define	DMA_nParaNum_MAC_Rff									0b11011	//4
-
-//HotLine #5----DMA_ParaNum_FMT_Send2FFT128
-//				FMT单序列运算，写入FFT128 RAM特殊通道，禁止外部调用！
-#define	DMA_ParaNum_FMT_Send2FFT128						0b00101	//5			
-#define	DMA_nParaNum_FMT_Send2FFT128					0b11010	//5	
-
-//HotLine #6----DMA_ParaNum_ALU_Send2IFFT128
-//				ALU单序列，逆FFT求共轭，写入FFT128 RAM特殊通道，禁止外部调用！
-#define	DMA_ParaNum_ALU_Send2IFFT128					0b00110	//6			
-#define	DMA_nParaNum_ALU_Send2IFFT128				0b11001	//6
-
-#define	DMA_ParaNum_FMT_GetH16					0b00111	//7			
-#define	DMA_nParaNum_FMT_GetH16				0b11000	//7
-
-#define	DMA_ParaNum_ALU_RffC					0b01000	//8			
-#define	DMA_nParaNum_ALU_RffC					0b10111	//8	
-
-#define	DMA_ParaNum_SingleSerPSD					0b01001	//9			
-#define	DMA_nParaNum_SingleSerPSD					0b10110	//
-
-#define	DMA_ParaNum_FMT_Send_DAC					0b01010	//10			
-#define	DMA_nParaNum_FMT_Send_DAC					0b10101	//10
-
-//#define	DMA_ParaNum_					0b01011	//11			
-//#define	DMA_nParaNum_					0b10100	//11	暂未使用
+////HotLine #0----DMA_ParaNum_GetADC_Ave_Max_Min	
+////				用于将ADC FlowRAM的数据搬移到Gram0中，同时进行STA运算，获得ave，max，min统计量
+//#define	DMA_ParaNum_GetADC_Ave_Max_Min				0b00000	//0	
+//#define	DMA_nParaNum_GetADC_Ave_Max_Min				0b11111	//0	
 //
-//#define	DMA_ParaNum_					0b01100	//12			
-//#define	DMA_nParaNum_					0b10011	//12	暂未使用
+////HotLine #1----DMA_ParaNum_MAC_RffC
+////				将GRAM0的数据乘常数
+//#define	DMA_ParaNum_MAC_RffC						0b00001	//1	
+//#define	DMA_nParaNum_MAC_RffC						0b11110	//1	
 //
-//#define	DMA_ParaNum_					0b01101	//13			
-//#define	DMA_nParaNum_					0b10010	//13	暂未使用
+////HotLine #2----DMA_ParaNum_Send_DAC
+////				用于DAC数据写回.完成移位、四舍五入，并将数据搬移到FlowRAM中
+//#define	DMA_ParaNum_Send_DAC						0b00010	//2	
+//#define	DMA_nParaNum_Send_DAC						0b11101	//2	
 //
-//#define	DMA_ParaNum_					0b01110	//14			
-//#define	DMA_nParaNum_					0b10001	//14	暂未使用
+////HotLine #3----DMA_ParaNum_FFT128_ClrRAM
+////				用于FFT的RAM清零(无需改PRAM配置)，禁止外部调用！
+//#define	DMA_ParaNum_FFT128_ClrRAM					0b00011	//3	用于FFT的RAM清零
+//#define	DMA_nParaNum_FFT128_ClrRAM					0b11100	//3	
 //
-//#define	DMA_ParaNum_					0b01111	//15			
-//#define	DMA_nParaNum_					0b10000	//15	暂未使用
+////HotLine #4----DMA_ParaNum_MAC_Rff
+////				MAC双序列乘法
+//#define	DMA_ParaNum_MAC_Rff							0b00100	//4			
+//#define	DMA_nParaNum_MAC_Rff						0b11011	//4
 //
-//#define	DMA_ParaNum_					0b10000	//16			
-//#define	DMA_nParaNum_					0b01111	//16	暂未使用
+////HotLine #5----DMA_ParaNum_FMT_Send2FFT128
+////				FMT单序列运算，写入FFT128 RAM特殊通道，禁止外部调用！
+//#define	DMA_ParaNum_FMT_Send2FFT128					0b00101	//5			
+//#define	DMA_nParaNum_FMT_Send2FFT128				0b11010	//5	
 //
-//#define	DMA_ParaNum_					0b10001	//17			
-//#define	DMA_nParaNum_					0b01110	//17	暂未使用
-//
-//#define	DMA_ParaNum_					0b10010	//18			
-//#define	DMA_nParaNum_					0b01101	//18	暂未使用
-//
-//#define	DMA_ParaNum_					0b10011	//19			
-//#define	DMA_nParaNum_					0b01100	//19	暂未使用
-//
-//#define	DMA_ParaNum_					0b10100	//20			
-//#define	DMA_nParaNum_					0b01011	//20	暂未使用
-//
+////HotLine #6----DMA_ParaNum_ALU_Send2IFFT128
+////				ALU单序列，逆FFT求共轭，写入FFT128 RAM特殊通道，禁止外部调用！
+//#define	DMA_ParaNum_ALU_Send2IFFT128				0b00110	//6			
+//#define	DMA_nParaNum_ALU_Send2IFFT128				0b11001	//6
+
+#define	DMA_ParaNum_FMT_GetH16							0b00111	//7			
+#define	DMA_nParaNum_FMT_GetH16							0b11000	//7
+
+#define	DMA_ParaNum_ALU_RffC							0b01000	//8			
+#define	DMA_nParaNum_ALU_RffC							0b10111	//8	
+
+#define	DMA_ParaNum_SingleSerPSD						0b01001	//9			
+#define	DMA_nParaNum_SingleSerPSD						0b10110	//
+
+#define	DMA_ParaNum_FMT_Send_DAC						0b01010	//10			
+#define	DMA_nParaNum_FMT_Send_DAC						0b10101	//10
+
+//热线标号暂时向后移位，让出0~6，供算法部门调试用
+/////////////////2021/12/20 17:08:57
+#define	DMA_ParaNum_GetADC_Ave_Max_Min					0b01011	//11			
+#define	DMA_nParaNum_GetADC_Ave_Max_Min					0b10100	//11	临时占用，热线标号暂时向后移位，让出0~6，供算法部门调试用
+
+#define	DMA_ParaNum_MAC_RffC							0b01100	//12			
+#define	DMA_nParaNum_MAC_RffC							0b10011	//12	临时占用，热线标号暂时向后移位，让出0~6，供算法部门调试用
+
+#define	DMA_ParaNum_Send_DAC							0b01101	//13			
+#define	DMA_nParaNum_Send_DAC							0b10010	//13	临时占用，热线标号暂时向后移位，让出0~6，供算法部门调试用
+
+#define	DMA_ParaNum_FFT128_ClrRAM						0b01110	//14			
+#define	DMA_nParaNum_FFT128_ClrRAM						0b10001	//14	临时占用，热线标号暂时向后移位，让出0~6，供算法部门调试用
+
+#define	DMA_ParaNum_MAC_Rff								0b01111	//15			
+#define	DMA_nParaNum_MAC_Rff							0b10000	//15	临时占用，热线标号暂时向后移位，让出0~6，供算法部门调试用
+
+#define	DMA_ParaNum_FMT_Send2FFT128						0b10000	//16			
+#define	DMA_nParaNum_FMT_Send2FFT128					0b01111	//16	临时占用，热线标号暂时向后移位，让出0~6，供算法部门调试用
+
+#define	DMA_ParaNum_ALU_Send2IFFT128					0b10001	//17			
+#define	DMA_nParaNum_ALU_Send2IFFT128					0b01110	//17	临时占用，热线标号暂时向后移位，让出0~6，供算法部门调试用
+
+//////////////////////可配置的热线：18-20，MAC、ALU
+#define	DMA_ParaNum_MAC_CFGLEN							0b10010	//18		MAC，可配置CFG，LoopNUMBER	
+#define	DMA_nParaNum_MAC_CFGLEN							0b01101	//18	
+
+#define	DMA_ParaNum_ALU_RFF_CFGLEN						0b10011	//19	ALU双序列，可配置CFG，LoopNUMBER		
+#define	DMA_nParaNum_ALU_RFF_CFGLEN						0b01100	//19	
+
+#define	DMA_ParaNum_ALU_RFFC_CFGLEN						0b10100	//20		ALU单序列，可配置CFG，LoopNUMBER		
+#define	DMA_nParaNum_ALU_RFFC_CFGLEN					0b01011	//20	
+
 //#define	DMA_ParaNum_					0b10101	//21			
 //#define	DMA_nParaNum_					0b01010	//21	暂未使用
-//
+
 //#define	DMA_ParaNum_					0b10110	//22			
 //#define	DMA_nParaNum_					0b01001	//22	暂未使用
-//
+
 //#define	DMA_ParaNum_					0b10111	//23			
 //#define	DMA_nParaNum_					0b01000	//23	暂未使用
 //
@@ -178,8 +202,8 @@
 //#define	DMA_ParaNum_					0b11111	//31	灵活使用（默认位置）		
 //#define	DMA_nParaNum_					0b00000	//31	灵活使用（默认位置）
 
-#define	DMA_ParaNum_ADDA_Flow					0b11111	//31	ADDA进程	
-#define	DMA_nParaNum_ADDA_Flow				0b00000	//31	
+#define	DMA_ParaNum_ADDA_Flow						0b11111	//31	ADDA进程	
+#define	DMA_nParaNum_ADDA_Flow						0b00000	//31	
 
 
 

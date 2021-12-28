@@ -2,6 +2,7 @@
 [Rr]elease/
 x64/
 .vs
+.vscode
 *.opendb
 user/data/data_out.bin
 *.db

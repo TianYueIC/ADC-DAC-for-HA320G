@@ -909,8 +909,11 @@ Sub_AutoField Get_ADC_Function;
 	RD0 = RN_GRAM_IN;
 	RA1 = RD0;
 	RD0 = g_LastBank_Average_0;
-	RD0_SignExtL16;
-	call _GetADC_Ave_Max_Min;   //1.RD0：结果的累加和，即SUM(Xi-C),32bit有符号数 2.RD1：峰峰值，Vpp=Max-Min，32bit有符号数
+	RD0_ClrByteH16;
+	RD1 = RD0;
+	RF_RotateL16(RD0);
+	RD0 += RD1;
+	call _GetADC_Ave_Max_Min;   
     g_Vpp_0 = RD1; 
     //平均值累加器 += 当前帧累加和
     RD1 = g_ADC_DC_0;
@@ -926,8 +929,11 @@ L_Mic0_End_0:
 	RD0 = RN_GRAM_IN1;
 	RA1 = RD0;
 	RD0 = g_LastBank_Average_1;
-	RD0_SignExtL16;
-	call _GetADC_Ave_Max_Min;   //1.RD0：结果的累加和，即SUM(Xi-C),32bit有符号数 2.RD1：峰峰值，Vpp=Max-Min，32bit有符号数
+	RD0_ClrByteH16;
+	RD1 = RD0;
+	RF_RotateL16(RD0);
+	RD0 += RD1;
+	call _GetADC_Ave_Max_Min;   
     g_Vpp_1 = RD1;      
     RD1 = g_ADC_DC_1;
     RD0 += RD1;
@@ -942,20 +948,28 @@ L_Mic1_End_0:
 
     //////2、去直流
     RD0 = g_Cnt_Frame;  //帧计数器
-    if(RD0_Zero) goto L_ADC_Bias_Adj_End;                      
     if(RD0_L8 != 0) goto L_ADC_Bias_Adj_End; 
+    if(RD0_Zero) goto L_ADC_Bias_Adj_End;                      
     if(RD0_Bit8 == 1) goto L_ADC_Bias_Adj_End;  //判是否满512帧，不满跳过                 
 	RD0 = g_Mic_Sta;
 	if(RD0_Bit0 == 0) goto L_Mic0_End_1;
     call ADC0_Step;
     RD2 = RD0;          //当前512帧平均值
-L_Mic0_End_1:
 	RD0 = g_Mic_Sta;
+L_Mic0_End_1:
 	if(RD0_Bit1 == 0) goto L_Mic1_End_1;
     call ADC1_Step;
     RD3 = RD0;          //当前512帧平均值
 L_Mic1_End_1:
+
+//    
 //RD0 = g_Cnt_Frame;
+//send_para(RD0);
+//call UART_PutDword_COM1;    
+//RD0 = RD2;
+//send_para(RD0);
+//call UART_PutDword_COM1;
+//RD0 = g_LastBank_Average_0;
 //send_para(RD0);
 //call UART_PutDword_COM1;
   

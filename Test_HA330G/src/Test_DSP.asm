@@ -35,6 +35,7 @@ extern UART_Putchar_COM1;
 //#define Calibration_byHand  //开启手动校准
 //#define Simulation_byCadence  //仿真
 #define         RN_SPI_CLK_CFG                  0x7ffffffc;//32000000/8000000/2 = 2
+#define	        SPI_Master_Init                             0x00003fb6
 
 
 ///////////////////////////////////////
@@ -223,58 +224,73 @@ Loop:   //main
     RD0 = 0xcf05a57e;
     M[RA1++] = RD0;
     CPU_WorkDisable; 
-//此处可修改算法，音频流在RN_GRAM_IN
 */
+
+
+//此处可修改算法，音频流在RN_GRAM_IN
+
 
 //音量调整 测试用
 //GPIO7按下减小音量，GPIO3按下增大音量
-	RD0 = GPIO_Data0;
-	if(RD0_Bit3 == 0) goto L_TEST_1;
-	goto  L_TEST_END1;   
-L_TEST_1:
-    nop;nop;
-	RD0 = GPIO_Data0;
-	if(RD0_Bit3 == 0) goto L_TEST_1;
-    RD0 = g_Vol;
-    RD0 += 1;
-    g_Vol = RD0;
-    RD2 = 2000*100;     
-    call _Delay_RD2;
-L_TEST_END1:
-    
-	RD0 = GPIO_Data0;
-	if(RD0_Bit7 == 0) goto L_TEST_2;
-	goto  L_TEST_END2;   
-L_TEST_2:
-    nop;nop;
-	RD0 = GPIO_Data0;
-	if(RD0_Bit7 == 0) goto L_TEST_2;
-    RD0 = g_Vol;
-    RD0 -= 1;
-    g_Vol = RD0;
-    RD2 = 2000*100;     
-    call _Delay_RD2;
-L_TEST_END2:
-    
-	RD0 = GPIO_Data0;
-	if(RD0_Bit4 == 0) goto L_TEST_3;
-	goto  L_TEST_END3;   
-L_TEST_3:
-    nop;nop;
-	RD0 = GPIO_Data0;
-	if(RD0_Bit4 == 0) goto L_TEST_3;
-    RD0 = g_Vol;
-    if(RD0_nZero) goto L_TEST_3_0;
-    RD0 = -100;
-    goto L_TEST_3_1;
-L_TEST_3_0:        
-    RD0 = 0;
-L_TEST_3_1:
-    g_Vol = RD0;
-    RD2 = 2000*100;     
-    call _Delay_RD2;
-L_TEST_END3:  
+//	RD0 = GPIO_Data0;
+//	if(RD0_Bit3 == 0) goto L_TEST_1;
+//	goto  L_TEST_END1;   
+//L_TEST_1:
+//    nop;nop;
+//	RD0 = GPIO_Data0;
+//	if(RD0_Bit3 == 0) goto L_TEST_1;
+//    RD0 = g_Vol;
+//    RD0 += 1;
+//    g_Vol = RD0;
+//    RD2 = 2000*100;     
+//    call _Delay_RD2;
+//L_TEST_END1:
+//    
+//	RD0 = GPIO_Data0;
+//	if(RD0_Bit7 == 0) goto L_TEST_2;
+//	goto  L_TEST_END2;   
+//L_TEST_2:
+//    nop;nop;
+//	RD0 = GPIO_Data0;
+//	if(RD0_Bit7 == 0) goto L_TEST_2;
+//    RD0 = g_Vol;
+//    RD0 -= 1;
+//    g_Vol = RD0;
+//    RD2 = 2000*100;     
+//    call _Delay_RD2;
+//L_TEST_END2:
+//    
+//	RD0 = GPIO_Data0;
+//	if(RD0_Bit4 == 0) goto L_TEST_3;
+//	goto  L_TEST_END3;   
+//L_TEST_3:
+//    nop;nop;
+//	RD0 = GPIO_Data0;
+//	if(RD0_Bit4 == 0) goto L_TEST_3;
+//    RD0 = g_Vol;
+//    if(RD0_nZero) goto L_TEST_3_0;
+//    RD0 = -100;
+//    goto L_TEST_3_1;
+//L_TEST_3_0:        
+//    RD0 = 0;
+//L_TEST_3_1:
+//    g_Vol = RD0;
+//    RD2 = 2000*100;     
+//    call _Delay_RD2;
+//L_TEST_END3:  
 /////////音量调整结束
+
+
+
+    call SPI_Export_IO_Init;
+    RD0 = RN_GRAM_IN;          //  导出的第一路数据
+    RD1 = FRAME_LEN_Byte;
+    call Export_Sound_16bit; 
+
+//    if(RD0_L8 != 0) goto L_1334123;; 
+//
+//
+//L_1334123:
     
     
     RD0 = RN_GRAM_IN;
