@@ -268,6 +268,7 @@
 #define L32_M3_A2           0x6296297d // 32*3+2 = 98
 #define L32_M3_A3           0x452c52fa // 32*3+3 = 99
 #define L32_M3_A4           0xa58a5f5  // 32*3+4 = 100
+#define L32_M3_A5           0x14b14beb  // 32*3+5 = 101
 #define L32_M2_A4_A1        0x3b13b14b // 32*2+4+1 = 69
 
 #define L48_M1_A2           0x1c762762 // 48*1+2 = 50

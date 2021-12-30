@@ -899,6 +899,11 @@ L_Get_ADC_DATA:
 //			(3)平均值累加器             g_ADC_DC_0 ：平均值累加器,权位为0
 //////////////////////////////////////////////////////////////////////////
 Sub_AutoField Get_ADC_Function;
+    //更新DAC_CFG
+    RD0 = g_DAC_Cfg; 
+    CPU_WorkEnable;
+    DAC_CFG = RD0;
+    CPU_WorkDisable;
     
 	RD0 = RA0;
 	RD2 = RD0;
@@ -940,11 +945,7 @@ L_Mic0_End_0:
     g_ADC_DC_1 = RD0;
 L_Mic1_End_0:
         
-    //更新DAC_CFG,放在此处接近ADC_Cfg调整，减少更改档位带来的震荡
-    RD0 = g_DAC_Cfg; 
-    CPU_WorkEnable;
-    DAC_CFG = RD0;
-    CPU_WorkDisable;
+
 
     //////2、去直流
     RD0 = g_Cnt_Frame;  //帧计数器
@@ -1031,6 +1032,7 @@ Sub_AutoField Send_DAC;
     call _Send_DAC_Interpolation;   
     goto L_Send_DAC_Odd;
 L_Send_DAC_xx:
+    //6的整数倍，插原值x
     RD0 = RD3; 
     RA0 = RD0;
     RA1 = RD0;

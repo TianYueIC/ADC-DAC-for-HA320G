@@ -371,7 +371,7 @@ L_DSP_HotLine_init_FMT_GetH16:	//#7	Get_Real提取实部
     RD1 = CntFWB1_32b;  				//CntB is 1
 	RD0 += RD1;
 	M[RA0+2*MMU_BASE] = RD0;
-	RD0 = 0x0C080002;//Step0
+	RD0 = 0x04080002;//Step0
 	M[RA0+3*MMU_BASE] = RD0;
 	RD0 = 0x06040002;//Step1
 	M[RA0+4*MMU_BASE] = RD0;
@@ -1273,7 +1273,7 @@ Sub_AutoField _Win_FFT;
 	MemSetPath_Enable;  //设置Group通道使能
 	M[RA0+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
 	M[RA1+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
-	M[RA2+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
+	M[RA2+MGRP_PATH_1w2] = RD0;//选择PATH2，通道信息在偏址上
 
 	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
 	// 连接到PATH1
@@ -1321,11 +1321,10 @@ Sub_AutoField _Win_FFT;
 //  名称:
 //      _Win_FFT_IFFT
 //  功能:
-//      FFT加窗
+//      IFFT加窗
 //  参数:
-//      1.RA0:源指针0(in),紧凑型16bit
-//      2.RA1:源指针1(in),紧凑型16bit
-//	    3.RA2:目标指针(out),紧凑型16bit
+//      1.RA0:源指针0(in),紧凑型16bit，窗地址
+//      2.RA1:源指针1(in),紧凑型16bit，RA1写回
 //  返回值:
 //      无
 //  注意:
@@ -1336,13 +1335,11 @@ Sub_AutoField _Win_FFT_IFFT;
 	MemSetPath_Enable;  //设置Group通道使能
 	M[RA0+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
 	M[RA1+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
-	M[RA2+MGRP_PATH2] = RD0;//选择PATH2，通道信息在偏址上
 
 	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
 	// 连接到PATH1
 	M[RA0] = DMA_PATH2;
 	M[RA1] = DMA_PATH2;
-	M[RA2] = DMA_PATH2;
 	MemSet_Disable;     //配置结束
 	//选择DMA_Ctrl通道，并启动运算
 	ParaMem_Num = DMA_PATH2;
@@ -1357,7 +1354,7 @@ Sub_AutoField _Win_FFT_IFFT;
 //  功能:
 //      紧凑16bit数据转换为FFT128数据格式，并启动FFT128Fast运算。
 //		数据长度固定为32DW，前后补0
-//		固定输出地址为 FFT128RAM_Addr0
+//		固定输出地址为 FFT128RAM_Addr0,必须使用path1取数据！
 //  参数:
 //      1.RA0:输入序列指针，紧凑型16bit
 //  返回值:
@@ -1390,19 +1387,26 @@ Sub_AutoField _SendFFT128;
 	RD0_SetBit10;			//目标地址，FFT128 Bank1
 	RA2 = RD0;
 
-	Wait_While(Flag_DMAWork==0);//等clrFFT结束
+	Wait_While(Flag_DMAWork==0);//等Win_FFT结束
+	//注意：此时FFT clr未结束！
 
-	MemSetPath_Enable;  //设置Group通道使能
-	M[RA0+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
-	M[RA1+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
-	M[RA2+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
+	//MemSetPath_Enable;  //设置Group通道使能
+	//M[RA0+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
+	//M[RA1+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
+	//M[RA2+MGRP_PATH1] = RD0;//选择PATH1，通道信息在偏址上
 
+	RD0 = 0x4;
+L_SendFFT128_WaitFFTclr:	
+	//数钟，等FFT_Clr! 并行计算特殊处理！
+	nop;
+	RD0--;
+	if(RQ_nZero) goto L_SendFFT128_WaitFFTclr;
 
 	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
 	//配置相关的4KRAM
 	M[RA0] = DMA_PATH1;
 	M[RA1] = DMA_PATH1;
-	M[RA2] = DMA_PATH1;
+	M[RA2] = DMA_PATH1;		
 	MemSet_Disable;     //配置结束
 
 
@@ -1483,6 +1487,8 @@ Sub_AutoField _SendFFT128;
 //      FFT_Fast128_HotLineRun
 //  功能:
 //      数据加窗后进行FFT运算，RD0返回FFT Gain
+//      固定输出地址为 FFT128RAM_Addr0,后续DSP处理，必须使用path1取数据！
+//      使用其他path，输出地址在FFT128RAM_Addr0<0:63>,FFT128RAM_Addr1<64:127>
 //  参数:
 //      1.RA0:数据地址(in),紧凑型16bit，长度32DW
 //	    2.RA1:窗函数(in),紧凑型16bit，长度32DW
@@ -1709,26 +1715,66 @@ Sub_AutoField _FMT_GetH16;
 //  功能:
 //      提取实部
 //  参数:
-//      1.RA0:输入序列指针，格式[Re | Im]
+//      1.RA0:FFT128 Bank0，格式[Re | Im]
 //      2.RA1:输出序列指针，格式[Re(n+1) | Re(n)](out)
+//      2.RA2:PRAM对应热线地址
 //  返回值:
 //      无
 ////////////////////////////////////////////////////////
 Sub_AutoField _FMT_GetH16_IFFT;
 
-	MemSetPath_Enable;  					//设置Group通道使能
-	M[RA0+MGRP_PATH1] = RD0;				//选择PATH1，通道信息在偏址上
-
 	MemSetRAM4K_Enable; 					//使用扩展端口或RAM配置时使能
 	//配置相关的4KRAM
 	M[RA0] = DMA_PATH1;						//把RA0挂在path1
+	M[RA1] = DMA_PATH1;						//把RA0挂在path1
 	MemSet_Disable; 					//配置结束
 
+    //FMT IFFT Round 0; 第一帧数据
 	//选择DMA_Ctrl通道，并启动运算
 	ParaMem_Num = DMA_PATH1;
 	ParaMem_Addr = DMA_nParaNum_FMT_GetH16;			//热线地址
 	nop;nop;nop;nop;nop;nop;
 	//此处不等待DSP运算完成，Path被临时占用。
+	
+	//配置DMA_Ctrl参数，包括地址.长度
+    //0*MMU_BASE: FFT128RAM_Addr1 + 64 * MMU_BASE
+    RD0 = FFT128RAM_Addr0 + 64 * MMU_BASE;
+	RF_ShiftR2(RD0);   	//变为Dword地址
+	RD0 -= 1;            	//调整适应流水线
+	RD0_ClrByteH8;
+    M[RA2+0*MMU_BASE] = RD0;    			//CntF is 0
+    // 1*MMU_BASE: FFT128RAM_Addr1 + (64+1) * MMU_BASE;
+	RD0 ++;
+	RD0_ClrByteH8;
+    RD1 = CntFWB3_32b;  				//CntW is 3
+    RD0 += RD1;
+    M[RA2+1*MMU_BASE] = RD0;
+    // 2*MMU_BASE: 目标地址
+    RD0 = RA1;      //FMT目标地址
+    RD0 += 16 * MMU_BASE;
+	RF_ShiftR2(RD0);   	//变为Dword地址
+	RD0 --;
+	RD0_ClrByteH8;
+	RD1 = CntFWB1_32b;  				//CntB is 1
+	RD0 += RD1;
+	M[RA2+2*MMU_BASE] = RD0;
+	
+	Wait_While(Flag_DMAWork==0);	//等待FMT IFFT Round 0; 第一帧数据结束
+	
+	MemSetRAM4K_Enable; 					//使用扩展端口或RAM配置时使能
+	RD0 = RA0;
+    RD0_SetBit10;		//FFT128 Bank1
+    RA0 = RD0;
+	M[RA0] = DMA_PATH1;						//把FFT128 Bank1挂在path1
+	MemSet_Disable; 					//配置结束
+	
+	//FMT IFFT Round 1; 第2帧数据
+	//选择DMA_Ctrl通道，并启动运算
+	ParaMem_Num = DMA_PATH1;
+	ParaMem_Addr = DMA_nParaNum_FMT_GetH16;			//热线地址
+	nop;nop;nop;nop;nop;nop;
+	//此处不等待DSP运算完成，Path被临时占用。
+	
     Return_AutoField(0);
 
 ////////////////////////////////////////////////////////
@@ -1859,101 +1905,93 @@ L_ALU1_Shift_Qbit_16b_32DW_End:
 //      长度32DW、紧凑型16b序列移位Qbit位运算，Q属于[0,14]
 //      使用PATH1 ALU1
 //  参数:
-//      1.RA0:输入序列指针(out),同址写回。
+//      1.RA1:输入序列指针(out),同址写回。
 //      2.RD0:序列移位的位数,Bit31=1右移，Bit31=0左移
 //  返回值:
 //      无
 /////////////////////////////////  ///////////////////////
 Sub_AutoField ALU_Shift_Qbit_16b_32DW_IFFT;
 	RD2 = RD0;						//ShiftR 's Number
-	//配置Group
-	MemSetPath_Enable;					//设置Group通道使能
-	M[RA0+MGRP_PATH1] = RD0;				//选择PATH1，通道信息在偏址上//RA0只是习惯性写法，无实际意义
-
-	//配置相关的4KRAM
-	MemSetRAM4K_Enable; 				//使用扩展端口或RAM配置时使能
-	M[RA0] = DMA_PATH1;
-	MemSet_Disable;	 				//配置结束
 
 	//准备移位
 	RD0 = RD2; 							//ShiftL 's Number
 
-	if(RD0_Bit3 == 0) goto L_IFFT_ALU1_Shift_Qbit_16b_32DW_Bit2;
+	if(RD0_Bit3 == 0) goto L_IFFT_ALU2_Shift_Qbit_16b_32DW_Bit2;
 	//配置ALU参数 --- 移动8bit
 	//MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
 	MemSet1_Enable;
 	//判断bit标志位，31位为0时左移
 	if (RD0_Bit31==0) goto L_IFFT_ShiftLeftBit3;
-	ALU_PATH1_CFG = Op16Bit+Rf_SftSR8;	 		//ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SftSR8;	 		//ALU2写指令端口
 	goto L_IFFT_ShiftBit3End;
 L_IFFT_ShiftLeftBit3:
-	ALU_PATH1_CFG = Op16Bit+Rf_SftL8;	 		//ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SftL8;	 		//ALU2写指令端口
 L_IFFT_ShiftBit3End:
 	MemSet1_Disable;
 	//选择DMA_Ctrl通道，并启动运算
-	ParaMem_Num = DMA_PATH1;
+	ParaMem_Num = DMA_PATH2;
 	ParaMem_Addr = DMA_nParaNum_ALU_RffC;
 	nop;nop;nop;nop;nop;nop;
 	Wait_While(Flag_DMAWork==0);//此处不等待，Path1占用
 
-L_IFFT_ALU1_Shift_Qbit_16b_32DW_Bit2:
+L_IFFT_ALU2_Shift_Qbit_16b_32DW_Bit2:
 	RD0 = RD2;
-	if(RD0_Bit2 == 0) goto L_IFFT_ALU1_Shift_Qbit_16b_32DW_Bit1;
+	if(RD0_Bit2 == 0) goto L_IFFT_ALU2_Shift_Qbit_16b_32DW_Bit1;
 	//配置ALU参数 --- 移动4bit
 	MemSet1_Enable;
 	//判断bit标志位，31位为0时左移
 	if (RD0_Bit31==0) goto L_IFFT_ShiftLeftBit2;
-	ALU_PATH1_CFG = Op16Bit+Rf_SftSR4;	 //ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SftSR4;	 //ALU2写指令端口
 	goto L_IFFT_ShiftBit2End;
 L_IFFT_ShiftLeftBit2:
-	ALU_PATH1_CFG = Op16Bit+Rf_SftL4;	 //ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SftL4;	 //ALU2写指令端口
 L_IFFT_ShiftBit2End:
 	MemSet1_Disable;
 	//选择DMA_Ctrl通道，并启动运算
-	ParaMem_Num = DMA_PATH1;
+	ParaMem_Num = DMA_PATH2;
 	ParaMem_Addr = DMA_nParaNum_ALU_RffC;
     nop;nop;nop;nop;nop;nop;
 	Wait_While(Flag_DMAWork==0);//此处不等待，Path1占用
 
-L_IFFT_ALU1_Shift_Qbit_16b_32DW_Bit1:
+L_IFFT_ALU2_Shift_Qbit_16b_32DW_Bit1:
 	RD0 = RD2;
-	if(RD0_Bit1 == 0) goto L_IFFT_ALU1_Shift_Qbit_16b_32DW_Bit0;
+	if(RD0_Bit1 == 0) goto L_IFFT_ALU2_Shift_Qbit_16b_32DW_Bit0;
 	//配置ALU参数 --- 移动2bit
 	MemSet1_Enable;
 	//判断bit标志位，31位为0时左移
 	if (RD0_Bit31==0) goto L_IFFT_ShiftLeftBit1;
-	ALU_PATH1_CFG = Op16Bit+Rf_SftSR2;	 //ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SftSR2;	 //ALU2写指令端口
 	goto L_IFFT_ShiftBit1End;
 L_IFFT_ShiftLeftBit1:
-	ALU_PATH1_CFG = Op16Bit+Rf_SftL2;	 //ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SftL2;	 //ALU2写指令端口
 L_IFFT_ShiftBit1End:
 	MemSet1_Disable;
 	//选择DMA_Ctrl通道，并启动运算
-	ParaMem_Num = DMA_PATH1;
+	ParaMem_Num = DMA_PATH2;
 	ParaMem_Addr = DMA_nParaNum_ALU_RffC;
     nop;nop;nop;nop;nop;nop;
 	Wait_While(Flag_DMAWork==0);//此处不等待，Path1占用
 
-L_IFFT_ALU1_Shift_Qbit_16b_32DW_Bit0:
+L_IFFT_ALU2_Shift_Qbit_16b_32DW_Bit0:
 	RD0 = RD2;
-	if(RD0_Bit0 == 0) goto L_IFFT_ALU1_Shift_Qbit_16b_32DW_End;
+	if(RD0_Bit0 == 0) goto L_IFFT_ALU2_Shift_Qbit_16b_32DW_End;
 	//配置ALU参数 --- 移动2bit
 	MemSet1_Enable;
 	//判断bit标志位，31位为0时左移
 	if (RD0_Bit31==0) goto L_IFFT_ShiftLeftBit0;
-	ALU_PATH1_CFG = Op16Bit+Rf_SftSR1;	 //ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SftSR1;	 //ALU2写指令端口
 	goto L_IFFT_ShiftBit0End;
 L_IFFT_ShiftLeftBit0:
-	ALU_PATH1_CFG = Op16Bit+Rf_SfAdd;	 //ALU1写指令端口
+	ALU_PATH2_CFG = Op16Bit+Rf_SfAdd;	 //ALU2写指令端口
 L_IFFT_ShiftBit0End:
 	MemSet1_Disable;
 	//选择DMA_Ctrl通道，并启动运算
-	ParaMem_Num = DMA_PATH1;
+	ParaMem_Num = DMA_PATH2;
 	ParaMem_Addr = DMA_nParaNum_ALU_RffC;
     nop;nop;nop;nop;nop;nop;
 	Wait_While(Flag_DMAWork==0);//此处不等待，Path1占用
 
-L_IFFT_ALU1_Shift_Qbit_16b_32DW_End:
+L_IFFT_ALU2_Shift_Qbit_16b_32DW_End:
 	Return_AutoField(0);
 
 ////////////////////////////////////////////////////////
@@ -2059,11 +2097,13 @@ Sub_AutoField SingleSerPSD_FFT;
 //      1.RA0:源指针，不可使用FFT128专用RAM。
 //	    2.RA1:窗系数
 //	    3.RD0:移位数据
+//      4.RA2:IFFT结果输出地址，紧凑型16bit
 //  返回值:无
 ////////////////////////////////////////////////////////
 Sub_AutoField IFFT_Fast128_HotLineRun;
-    push RA2;	//保护RA2
+    
 	push RA1;	//RA1，窗函数系数堆栈
+	push RA2;	//RA2,FFT结果输出地址，紧凑型16bit
 	RD2 = RD0;  //暂存移位
 
 	RD0 = FFT128RAM_Addr0;
@@ -2099,20 +2139,21 @@ Sub_AutoField IFFT_Fast128_HotLineRun;
 	//配置DMA_Ctrl参数，包括地址.长度
     RD0 = RN_PRAM_START+DMA_ParaNum_FMT_GetH16*MMU_BASE*8;	//热线地址
     RA2 = RD0;
-    //0*MMU_BASE: 源地址 RA0;
+    //0*MMU_BASE: FFT128RAM_Addr0 + 32 * MMU_BASE
     RD0 = FFT128RAM_Addr0 + 32 * MMU_BASE;
 	RF_ShiftR2(RD0);   	//变为Dword地址
 	RD0 -= 1;            	//调整适应流水线
 	RD0_ClrByteH8;
     M[RA2+0*MMU_BASE] = RD0;    			//CntF is 0
-    // 1*MMU_BASE: 源地址 RA0;
+    // 1*MMU_BASE: FFT128RAM_Addr0 + (32+1) * MMU_BASE;
 	RD0 ++;
 	RD0_ClrByteH8;
     RD1 = CntFWB3_32b;  				//CntW is 3
     RD0 += RD1;
     M[RA2+1*MMU_BASE] = RD0;
     // 2*MMU_BASE: 目标地址
-    RD0 = FFT128RAM_Addr0;
+    pop RD0;        //弹栈，FFT结果输出地址，紧凑型16bit
+    RA1 = RD0;      //FMT目标地址
 	RF_ShiftR2(RD0);   	//变为Dword地址
 	RD0 --;
 	RD0_ClrByteH8;
@@ -2144,8 +2185,6 @@ L_IFFT_Fast128_HotLineRun_FMT:
 	//FMT_GetH16
 	RD0 = FFT128RAM_Addr0 + 32 * MMU_BASE;
 	RA0 = RD0;
-	RD0 = FFT128RAM_Addr0;
-	RA1 = RD0;
 	call _FMT_GetH16_IFFT;
 
 	//MAC PRAM配置
@@ -2158,21 +2197,21 @@ L_IFFT_Fast128_HotLineRun_FMT:
 	//配置DMA_Ctrl参数，包括地址.长度
 	RD0 = RN_PRAM_START+DMA_ParaNum_MAC_Rff*MMU_BASE*8;
 	RA2 = RD0;
-	// 0*MMU_BASE: 源地址 FFT128RAM_Addr0;
-	RD0 = FFT128RAM_Addr0;
+	// 0*MMU_BASE: 源地址 RA1;
+	RD0 = RA1;
 	RF_ShiftR2(RD0);   	//变为Dword地址
 	RD0_ClrByteH8;
 	M[RA2+0*MMU_BASE] = RD0;
 	// 1*MMU_BASE: 源地址 窗系数
-	pop RA1;	//弹出寄存在堆栈中的源地址
-	RD0 = RA1;
+	pop RA0;	//弹出寄存在堆栈中的源地址，窗地址
+	RD0 = RA0;
 	RF_ShiftR2(RD0);   	//变为Dword地址
 	RD0_ClrByteH8;
 	RD1 = CntFWB4_32b;  	//CntW is 4
 	RD0 += RD1;
 	M[RA2+1*MMU_BASE] = RD0;
-	// 2*MMU_BASE:目标地址FFT128RAM_Addr0
-	RD0 = FFT128RAM_Addr0;
+	// 2*MMU_BASE:目标地址，RA1
+	RD0 = RA1;
 	RF_ShiftR2(RD0);   	//变为Dword地址
 	RD0 -= 1;          	//流水线前1次写无效
 	RD0_ClrByteH8;
@@ -2182,25 +2221,21 @@ L_IFFT_Fast128_HotLineRun_FMT:
 
 	Wait_While(Flag_DMAWork==0);	//等待Get_H16函数结束
 
-	RD0 = FFT128RAM_Addr0;
-	RA0 = RD0;  		//重新给地址是为了函数里面挂通道
-	RD0 = FFT128RAM_Addr0;
-	RA2 = RD0;
 	call _Win_FFT_IFFT;
 
 	//配置DMA_Ctrl参数，包括地址.长度
 	//移位PRAM配置指令
 	RD0 = RN_PRAM_START+DMA_ParaNum_ALU_RffC*8*MMU_BASE;
 	RA2 = RD0;
-	// 0*MMU_BASE: 源地址 FFT128RAM_Addr0;
-	RD0 = FFT128RAM_Addr0;
+	// 0*MMU_BASE: 源地址 
+	RD0 = RA1;
 	RF_ShiftR2(RD0);   	//变为Dword地址
 	RD0 --;
 	RD0_ClrByteH8;
 	M[RA2+0*MMU_BASE] = RD0;    			//CntF is 0
-	// 1*MMU_BASE: 源地址 FFT128RAM_Addr0;
+	// 1*MMU_BASE: 源地址 
 	RD1 = CntFWB4_32b;  				//CntW is 3
-	RD0 =  FFT128RAM_Addr0;
+	RD0 =  RA1;
 	RF_ShiftR2(RD0);
 	RD0 -= 2;
 	RD0_ClrByteH8;
@@ -2213,12 +2248,9 @@ L_IFFT_Fast128_HotLineRun_FMT:
 	Wait_While(Flag_DMAWork==0);
 
 	// 移位开始
-	RD0 = FFT128RAM_Addr0;
-	RA0 = RD0;
 	RD0 = RD2;		//移位位数，Bit31=1右移，Bit31=0左移
 	call ALU_Shift_Qbit_16b_32DW_IFFT;
 	Wait_While(Flag_DMAWork==0);
-	pop RA2;
 
 Return_AutoField(0);
 

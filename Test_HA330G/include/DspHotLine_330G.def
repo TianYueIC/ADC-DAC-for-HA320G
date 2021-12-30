@@ -243,7 +243,15 @@
 #define	CntFWB14_32b	0x33000000	//	14	
 
 
-/////////
+/////////Group Ó²¼þºê
+//#define     MGRP_PATH1    		0x8  
+//#define     MGRP_PATH2    		0x10 
+//#define     MGRP_PATH3    		0x20 
+//#define     MGRP_PATH4    		0x40 
+//#define     MGRP_PATH5    		0x80 
+//#define     MGRP_PATHIO    		0x200
+
+#define     MGRP_PATH_1w2    		0x18  
 
 #endif /* _DSPHOTLINE_330G_DEF_ */
 
