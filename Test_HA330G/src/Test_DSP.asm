@@ -170,15 +170,13 @@ L_Wait_Key0:
 
     RD0 = 0;
     g_Vol = RD0;    //音量调整值
-    
-    RD2 = 0;
 
 Loop:   //main
     
     call Get_ADC;
     nop;nop;nop;nop;
     if(RD0_nZero) goto Loop;
-
+/*
 //使用测试数据替代ADC输入
     RD0 = RN_GRAM_IN;
     RA1 = RD0;
@@ -225,7 +223,7 @@ Loop:   //main
     RD0 = 0xcf05a57e;
     M[RA1++] = RD0;
     CPU_WorkDisable; 
-
+*/
 
 
 //此处可修改算法，音频流在RN_GRAM_IN
