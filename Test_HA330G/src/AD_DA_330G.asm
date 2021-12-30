@@ -1006,8 +1006,35 @@ L_ADC_Bias_Adj_End:
 Sub_AutoField Send_DAC;
 
     RD3 = RD0;
-    	
-    RD0 = g_Vol;   
+
+    //DAC自动变档位测试
+    RD1 = 0;
+    RD0 = g_Vpp_0;
+    RF_RotateL4(RD0);
+    RD0_ClrByteL16;
+    if(RD0_nZero) goto L_TEST_0;
+    RD0 = g_Count;
+    RD0 -= 100;
+    if(RD0_Zero) goto L_TEST_1;
+    g_Count ++;
+    goto L_TEST_End;
+
+L_TEST_1:
+    RD0 = RD3;
+    RA0 = RD0;
+    RD0 = 2;
+    call ALU_Shift_Qbit_16b_32DW;
+    RD1 = 12;
+    goto L_TEST_End;
+L_TEST_0:
+	RD0 = 0;
+    g_Count = RD0;
+    //TEST END
+L_TEST_End:
+
+
+    RD0 = g_Vol;
+RD0 -= RD1;   
     call Find_k;   
     RD2 = RD1;  //右移位数 
     call DAC_Tab;
