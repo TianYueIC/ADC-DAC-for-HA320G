@@ -118,10 +118,10 @@ L_Calibration:
     GPIO_WEn0 = RD0;
     RD0 = GPIO_IN|GPIO_PULL;
     GPIO_Set0 = RD0;
-    RD0 = GP0_4;
-    GPIO_WEn0 = RD0;
-    RD0 = GPIO_IN|GPIO_PULL;
-    GPIO_Set0 = RD0;
+    // RD0 = GP0_4;
+    // GPIO_WEn0 = RD0;
+    // RD0 = GPIO_IN|GPIO_PULL;
+    // GPIO_Set0 = RD0;
     RD0 = GP0_7;
     GPIO_WEn0 = RD0;
     RD0 = GPIO_IN|GPIO_PULL;
@@ -318,32 +318,39 @@ L_TEST_1:
 	RD0 = GPIO_Data0;
 	if(RD0_Bit7 == 0) goto L_TEST_1;
     RD0 = g_Vol;
-    RD1 = 6*256;
+    RD1 = 1*256;
     RD0 += RD1;
     g_Vol = RD0;
     RD2 = 2000*100;     
     call _Delay_RD2;
+	RD0 = g_Vol;
+	send_para(RD0);
+	call UART_PutDword_COM1;    
 L_TEST_END1:
     
 	RD0 = GPIO_Data0;
-	if(RD0_Bit4 == 0) goto L_TEST_2;
+	if(RD0_Bit3 == 0) goto L_TEST_2;
 	goto  L_TEST_END2;   
 L_TEST_2:
     nop;nop;
 	RD0 = GPIO_Data0;
-	if(RD0_Bit4 == 0) goto L_TEST_2;
+	if(RD0_Bit3 == 0) goto L_TEST_2;
     RD0 = g_Vol;
-    RD1 = 6*256;
+    RD1 = 1*256;
     RD0 -= RD1;
     g_Vol = RD0;
     RD2 = 2000*100;     
     call _Delay_RD2;
-L_TEST_END2:    
+	RD0 = g_Vol;
+	send_para(RD0);
+	call UART_PutDword_COM1;    
+L_TEST_END2:
+
    
     // µ÷½ÚÒôÁ¿
     RD0 = g_Vol;
     send_para(RD0);
-    RD0 = RN_SAMPLES_STREAM_0;
+    RD0 = RN_SAMPLES_STREAM_OUT;
     send_para(RD0);
     RD0 = FL2_M3_A3;
     send_para(RD0);

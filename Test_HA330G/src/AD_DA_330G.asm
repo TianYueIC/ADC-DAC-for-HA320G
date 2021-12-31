@@ -93,7 +93,10 @@ Sub_AutoField AD_DA_INIT_330G;
 //		call IIR_PATH3_HP500Init;
 //    IIR_PATH3_Disable;
 //    MemSet_Disable;
-
+    // 64位乘法器初始化
+    Multi64_Enable;
+    RD0 = 0;// 默认为有符号数乘
+    Multi64_Cfg = RD0;
 		Return_AutoField(0*MMU_BASE);
 
 
