@@ -902,6 +902,13 @@ Sub_AutoField Get_ADC_Function;
     
 	RD0 = RA0;
 	RD2 = RD0;
+
+    //更新DAC_CFG,放在此处接近ADC_Cfg调整，减少更改档位带来的震荡
+    RD0 = g_DAC_Cfg; 
+    CPU_WorkEnable;
+    DAC_CFG = RD0;
+    CPU_WorkDisable;
+
     //////1、数据统计
 	//ALU计算xi-g_LastBank_Average_0，g_LastBank_Average_0：前一块（512帧）数据的均值
 	RD0 = g_Mic_Sta;
@@ -940,11 +947,7 @@ L_Mic0_End_0:
     g_ADC_DC_1 = RD0;
 L_Mic1_End_0:
         
-    //更新DAC_CFG,放在此处接近ADC_Cfg调整，减少更改档位带来的震荡
-    RD0 = g_DAC_Cfg; 
-    CPU_WorkEnable;
-    DAC_CFG = RD0;
-    CPU_WorkDisable;
+
 
     //////2、去直流
     RD0 = g_Cnt_Frame;  //帧计数器
@@ -1006,8 +1009,60 @@ L_ADC_Bias_Adj_End:
 Sub_AutoField Send_DAC;
 
     RD3 = RD0;
+<<<<<<< Updated upstream
     	
     RD0 = g_Vol;   
+=======
+
+    //DAC自动变档位测试
+    RD0 = g_DAC_Cfg;
+    if(RD0_Bit7 ==1) goto L_TEST_0;
+    //DAC低档位
+    RD0 = g_Vpp_0;
+    RF_RotateL4(RD0);
+    RD0_ClrByteL16;
+    if(RD0_Zero) goto L_TEST_1_0;    
+    RD0 = g_Count;
+    RD0 -= 255;
+    if(RD0_Zero) goto L_TEST_1_1;
+    g_Count ++;   
+    goto L_TEST_End;
+L_TEST_1_0:
+    RD0 = 0;
+    g_Count = RD0;
+    goto L_TEST_End;
+L_TEST_1_1:
+    RD0 = 0x808180;   
+	g_DAC_Cfg = RD0;    
+    RD0 = 0;
+    g_Count = RD0;
+    goto L_TEST_End;
+L_TEST_0:
+    //DAC高档位
+    RD0 = g_Vpp_0;
+    RF_RotateL8(RD0);
+    RD0_ClrByteL16;
+    if(RD0_nZero) goto L_TEST_0_0;
+    RD0 = g_Count;
+    RD0 -= 255;
+    if(RD0_Zero) goto L_TEST_0_1;
+    g_Count ++;   
+    goto L_TEST_End;
+L_TEST_0_0:
+    RD0 = 0;
+    g_Count = RD0;
+    goto L_TEST_End;
+L_TEST_0_1:
+    RD0 = 0x808100;   //E=0，Y2不拉
+	g_DAC_Cfg = RD0;    
+    RD0 = 0;
+    g_Count = RD0;
+L_TEST_End:
+
+
+goto L_Send_DAC_xx;
+    RD0 = g_Vol; 
+>>>>>>> Stashed changes
     call Find_k;   
     RD2 = RD1;  //右移位数 
     call DAC_Tab;

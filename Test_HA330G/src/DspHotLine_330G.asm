@@ -442,7 +442,7 @@ L_DSP_HotLine_init_DMA_ParaNum_SingleSerPSD://#9	功率谱计算
 	M[RA0+5*MMU_BASE] = RD0;
 	RD0 = -1;
 	M[RA0+7*MMU_BASE] = RD0;
-	RD0 = L32_M3_A5;
+//	RD0 = L32_M3_A5;
 	M[RA0+6*MMU_BASE] = RD0;  //Loop_Num
 
 
@@ -1968,53 +1968,53 @@ L_IFFT_ALU1_Shift_Qbit_16b_32DW_End:
 //      无
 ////////////////////////////////////////////////////////
 Sub_AutoField SingleSerPSD;
-	push RA2;
-
-	MemSetPath_Enable;  //设置Group通道使能
-	M[RA0+MGRP_PATH2] = RD0;//选择PATH1，通道信息在偏址上
-
-	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
-	//配置ALU参数
-	RD0 =RN_CFG_MAC_TYPE4;
-	MAC_CFG = RD0;     //ALU1写指令端口
-
-	//配置相关的4KRAM
-	M[RA0] = DMA_PATH2;
-	M[RA1] = DMA_PATH2;
-	MemSet_Disable;     //配置结束
-
-	//配置DMA_Ctrl参数，包括地址.长度
-	RD0 = RN_PRAM_START+DMA_ParaNum_SingleSerPSD*MMU_BASE*8;
-	RA2 = RD0;
-	// 0*MMU_BASE: 源地址 RA0;
-    RD0 = RA0;
-	RF_ShiftR2(RD0);           //变为Dword地址
-    RD1 = RD0;
-	RD0_ClrByteH8;
-    M[RA2+0*MMU_BASE] = RD0;            //CntF is 0
-    // 1*MMU_BASE: 源地址 RA0;
-    RD0 = RD1;
-	RD0 -= 2;
-	RD0_ClrByteH8;
-    RD1 = CntFWB7_32b;          //CntW is 7
-    RD0 += RD1;
-    M[RA2+1*MMU_BASE] = RD0;
-    // 2*MMU_BASE: 目标地址
-    RD0 =  RA1;
-	RF_ShiftR2(RD0);           //变为Dword地址
-	RD0 --;
-	RD0_ClrByteH8;
-    RD1 = CntFWB1_32b;          //CntB is 1
-	RD0 += RD1;
-    M[RA2+2*MMU_BASE] = RD0;
-
-	//选择DMA_Ctrl通道，并启动运算
-	ParaMem_Num = DMA_PATH2;
-	ParaMem_Addr = DMA_nParaNum_SingleSerPSD;
-	nop;nop;nop;nop;nop;nop;
-	Wait_While(Flag_DMAWork==0);
-
-    pop RA2;
+////	push RA2;
+////
+////	MemSetPath_Enable;  //设置Group通道使能
+////	M[RA0+MGRP_PATH2] = RD0;//选择PATH1，通道信息在偏址上
+////
+////	MemSetRAM4K_Enable; //使用扩展端口或RAM配置时使能
+////	//配置ALU参数
+////	RD0 =RN_CFG_MAC_TYPE4;
+////	MAC_CFG = RD0;     //ALU1写指令端口
+////
+////	//配置相关的4KRAM
+////	M[RA0] = DMA_PATH2;
+////	M[RA1] = DMA_PATH2;
+////	MemSet_Disable;     //配置结束
+////
+////	//配置DMA_Ctrl参数，包括地址.长度
+////	RD0 = RN_PRAM_START+DMA_ParaNum_SingleSerPSD*MMU_BASE*8;
+////	RA2 = RD0;
+////	// 0*MMU_BASE: 源地址 RA0;
+////    RD0 = RA0;
+////	RF_ShiftR2(RD0);           //变为Dword地址
+////    RD1 = RD0;
+////	RD0_ClrByteH8;
+////    M[RA2+0*MMU_BASE] = RD0;            //CntF is 0
+////    // 1*MMU_BASE: 源地址 RA0;
+////    RD0 = RD1;
+////	RD0 -= 2;
+////	RD0_ClrByteH8;
+////    RD1 = CntFWB7_32b;          //CntW is 7
+////    RD0 += RD1;
+////    M[RA2+1*MMU_BASE] = RD0;
+////    // 2*MMU_BASE: 目标地址
+////    RD0 =  RA1;
+////	RF_ShiftR2(RD0);           //变为Dword地址
+////	RD0 --;
+////	RD0_ClrByteH8;
+////    RD1 = CntFWB1_32b;          //CntB is 1
+////	RD0 += RD1;
+////    M[RA2+2*MMU_BASE] = RD0;
+////
+////	//选择DMA_Ctrl通道，并启动运算
+////	ParaMem_Num = DMA_PATH2;
+////	ParaMem_Addr = DMA_nParaNum_SingleSerPSD;
+////	nop;nop;nop;nop;nop;nop;
+////	Wait_While(Flag_DMAWork==0);
+//
+//    pop RA2;
 	Return_AutoField(0);
 
 /*////////////////////////////////////////////////////////
