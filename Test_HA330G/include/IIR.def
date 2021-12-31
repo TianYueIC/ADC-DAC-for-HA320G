@@ -8,6 +8,7 @@
     extern _IIR_PATH1_HawlClr;
     extern _IIR_PATH3_HP;
     extern _IIR_PATH3_FSFT;
+    extern _IIR_PATH3_HB;
 #endif /* _IIR_F_ */
 
 //=========================== 硬件资源定义 ===========================

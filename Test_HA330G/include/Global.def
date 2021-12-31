@@ -269,6 +269,7 @@
 #define L32_M3_A3           0x452c52fa // 32*3+3 = 99
 #define L32_M3_A4           0xa58a5f5  // 32*3+4 = 100
 #define L32_M2_A4_A1        0x3b13b14b // 32*2+4+1 = 69
+#define L32_M3_A5           0x14b14beb  // 32*3+5 = 101
 
 #define L48_M1_A2           0x1c762762 // 48*1+2 = 50
 #define L48_M2_A2           0x6296297d // 48*2+2 = 98
@@ -353,6 +354,8 @@
 #define L512_M2_A2          0x0b14e9d1 // 512*2+2 = 1026
 #define L512_M2_A4_A1       0x58a74e89 // 512*2+4+1 = 1029
 #define L512_M3_A3          0x7a7162c7 // 512*3+3 = 1539
+
+#define FL2_M88_A1                          0x34277e60 // 32*88+1 = 2817
 
 // 全局常量定义
 #define FRAME_LEN2              (FRAME_LEN_Word*2)
@@ -628,6 +631,9 @@
 #define RN_GRAM_IN1             (RN_GRAM0+128)                          
 #define RN_GRAM_DAC_kx          (RN_GRAM0+256)                                     
 #define RN_GRAM_DAC_Cache       (RN_GRAM0+512)                                     
+#define RN_SAMPLES_STREAM_0              RN_GRAM0                               // 64Byte 16DW MIC0信号流
+#define RN_SAMPLES_STREAM_1              (RN_GRAM0+64*MMU_BASE)                 // 64Byte 16DW MIC1信号流
+#define RN_SAMPLES_STREAM_OUT            (RN_GRAM0+128*MMU_BASE)                // 64Byte 16DW 输出数字样点
 
 // ============================ GRAM1 ============================
 #define RN_myTableMod_ADDR          RN_GRAM1                                    // 2048Byte [cos|sin]

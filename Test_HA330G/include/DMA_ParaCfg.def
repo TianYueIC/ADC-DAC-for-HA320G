@@ -47,6 +47,7 @@
 	extern _DMA_ParaCfg_Rff_Step2;
 	extern _DMA_ParaCfg_FFT128_Write;
 	extern _DMA_ParaCfg_FFT128_Read;
+	extern _DMA_ParaCfg_Flow2;
 extern _DMA_ParaCfg_FFT128;
 extern _DMA_ParaCfg_FFT128_Revs;	
 extern _DMA_ParaCfg_FFT64;
@@ -72,36 +73,54 @@ extern _DMA_ParaCfg_FFT64_Revs;
 #define     MGRP_PATHIO    		0x200
 
 
-#define DMA_ParaNum_ALU         0b11111        //1组参数8个Dword
-#define DMA_nParaNum_ALU        0b00000      	//1组参数8个Dword
-
-#define DMA_ParaNum_Copy        0b11111
-#define DMA_nParaNum_Copy       0b00000
-
-#define DMA_ParaNum_IIR 		0b11111
-#define DMA_nParaNum_IIR 		0b00000
-
-#define DMA_ParaNum_MAC 		0b11111
-#define DMA_nParaNum_MAC 		0b00000
-
-#define DMA_ParaNum_IIRBANK			0b11111
-#define DMA_nParaNum_IIRBANK    	0b00000
-
-#define DMA_ParaNum_Flow        	0b11111
-#define DMA_nParaNum_Flow       	0b00000
-
-#define DMA_ParaNum_FFTRevs     	0b11111
-#define DMA_nParaNum_FFTRevs    	0b00000
-
-#define DMA_ParaNum_FFT        		0b11111
-#define DMA_nParaNum_FFT         	0b00000
-
-#define DMA_ParaNum_Format     		0b11111
-#define DMA_nParaNum_Format      	0b00000
+//#define DMA_ParaNum_ALU         0b11111        //1组参数8个Dword
+//#define DMA_nParaNum_ALU        0b00000      	//1组参数8个Dword
+//
+//#define DMA_ParaNum_Copy        0b11111
+//#define DMA_nParaNum_Copy       0b00000
+//
+//#define DMA_ParaNum_IIR 		0b11111
+//#define DMA_nParaNum_IIR 		0b00000
+//
+//#define DMA_ParaNum_MAC 		0b11111
+//#define DMA_nParaNum_MAC 		0b00000
+//
+//#define DMA_ParaNum_IIRBANK			0b11111
+//#define DMA_nParaNum_IIRBANK    	0b00000
+//
+//#define DMA_ParaNum_Flow        	0b11111
+//#define DMA_nParaNum_Flow       	0b00000
+//
+//#define DMA_ParaNum_FFTRevs     	0b11111
+//#define DMA_nParaNum_FFTRevs    	0b00000
+//
+//#define DMA_ParaNum_FFT        		0b11111
+//#define DMA_nParaNum_FFT         	0b00000
+//
+//#define DMA_ParaNum_Format     		0b11111
+//#define DMA_nParaNum_Format      	0b00000
 
 #define DMA_ParaNum_I2S         	0b11111
 #define DMA_nParaNum_I2S        	0b00000
 
+#define DMA_ParaNum_ALU         0         //1组参数8个Dword
+#define DMA_nParaNum_ALU        0x1f      //1组参数8个Dword
+#define DMA_ParaNum_Copy        0
+#define DMA_nParaNum_Copy       0x1f
+#define DMA_nParaNum_IIR 		0x1E  //1
+#define DMA_ParaNum_IIR 		1
+#define DMA_nParaNum_MAC 		0x1d  //2
+#define DMA_ParaNum_MAC 		2
+#define DMA_nParaNum_IIRBANK    0x1c  //3
+#define DMA_ParaNum_IIRBANK		3
+#define DMA_nParaNum_Flow       0x1b  //3
+#define DMA_ParaNum_Flow        4
+#define DMA_nParaNum_FFTRevs    0x1a  //3
+#define DMA_ParaNum_FFTRevs     5
+#define DMA_nParaNum_FFT        0x1a  //3
+#define DMA_ParaNum_FFT         5
+#define DMA_nParaNum_Format     0x19
+#define DMA_ParaNum_Format      0x6
 
 #define HCtrl_Para   			M[RA6+6]//RP52
 #define Multi_Cfg0              M[RA6+7]//RP50

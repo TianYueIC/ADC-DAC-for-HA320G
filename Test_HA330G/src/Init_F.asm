@@ -617,97 +617,97 @@ Sub_AutoField IIR_PATH1_LP32Init;
 //      2000, ADA3, 1FD1, 0, 0
 //      //    2DA3, 9FD1, 0, 0,     //A系数符号位取反
 ////////////////////////////////////////////////////////
-Sub_AutoField IIR1_SetHD_100DB;
-//// IIR0
-//2000, 1A77, 2CBE, 1A77, 2000
-////    6035, F17D, 3DF2, 8D2B
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x1A77;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x2CBE;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x1A77;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x6035;
+// Sub_AutoField IIR1_SetHD_100DB;
+// //// IIR0
+// //2000, 1A77, 2CBE, 1A77, 2000
+// ////    6035, F17D, 3DF2, 8D2B
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x1A77;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x2CBE;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x1A77;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x6035;
     
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xF17D;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x3DF2;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x8D2B;
-    DAC_IIR1_HD = RD0;
-    DAC_IIR1_HD = RD0; //空写一个
-//// IIR1
-//2000, CAB7, 6B46, CAB7, 2000
-////    5CD9, FA50, 4FC7, 978C,     //A系数符号位取反
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xCAB7;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x6B46;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xCAB7;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x5CD9;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xFA50;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x4FC7;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x978C;
-    DAC_IIR1_HD = RD0;
-    DAC_IIR1_HD = RD0; //空写一个
-//// IIR2
-//2000, D785, 7BD5, D785, 2000
-////    5B51, FEFB, 583A, 9DDD,     //A系数符号位取反
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xD785;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x7BD5;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xD785;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x5B51;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xFEFB;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x583A;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x9DDD;
-    DAC_IIR1_HD = RD0;
-    DAC_IIR1_HD = RD0; //空写一个
-//// IIR3
-//2000, ACB0, 2000, 0, 0
-////    2DA3, 9FD1, 0, 0,     //A系数符号位取反
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0xACB0;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x2000;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x0;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x0;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x2DA3;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x9FD1;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x0;
-    DAC_IIR1_HD = RD0;
-    RD0 = 0x0;
-    DAC_IIR1_HD = RD0;
-    DAC_IIR1_HD = RD0; //空写一个
-    Return_AutoField(0*MMU_BASE);
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xF17D;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x3DF2;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x8D2B;
+//     DAC_IIR1_HD = RD0;
+//     DAC_IIR1_HD = RD0; //空写一个
+// //// IIR1
+// //2000, CAB7, 6B46, CAB7, 2000
+// ////    5CD9, FA50, 4FC7, 978C,     //A系数符号位取反
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xCAB7;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x6B46;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xCAB7;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x5CD9;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xFA50;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x4FC7;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x978C;
+//     DAC_IIR1_HD = RD0;
+//     DAC_IIR1_HD = RD0; //空写一个
+// //// IIR2
+// //2000, D785, 7BD5, D785, 2000
+// ////    5B51, FEFB, 583A, 9DDD,     //A系数符号位取反
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xD785;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x7BD5;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xD785;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x5B51;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xFEFB;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x583A;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x9DDD;
+//     DAC_IIR1_HD = RD0;
+//     DAC_IIR1_HD = RD0; //空写一个
+// //// IIR3
+// //2000, ACB0, 2000, 0, 0
+// ////    2DA3, 9FD1, 0, 0,     //A系数符号位取反
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0xACB0;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x2000;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x0;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x0;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x2DA3;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x9FD1;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x0;
+//     DAC_IIR1_HD = RD0;
+//     RD0 = 0x0;
+//     DAC_IIR1_HD = RD0;
+//     DAC_IIR1_HD = RD0; //空写一个
+//     Return_AutoField(0*MMU_BASE);
 
 ////////////////////////////////////////////////////////
 //  名称:
@@ -1123,145 +1123,7 @@ Sub_AutoField IIR_PATH3_HP340Init;
     Return_AutoField(0*MMU_BASE);
 
 
-////////////////////////////////////////////////////////
-//  名称:
-//      IIR1_HalfBand_80DB
-//  功能:
-//      半带滤波器，用于倍增采样率插0值后重建信号
-//G1_recip = 246
-//b11 =   8192       21452       21452        8192
-//a11 =   8192       -9393        4696        -916
-//b21 =   8192       12205       20507       12205        8192
-//a21 =   8192       -7026       11001       -4266        2712
-//b31 =   8192        3354       16695        3354        8192
-//a31 =   8192       -2672       14489       -2356        6209
-//b41 =   8192         750        8192
-//a41 =   8192        -777        7988
-//////////////////////////////////////////////////////////
-Sub_AutoField IIR_PATH3_HalfBand_Init;
-#define b11         0x2000
-#define b12         0x53CC
-#define b13         0x53CC
-#define b14         0x2000
-#define b15         0x0000
-#define a12         0x24B1
-#define a13         0x9258
-#define a14         0x0394
-#define a15         0x0000
-//---------------------------
-#define b21         0x2000
-#define b22         0x2FAD
-#define b23         0x505A
-#define b24         0x2FAD
-#define b25         0x2000
-#define a22         0x1B72
-#define a23         0xAAF9
-#define a24         0x10AA
-#define a25         0x8AA1
-//---------------------------
-#define b31         0x2000
-#define b32         0x0D1A
-#define b33         0x4137
-#define b34         0x0D1A
-#define b35         0x2000
-#define a32         0x0A70
-#define a33         0xB899
-#define a34         0x0934
-#define a35         0x9841
-//---------------------------
-#define b41         0x2000
-#define b42         0x02EE
-#define b43         0x2000
-#define b44         0x0000
-#define b45         0x0000
-#define a42         0x0309
-#define a43         0x9F34
-#define a44         0x0000
-#define a45         0x0000
-//---------------------------
-#define c00         0x0021
 
-	RD0 = b11;    IIR_PATH3_HD = RD0;
-	RD0 = b12;    IIR_PATH3_HD = RD0;
-	RD0 = b13;    IIR_PATH3_HD = RD0;
-	RD0 = b14;    IIR_PATH3_HD = RD0;
-	RD0 = b15;    IIR_PATH3_HD = RD0;
-	RD0 = a12;    IIR_PATH3_HD = RD0;
-	RD0 = a13;    IIR_PATH3_HD = RD0;
-	RD0 = a14;    IIR_PATH3_HD = RD0;
-	RD0 = a15;    IIR_PATH3_HD = RD0;
-	RD0 = c00;    IIR_PATH3_HD = RD0;
-	RD0 = b21;    IIR_PATH3_HD = RD0;
-	RD0 = b22;    IIR_PATH3_HD = RD0;
-	RD0 = b23;    IIR_PATH3_HD = RD0;
-	RD0 = b24;    IIR_PATH3_HD = RD0;
-	RD0 = b25;    IIR_PATH3_HD = RD0;
-	RD0 = a22;    IIR_PATH3_HD = RD0;
-	RD0 = a23;    IIR_PATH3_HD = RD0;
-	RD0 = a24;    IIR_PATH3_HD = RD0;
-	RD0 = a25;    IIR_PATH3_HD = RD0;
-	RD0 = c00;    IIR_PATH3_HD = RD0;
-	RD0 = b31;    IIR_PATH3_HD = RD0;
-	RD0 = b32;    IIR_PATH3_HD = RD0;
-	RD0 = b33;    IIR_PATH3_HD = RD0;
-	RD0 = b34;    IIR_PATH3_HD = RD0;
-	RD0 = b35;    IIR_PATH3_HD = RD0;
-	RD0 = a32;    IIR_PATH3_HD = RD0;
-	RD0 = a33;    IIR_PATH3_HD = RD0;
-	RD0 = a34;    IIR_PATH3_HD = RD0;
-	RD0 = a35;    IIR_PATH3_HD = RD0;
-	RD0 = c00;    IIR_PATH3_HD = RD0;
-	RD0 = b41;    IIR_PATH3_HD = RD0;
-	RD0 = b42;    IIR_PATH3_HD = RD0;
-	RD0 = b43;    IIR_PATH3_HD = RD0;
-	RD0 = b44;    IIR_PATH3_HD = RD0;
-	RD0 = b45;    IIR_PATH3_HD = RD0;
-	RD0 = a42;    IIR_PATH3_HD = RD0;
-	RD0 = a43;    IIR_PATH3_HD = RD0;
-	RD0 = a44;    IIR_PATH3_HD = RD0;
-	RD0 = a45;    IIR_PATH3_HD = RD0;
-	RD0 = c00;    IIR_PATH3_HD = RD0;
-    IIR_PATH3_CLRADDR;
-
-#undef b11
-#undef b12
-#undef b13
-#undef b14
-#undef b15
-#undef a12
-#undef a13
-#undef a14
-#undef a15
-#undef b21
-#undef b22
-#undef b23
-#undef b24
-#undef b25
-#undef a22
-#undef a23
-#undef a24
-#undef a25
-#undef b31
-#undef b32
-#undef b33
-#undef b34
-#undef b35
-#undef a32
-#undef a33
-#undef a34
-#undef a35
-#undef b41
-#undef b42
-#undef b43
-#undef b44
-#undef b45
-#undef a42
-#undef a43
-#undef a44
-#undef a45
-#undef c00
-
-    Return_AutoField(0*MMU_BASE);
 
 
 
