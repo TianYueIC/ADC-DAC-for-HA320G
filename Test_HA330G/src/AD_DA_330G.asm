@@ -1009,10 +1009,6 @@ L_ADC_Bias_Adj_End:
 Sub_AutoField Send_DAC;
 
     RD3 = RD0;
-<<<<<<< Updated upstream
-    	
-    RD0 = g_Vol;   
-=======
 
     //DAC自动变档位测试
     RD0 = g_DAC_Cfg;
@@ -1059,10 +1055,9 @@ L_TEST_0_1:
     g_Count = RD0;
 L_TEST_End:
 
-
+    RD2 = 0;
 goto L_Send_DAC_xx;
     RD0 = g_Vol; 
->>>>>>> Stashed changes
     call Find_k;   
     RD2 = RD1;  //右移位数 
     call DAC_Tab;
