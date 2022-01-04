@@ -177,6 +177,8 @@ Loop:   //main
     call Get_ADC;
     nop;nop;nop;nop;
     if(RD0_nZero) goto Loop;
+        CPU_SimpleLevel_H;
+
 /*
 //使用测试数据替代ADC输入
     RD0 = RN_GRAM_IN;

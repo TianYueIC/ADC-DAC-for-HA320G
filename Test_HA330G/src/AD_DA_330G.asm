@@ -1018,41 +1018,44 @@ Sub_AutoField Send_DAC;
     RF_RotateL4(RD0);
     RD0_ClrByteL16;
     if(RD0_Zero) goto L_TEST_1_0;    
-    RD0 = g_Count;
-    RD0 -= 255;
+    RD0 = g_Vol;
+    RD0 -= 100;
     if(RD0_Zero) goto L_TEST_1_1;
-    g_Count ++;   
+    g_Vol ++;   
     goto L_TEST_End;
 L_TEST_1_0:
     RD0 = 0;
-    g_Count = RD0;
+    g_Vol = RD0;
     goto L_TEST_End;
 L_TEST_1_1:
     RD0 = 0x808180;   
 	g_DAC_Cfg = RD0;    
     RD0 = 0;
-    g_Count = RD0;
+    g_Vol = RD0;
     goto L_TEST_End;
 L_TEST_0:
     //DAC高档位
     RD0 = g_Vpp_0;
-    RF_RotateL8(RD0);
+    RF_RotateL4(RD0);
+    RF_RotateL2(RD0);
     RD0_ClrByteL16;
-    if(RD0_nZero) goto L_TEST_0_0;
-    RD0 = g_Count;
-    RD0 -= 255;
+    if(RD0_nZero) goto L_TEST_0_0;   
+    RD0 = g_Vol;
+    RD0 -= 100;
     if(RD0_Zero) goto L_TEST_0_1;
-    g_Count ++;   
+    g_Vol ++;   
     goto L_TEST_End;
 L_TEST_0_0:
     RD0 = 0;
-    g_Count = RD0;
+    g_Vol = RD0;
     goto L_TEST_End;
 L_TEST_0_1:
+	CPU_SimpleLevel_L;
+
     RD0 = 0x808100;   //E=0，Y2不拉
 	g_DAC_Cfg = RD0;    
     RD0 = 0;
-    g_Count = RD0;
+    g_Vol = RD0;
 L_TEST_End:
 
     RD2 = 0;
